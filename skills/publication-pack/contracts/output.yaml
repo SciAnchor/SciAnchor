@@ -1,0 +1,51 @@
+schema_version: rh.schema.artifact.publication_pack.v0
+type: object
+description: Artifact payload emitted by publication-pack runtime evaluation.
+required:
+  - topic_id
+  - target_profile
+  - ready_for_review
+  - submission_ready
+  - components
+  - missing_required
+  - qa_checks
+  - next_actions
+properties:
+  topic_id:
+    type: integer
+    minimum: 1
+  target_profile:
+    type: string
+  publication_pack_artifact_id:
+    type: integer
+    minimum: 0
+  ready_for_review:
+    type: boolean
+  submission_ready:
+    type: boolean
+  components:
+    type: object
+  source_artifacts:
+    type: array
+  missing_required:
+    type: array
+    items:
+      type: string
+  missing_optional:
+    type: array
+    items:
+      type: string
+  qa_checks:
+    type: array
+    items:
+      type: object
+  next_actions:
+    type: array
+    items:
+      type: object
+  provenance_map:
+    type: object
+guardrails:
+  - required_components_classified
+  - qa_checks_present
+  - readiness_not_overstated

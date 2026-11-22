@@ -1,0 +1,519 @@
+"""Stage policy — defines what each stage does, when to call codex, and error handling.
+
+V2: 6-stage policies (Init, Build, Analyze, Propose, Experiment, Write).
+Legacy 13-stage policies preserved for reference.
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+import os
+from dataclasses import dataclass, field
+from typing import Any, Literal
+
+from ..orchestrator.stages import STAGE_ORDER, STAGE_REGISTRY
+
+logger = logging.getLogger(__name__)
+
+
+CodexPolicy = Literal["required", "recommended", "optional", "none"]
+HumanPolicy = Literal["always", "conditional", "never"]
+RetryPolicy = Literal["retry_twice", "retry_once", "no_retry"]
+
+
+@dataclass(frozen=True)
+class StagePolicy:
+    """Execution policy for one orchestrator stage."""
+
+    name: str
+    tools: tuple[str, ...]  # MCP tools to call (in order)
+    codex: CodexPolicy  # When to invoke codex review
+    codex_focus: str  # Focus text for codex review prompt
+    human_checkpoint: HumanPolicy  # When to pause for human
+    retry: RetryPolicy  # How to handle tool failures
+    max_codex_rounds: int = 3  # Max adversarial rounds
+    description: str = ""  # One-line stage objective for prompt
+    autonomous_allowed: bool = True
+    risk_level: str = "low"  # low|medium|high — high-risk stages require human even in autonomous mode
+    approval_policy: str = "auto"  # auto|human_required|budget_dependent
+    expansion_paper_budget: int = 0  # Max papers to add during loopback (0 = unlimited)
+
+
+# ---------------------------------------------------------------------------
+# V2: 6-stage policies
+# ---------------------------------------------------------------------------
+
+STAGE_POLICIES: dict[str, StagePolicy] = {
+    "init": StagePolicy(
+        name="init",
+        tools=(
+            "orchestrator_status",
+            "orchestrator_record_artifact",
+            "paper_search",
+            "paper_ingest",
+            "orchestrator_gate_check",
+        ),
+        codex="none",
+        codex_focus="",
+        human_checkpoint="always",
+        retry="no_retry",
+        description=(
+            "Environment sensing, guided interaction, query generation, "
+            "exclusion criteria, seed paper ingestion, parameter confirmation."
+        ),
+        autonomous_allowed=True,
+        risk_level="low",
+        approval_policy="auto",
+    ),
+    "build": StagePolicy(
+        name="build",
+        tools=(
+            "paper_search",
+            "paper_ingest",
+            "select_seeds",
+            "expand_citations",
+            "paper_acquire",
+            "paper_list",
+            "paper_coverage_check",
+            "paper_dismiss",
+            "orchestrator_record_artifact",
+            "orchestrator_gate_check",
+        ),
+        codex="optional",
+        codex_focus=(
+            "Evaluate search coverage: are key baselines and seminal works included? "
+            "Check method family diversity and temporal span."
+        ),
+        human_checkpoint="conditional",
+        retry="retry_twice",
+        description=(
+            "Multi-source retrieval, citation expansion, relevance filtering, "
+            "metadata completion, PDF cascade, structured extraction."
+        ),
+        autonomous_allowed=True,
+        risk_level="low",
+        approval_policy="auto",
+    ),
+    "analyze": StagePolicy(
+        name="analyze",
+        tools=(
+            "paper_list",
+            "paper_search",
+            "paper_ingest",
+            "claim_extract",
+            "evidence_link",
+            "baseline_identify",
+            "gap_detect",
+            "orchestrator_record_artifact",
+            "orchestrator_gate_check",
+        ),
+        codex="optional",
+        codex_focus=(
+            "Evaluate claim graph completeness, gap significance, "
+            "and research direction novelty/feasibility."
+        ),
+        human_checkpoint="always",
+        retry="retry_twice",
+        description=(
+            "Method taxonomy, claim extraction, claim graph, baseline identification, "
+            "gap detection, research direction ranking."
+        ),
+        autonomous_allowed=True,
+        risk_level="medium",
+        approval_policy="budget_dependent",
+        expansion_paper_budget=30,
+    ),
+    "propose": StagePolicy(
+        name="propose",
+        tools=(
+            "paper_search",
+            "paper_ingest",
+            "paper_acquire",
+            "orchestrator_record_artifact",
+            "adversarial_run",
+            "adversarial_resolve",
+            "adversarial_status",
+            "orchestrator_gate_check",
+        ),
+        codex="required",
+        codex_focus=(
+            "Challenge the research direction for novelty, evidence coverage, "
+            "method validity, baseline completeness, scope discipline, "
+            "falsifiability, and clarity. Verify method-layer papers "
+            "adequately support the proposed approach."
+        ),
+        human_checkpoint="always",
+        retry="retry_once",
+        max_codex_rounds=5,
+        description=(
+            "Proposal draft, method-layer paper expansion (cross-domain), "
+            "adversarial optimization, experiment design."
+        ),
+        autonomous_allowed=True,
+        risk_level="high",
+        approval_policy="human_required",
+        expansion_paper_budget=10,
+    ),
+    "experiment": StagePolicy(
+        name="experiment",
+        tools=(
+            "code_generate",
+            "code_validate",
+            "experiment_run",
+            "verified_registry_build",
+            "verified_registry_check",
+            "orchestrator_record_artifact",
+            "orchestrator_gate_check",
+        ),
+        codex="recommended",
+        codex_focus=(
+            "Review experiment code for correctness, security, and statistical "
+            "validity. Check metric computation, baseline fairness, and "
+            "reproducibility."
+        ),
+        human_checkpoint="conditional",
+        retry="retry_twice",
+        description=(
+            "Code generation from study spec, AST validation, sandbox execution, "
+            "metric evaluation, iterative improvement, verified registry construction."
+        ),
+        autonomous_allowed=True,
+        risk_level="medium",
+        approval_policy="auto",
+    ),
+    "write": StagePolicy(
+        name="write",
+        tools=(
+            "writing_architecture",
+            "outline_generate",
+            "section_draft",
+            "section_review",
+            "section_revise",
+            "consistency_check",
+            "figure_suite_plan",
+            "figure_plan",
+            "figure_suite_render",
+            "figure_generate",
+            "verified_registry_check",
+            "paper_verify_numbers",
+            "citation_verify",
+            "evidence_trace",
+            "latex_compile",
+            "publication_pack_backfill",
+            "publication_run",
+            "integrity_check",
+            "review_add_issue",
+            "review_bundle_create",
+            "review_issues",
+            "review_respond",
+            "review_resolve",
+            "review_status",
+            "finalize_project",
+            "orchestrator_record_artifact",
+            "orchestrator_gate_check",
+        ),
+        codex="recommended",
+        codex_focus=(
+            "Conduct scholarly review: methodology rigor, statistical validity, "
+            "writing clarity, citation completeness, citation density. "
+            "Verify comparison table accuracy and BibTeX integrity."
+        ),
+        human_checkpoint="always",
+        retry="retry_once",
+        description=(
+            "Competitive paper learning, writing architecture discussion, "
+            "section drafting, review loop, assembly, submission prep."
+        ),
+        autonomous_allowed=True,
+        risk_level="high",
+        approval_policy="human_required",
+    ),
+}
+
+
+# ---------------------------------------------------------------------------
+# Policy helpers
+# ---------------------------------------------------------------------------
+
+
+def get_policy(stage: str) -> StagePolicy | None:
+    """Get the execution policy for a stage."""
+    return STAGE_POLICIES.get(stage)
+
+
+def should_invoke_codex(stage: str, mode: str = "standard") -> bool:
+    """Determine if codex should be invoked for a stage given the workflow mode."""
+    policy = get_policy(stage)
+    if policy is None:
+        return False
+    if policy.codex == "required":
+        return True
+    if policy.codex == "recommended" and mode in ("standard", "strict"):
+        return True
+    if policy.codex == "optional" and mode == "strict":
+        return True
+    return False
+
+
+def should_pause_human(
+    stage: str, mode: str = "standard", autonomy: str = "supervised"
+) -> bool:
+    """Determine if the runner should pause for human approval."""
+    policy = get_policy(stage)
+    if policy is None:
+        return True
+    if autonomy == "autonomous":
+        if policy.approval_policy == "human_required" or policy.risk_level == "high":
+            return True
+        return not policy.autonomous_allowed
+    if policy.human_checkpoint == "always":
+        return mode != "demo"
+    if policy.human_checkpoint == "conditional":
+        return mode in ("standard", "strict")
+    return False
+
+
+def max_retries(stage: str) -> int:
+    """Return the max retry count for a stage."""
+    policy = get_policy(stage)
+    if policy is None:
+        return 0
+    return {"retry_twice": 2, "retry_once": 1, "no_retry": 0}[policy.retry]
+
+
+def decide_recovery(
+    stage: str,
+    error_kind: str,
+    retry_count: int,
+) -> Literal["retry", "pause_human", "fallback_stage"]:
+    """Decide recovery action based on stage policy and error state."""
+    limit = max_retries(stage)
+
+    if retry_count < limit:
+        return "retry"
+
+    # Exhausted retries — check if fallback is available
+    meta = STAGE_REGISTRY.get(stage)
+    if meta and meta.fallback_stage:
+        return "fallback_stage"
+
+    return "pause_human"
+
+
+# ---------------------------------------------------------------------------
+# Pre-execution planner: should_execute()
+# ---------------------------------------------------------------------------
+
+ExecutionReason = Literal[
+    "run",
+    "fresh_artifact_present",
+    "gate_already_passed",
+    "resumed_past_stage",
+    "deliberation_said_skip",
+]
+
+
+@dataclass(frozen=True)
+class ExecutionDecision:
+    """Result of pre-execution planner for a stage."""
+
+    should_run: bool
+    reason: ExecutionReason = "run"
+    advisory_notes: list[str] = field(default_factory=list)
+
+
+# Maps each stage to the artifact types it is expected to produce.
+# This is derived from the orchestrator registry so pre-execution skip checks
+# and transition gates cannot drift apart.
+_STAGE_REQUIRED_ARTIFACTS: dict[str, tuple[str, ...]] = {
+    stage_name: tuple(meta.required_artifacts)
+    for stage_name, meta in STAGE_REGISTRY.items()
+    if meta.required_artifacts
+}
+
+
+# Demo smoke artifacts are valid only inside a demo run. A strict/formal run
+# must regenerate them instead of skipping on their freshness — a demo
+# final_bundle satisfying the write stage of a formal rerun is exactly the
+# leak that shipped a smoke PDF as a formal deliverable.
+_DEMO_SCOPE_MARKERS = frozenset(
+    {
+        "paper_production_demo_pdf_smoke",
+        "demo_pdf_smoke",
+        "demo_limited_seed_pool",
+    }
+)
+_DEMO_SCOPE_KEYS = (
+    "automation_scope",
+    "readiness_scope",
+    "evidence_boundary",
+    "publication_pack_status",
+)
+
+
+def _is_demo_scoped_payload(payload: Any) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    return any(
+        str(payload.get(key) or "") in _DEMO_SCOPE_MARKERS for key in _DEMO_SCOPE_KEYS
+    )
+
+
+def _orchestrator_run_mode(conn: Any, topic_id: int) -> str:
+    try:
+        row = conn.execute(
+            "SELECT mode FROM orchestrator_runs WHERE topic_id = ? "
+            "ORDER BY id DESC LIMIT 1",
+            (topic_id,),
+        ).fetchone()
+    except Exception:  # noqa: BLE001 - legacy DBs may lack the table
+        return ""
+    if row is None:
+        return ""
+    return str(row["mode"] or "")
+
+
+def should_execute(
+    db,
+    topic_id: int,
+    stage: str,
+    *,
+    current_checkpoint_stage: str | None = None,
+) -> ExecutionDecision:
+    """Determine whether a stage needs to run.
+
+    Runs BEFORE execute_stage() in the runner loop. Deterministic checks first,
+    optional LLM deliberation only if gated by RESEARCH_HARNESS_DELIBERATION env.
+
+    Existing post-execution gates (TransitionValidator, GateEvaluator) are NOT
+    duplicated here — this is a pre-execution planner only.
+
+    Args:
+        db: Database handle
+        topic_id: Topic being run
+        stage: Stage name (must be in STAGE_ORDER)
+        current_checkpoint_stage: Checkpoint's current_stage, if available
+
+    Returns:
+        ExecutionDecision with should_run=True (default) unless a skip reason fires.
+    """
+    notes: list[str] = []
+
+    if stage not in STAGE_ORDER:
+        return ExecutionDecision(should_run=True, reason="run", advisory_notes=[])
+
+    # Check 1: resumed_past_stage
+    if current_checkpoint_stage and current_checkpoint_stage in STAGE_ORDER:
+        try:
+            cur_idx = STAGE_ORDER.index(current_checkpoint_stage)
+            tgt_idx = STAGE_ORDER.index(stage)
+            if tgt_idx < cur_idx:
+                notes.append(
+                    f"checkpoint is at {current_checkpoint_stage} (index {cur_idx}); "
+                    f"target {stage} (index {tgt_idx}) is in the past"
+                )
+                return ExecutionDecision(
+                    should_run=False,
+                    reason="resumed_past_stage",
+                    advisory_notes=notes,
+                )
+        except ValueError:
+            pass
+
+    # Check 2: fresh_artifact_present
+    required_types = _STAGE_REQUIRED_ARTIFACTS.get(stage, ())
+    if required_types:
+        try:
+            conn = db.connect()
+            try:
+                run_mode = _orchestrator_run_mode(conn, topic_id)
+                found_types: set[str] = set()
+                all_fresh = True
+                for art_type in required_types:
+                    row = conn.execute(
+                        """
+                        SELECT id, stale, payload_json
+                        FROM project_artifacts
+                        WHERE topic_id = ? AND artifact_type = ? AND status = 'active'
+                        ORDER BY id DESC LIMIT 1
+                        """,
+                        (topic_id, art_type),
+                    ).fetchone()
+                    if row is None:
+                        all_fresh = False
+                        break
+                    if row["stale"]:
+                        all_fresh = False
+                        break
+                    if run_mode != "demo":
+                        try:
+                            payload = json.loads(row["payload_json"] or "{}")
+                        except (TypeError, ValueError):
+                            payload = {}
+                        if _is_demo_scoped_payload(payload):
+                            notes.append(
+                                f"{art_type} is demo-scoped and does not "
+                                f"count as fresh for a "
+                                f"{run_mode or 'non-demo'} run"
+                            )
+                            all_fresh = False
+                            break
+                    found_types.add(art_type)
+
+                if all_fresh and len(found_types) == len(required_types):
+                    notes.append(
+                        f"all required artifact types present and non-stale: "
+                        f"{sorted(required_types)}"
+                    )
+                    return ExecutionDecision(
+                        should_run=False,
+                        reason="fresh_artifact_present",
+                        advisory_notes=notes,
+                    )
+            finally:
+                conn.close()
+        except Exception as exc:
+            logger.warning(
+                "should_execute artifact check failed for topic=%d stage=%s: %s",
+                topic_id,
+                stage,
+                exc,
+            )
+
+    # Check 3: gate_already_passed
+    try:
+        from ..orchestrator.transitions import GateEvaluator
+
+        evaluator = GateEvaluator(db)
+        decision = evaluator.evaluate(topic_id, stage)
+        outcome = (
+            decision
+            if isinstance(decision, str)
+            else getattr(decision, "outcome", None)
+        )
+        if outcome == "pass":
+            notes.append(f"gate for stage {stage} already evaluates to pass")
+            return ExecutionDecision(
+                should_run=False,
+                reason="gate_already_passed",
+                advisory_notes=notes,
+            )
+    except Exception as exc:
+        # Defensive: gate eval is not the authority here, just an optimization.
+        logger.debug(
+            "should_execute gate check skipped for topic=%d stage=%s: %s",
+            topic_id,
+            stage,
+            exc,
+        )
+
+    # Check 4: optional LLM deliberation (off by default)
+    if os.environ.get("RESEARCH_HARNESS_DELIBERATION") == "1":
+        # Advisory only; no LLM call in v2 Step 3 since that requires prompt
+        # infrastructure. Flag is reserved for future extension.
+        notes.append(
+            "deliberation enabled but no implementation yet; defaulting to run"
+        )
+
+    return ExecutionDecision(should_run=True, reason="run", advisory_notes=notes)

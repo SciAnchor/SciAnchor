@@ -1,0 +1,78 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+*.pyo
+*.pyd
+.coverage
+htmlcov/
+.venv/
+.venv-cs/
+.env
+.env.local
+.envrc
+.envrc.local
+private.env
+private.*.env
+.mcp.json
+*.egg-info/
+~/.research-harness/
+.longrun/
+.research-harness/
+paper_library/
+*.pdf
+*.pptx
+*.db
+.DS_Store
+.conda/
+.claude/
+
+# Local-only prototype UI artifacts
+/web/.DS_Store
+/web/.next/
+/web/next-env.d.ts
+/web/dist/
+/web/node_modules/
+/web/tsconfig.tsbuildinfo
+/web_dashboard/
+packages/*/build/
+
+# Build output for the local Zotero plugin MVP
+integrations/zotero-rh-panel/dist/
+
+# Local dev artifacts — never commit
+.playwright-mcp/
+logs/
+experiments/*/data/
+experiments/*/runs/
+/*.png
+/e2e-*.png
+
+# Private/local research scratch artifacts — do not publish before paper release
+/paper-production/
+.tmp_*.json
+.tmp_*.txt
+/01-literature/
+/02-evidence-map/
+/03-proposals/
+/discovery-snapshots/
+/discovery-*-snapshot.md
+/scripts/generate_*_evidence_matrix.py
+/docs/discover/evidence/latest.json
+/docs/discover/published/*.html
+/docs/discover/published/*.md
+/docs/discover/issues/*.json
+!/docs/discover/issues/demo-weekly.json
+# MkDocs local build output
+/site/
+
+packages/research_harness/paper-production/
+**/._*
+
+# Local scratch, caches and RH run outputs — never commit
+/tmp/
+/.spc_cache/
+/seed_pack/
+# Private maintainer self-dev control plane (scripts/rh-selfdev.py state)
+/.rh-selfdev/
+

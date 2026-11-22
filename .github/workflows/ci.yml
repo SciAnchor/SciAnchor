@@ -1,0 +1,142 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('packages/*/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      - name: Install packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e "packages/llm_router[all]"
+          pip install -e "packages/paperindex"
+          pip install -e "packages/research_harness[dev,paperindex]"
+          pip install -e "packages/research_harness_mcp[dev]"
+
+      # Experiments run under experiment/confine.py: on Linux that is bwrap in fresh user
+      # namespaces. Ubuntu 24.04 restricts unprivileged userns through AppArmor, so lift that
+      # restriction and prove bwrap works before the tests that execute experiments.
+      - name: Enable experiment confinement (bubblewrap)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap
+          if [ -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+          /usr/bin/bwrap --unshare-all --die-with-parent --ro-bind / / true
+
+      - name: Release gate self-check
+        run: python scripts/check-release-gates.py
+
+      - name: Run tests
+        run: |
+          if [[ "${{ matrix.python-version }}" == "3.12" ]]; then
+            scripts/codex-check.sh --python
+          else
+            scripts/codex-check.sh --full
+          fi
+
+      - name: Coverage release guards
+        if: matrix.python-version == '3.11'
+        run: scripts/codex-check.sh --coverage
+
+      - name: Dependency audit report (advisory)
+        run: bash scripts/dependency-audit-report.sh
+
+      - name: Release artifact smoke
+        run: scripts/release-artifact-smoke.sh
+
+  paperfetch:
+    name: paperfetch (Python 3.12)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/paperfetch
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-paperfetch-${{ hashFiles('packages/paperfetch/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-paperfetch-
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: CLI smoke
+        run: |
+          paperfetch --help
+          spc schema paper > /dev/null
+
+      - name: Offline tests
+        run: pytest -q -m "not online and not live and not release and not browser"
+
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-lint-${{ hashFiles('packages/*/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-lint-
+
+      - name: Install ruff
+        run: pip install ruff==0.15.12
+
+      - name: Ruff check
+        run: ruff check packages/
+
+      - name: Ruff format check
+        run: ruff format --check packages/

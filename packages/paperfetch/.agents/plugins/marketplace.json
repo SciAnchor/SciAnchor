@@ -1,0 +1,20 @@
+{
+  "name": "paperfetch",
+  "interface": {
+    "displayName": "paperfetch"
+  },
+  "plugins": [
+    {
+      "name": "spc",
+      "source": {
+        "source": "local",
+        "path": "./plugins/spc"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Research"
+    }
+  ]
+}

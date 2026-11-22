@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "research-harness-mcp"
+version = "1.5.0"
+description = "MCP server exposing Research Harness primitives to agent hosts"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "CC-BY-NC-4.0"
+dependencies = [
+    "research-harness",
+    "paperindex",
+    # Cap below mcp 2.0.0: that major release renamed Tool.inputSchema ->
+    # Tool.input_schema, which breaks the tool_surface / tools_* modules and
+    # their tests (they build and read `.inputSchema`). Every 1.x release
+    # (through 1.29.0) keeps `inputSchema`; unpinned CI was resolving to 2.0.0.
+    "mcp>=1.0,<2",
+    "PyJWT>=2.13.0",
+    "starlette>=1.0.1",
+]
+
+[project.optional-dependencies]
+api = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+]
+
+[project.scripts]
+rh-mcp = "research_harness_mcp.server:run"
+research-harness-mcp = "research_harness_mcp.server:run"
+rh-gateway = "research_harness_mcp.gateway:run"
+rh-mcp-search = "research_harness_mcp.search_stdio:run"
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+pythonpath = [
+    ".",
+    "../research_harness",
+    "../llm_router",
+    "../paperindex",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["research_harness_mcp*"]

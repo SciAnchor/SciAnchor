@@ -1,0 +1,1977 @@
+from __future__ import annotations
+
+import hashlib
+import json
+import logging
+import os
+import re
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+from dataclasses import dataclass
+from typing import Any, Callable
+
+from defusedxml.ElementTree import fromstring as _safe_fromstring
+
+from .core.circuit_breaker import CircuitBreakerConfig, get_breaker
+from .host_pacer import pace
+from .key_pool import KeyPool, openalex_pool, semantic_scholar_pool
+from .paper_sources import PDFCandidate, PaperRecord, SearchProvider, SearchQuery
+
+# S2 gets a lenient breaker: 429 is rate-limiting (expected), not an outage.
+# 8 failures before trip (vs default 3), shorter recovery (30s vs 60s).
+_S2_BREAKER_CONFIG = CircuitBreakerConfig(
+    failure_threshold=8,
+    initial_recovery_sec=30.0,
+    max_recovery_sec=300.0,
+    backoff_multiplier=2.0,
+)
+
+logger = logging.getLogger(__name__)
+
+JsonFetcher = Callable[[str, dict[str, str]], Any]
+TextFetcher = Callable[[str, dict[str, str]], str]
+
+_RETRYABLE_HTTP_CODES = {429, 500, 502, 503, 504}
+_MAX_RETRIES = 3
+_BASE_BACKOFF_SECS = 1.0
+
+
+# arxiv CS category → OpenAlex concept id (Wikidata-style)
+# These drive subject_categories filtering for the OpenAlex provider.
+# Lookup: https://api.openalex.org/concepts?search=<term>
+ARXIV_TO_OPENALEX_CONCEPT: dict[str, str] = {
+    "cs.AI": "C154945302",  # Artificial Intelligence
+    "cs.LG": "C119857082",  # Machine Learning
+    "cs.CV": "C31972630",  # Computer Vision
+    "cs.CL": "C204321447",  # Natural Language Processing
+    "cs.IR": "C23123220",  # Information Retrieval
+    "cs.RO": "C90509273",  # Robotics
+    "cs.CR": "C38652104",  # Computer Security
+    "cs.DB": "C77088390",  # Database
+    "cs.DC": "C79974875",  # Distributed Computing
+    "cs.DS": "C11413529",  # Data Structures / Algorithms
+    "cs.HC": "C107457646",  # Human-Computer Interaction
+    "cs.PL": "C2524010",  # Programming Languages
+    "cs.SE": "C115903868",  # Software Engineering
+    "cs.SY": "C127413603",  # Control Systems
+}
+
+
+class ProviderConfigError(RuntimeError):
+    pass
+
+
+@dataclass(frozen=True)
+class ProviderSpec:
+    name: str
+    enabled: bool
+    reason: str = ""
+
+
+@dataclass(frozen=True)
+class ProviderStatus:
+    name: str
+    enabled: bool
+    ready: bool
+    credentialed: bool
+    reason: str
+    required_env: tuple[str, ...] = ()
+    optional_env: tuple[str, ...] = ()
+
+
+def _fetch_with_retry(
+    url: str,
+    headers: dict[str, str],
+    parse: Callable[[bytes], Any],
+    max_retries: int = _MAX_RETRIES,
+    base_backoff: float = _BASE_BACKOFF_SECS,
+    *,
+    data: bytes | None = None,
+    method: str | None = None,
+    timeout: int = 30,
+) -> Any:
+    """Fetch a URL with exponential backoff on transient errors.
+
+    Supports both GET and POST requests. For POST, pass *data* and optionally *method*.
+    Respects Retry-After header on 429/503 responses.
+    """
+    last_exc: Exception | None = None
+    for attempt in range(max_retries + 1):
+        try:
+            request = urllib.request.Request(
+                url, headers=headers, data=data, method=method
+            )
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                return parse(response.read())
+        except urllib.error.HTTPError as exc:
+            last_exc = exc
+            if exc.code not in _RETRYABLE_HTTP_CODES or attempt == max_retries:
+                raise
+            wait = _parse_retry_after(exc, base_backoff * (2**attempt))
+            logger.warning(
+                "HTTP %d from %s, retrying in %.1fs (attempt %d/%d)",
+                exc.code,
+                url,
+                wait,
+                attempt + 1,
+                max_retries,
+            )
+            time.sleep(wait)
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            last_exc = exc
+            if attempt == max_retries:
+                raise
+            wait = base_backoff * (2**attempt)
+            logger.warning(
+                "Network error from %s: %s, retrying in %.1fs (attempt %d/%d)",
+                url,
+                exc,
+                wait,
+                attempt + 1,
+                max_retries,
+            )
+            time.sleep(wait)
+    raise last_exc  # type: ignore[misc]
+
+
+_MAX_RETRY_AFTER_SECS = 15.0
+
+
+def _parse_retry_after(exc: urllib.error.HTTPError, default: float) -> float:
+    """Extract wait time from Retry-After header, falling back to *default*.
+
+    Capped at ``_MAX_RETRY_AFTER_SECS`` so a provider handing out long 429
+    Retry-After values (Crossref) cannot stall an interactive search fan-out.
+    """
+    retry_after = exc.headers.get("Retry-After") if exc.headers else None
+    if retry_after is None:
+        return min(default, _MAX_RETRY_AFTER_SECS)
+    try:
+        return min(max(float(retry_after), 0.5), _MAX_RETRY_AFTER_SECS)
+    except ValueError:
+        return min(default, _MAX_RETRY_AFTER_SECS)
+
+
+def default_json_fetcher(url: str, headers: dict[str, str]) -> Any:
+    return _fetch_with_retry(
+        url, headers, lambda data: json.loads(data.decode("utf-8"))
+    )
+
+
+def default_text_fetcher(url: str, headers: dict[str, str]) -> str:
+    return _fetch_with_retry(url, headers, lambda data: data.decode("utf-8"))
+
+
+class HTTPProvider(SearchProvider):
+    name: str
+
+    def __init__(self, fetcher: JsonFetcher | None = None):
+        self._fetcher = fetcher or default_json_fetcher
+
+    def _fetch_json(self, url: str, headers: dict[str, str] | None = None) -> Any:
+        breaker = get_breaker(self.name)
+        return breaker.call(self._fetcher, url, headers or {})
+
+
+class GoogleScholarProvider(HTTPProvider):
+    name = "google_scholar"
+
+    def __init__(
+        self, api_url: str, api_key: str = "", fetcher: JsonFetcher | None = None
+    ):
+        super().__init__(fetcher=fetcher)
+        self.api_url = api_url.rstrip("/")
+        self.api_key = api_key
+
+    def search(self, query: SearchQuery) -> list[PaperRecord]:
+        params = {"q": query.query, "num": str(query.limit)}
+        if query.year_from is not None:
+            params["as_ylo"] = str(query.year_from)
+        if query.year_to is not None:
+            params["as_yhi"] = str(query.year_to)
+        url = f"{self.api_url}?{urllib.parse.urlencode(params)}"
+        headers = {"Accept": "application/json"}
+        if self.api_key:
+            headers["X-API-Key"] = self.api_key
+        payload = self._fetch_json(url, headers)
+        items = (
+            payload.get("organic_results")
+            or payload.get("results")
+            or payload.get("papers")
+            or []
+        )
+        records: list[PaperRecord] = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            pdf_candidates: list[PDFCandidate] = []
+            resources = item.get("resources") or item.get("pdfs") or []
+            if isinstance(resources, list):
+                for resource in resources:
+                    if not isinstance(resource, dict) or not resource.get("link"):
+                        continue
+                    file_format = str(resource.get("file_format") or "").lower()
+                    title = str(resource.get("title") or "").lower()
+                    link = str(resource.get("link") or "")
+                    if (
+                        "pdf" in file_format
+                        or "pdf" in title
+                        or link.lower().endswith(".pdf")
+                    ):
+                        pdf_candidates.append(
+                            PDFCandidate(
+                                url=link,
+                                source_type="open_access_pdf",
+                                provider=self.name,
+                                confidence=0.75,
+                            )
+                        )
+            if item.get("pdf_url"):
+                pdf_candidates.append(
+                    PDFCandidate(
+                        url=str(item["pdf_url"]),
+                        source_type="open_access_pdf",
+                        provider=self.name,
+                        confidence=0.8,
+                    )
+                )
+            publication_info = item.get("publication_info") or {}
+            records.append(
+                PaperRecord(
+                    title=str(item.get("title") or ""),
+                    authors=_coerce_authors(publication_info or item.get("authors")),
+                    year=_coerce_year(
+                        item.get("year")
+                        or item.get("publication_year")
+                        or _google_scholar_summary_year(publication_info)
+                    ),
+                    venue=str(
+                        item.get("publication")
+                        or item.get("venue")
+                        or _google_scholar_summary_venue(publication_info)
+                    ),
+                    abstract=str(item.get("snippet") or item.get("abstract") or ""),
+                    doi=str(item.get("doi") or ""),
+                    url=str(item.get("link") or item.get("url") or ""),
+                    provider=self.name,
+                    citation_count=_coerce_int(
+                        item.get("cited_by_count")
+                        or item.get("inline_links", {}).get("cited_by", {}).get("total")
+                    ),
+                    pdf_candidates=pdf_candidates,
+                )
+            )
+        return records
+
+
+class CrossrefProvider(HTTPProvider):
+    name = "crossref"
+
+    def __init__(
+        self,
+        email: str | None = None,
+        fetcher: JsonFetcher | None = None,
+    ):
+        super().__init__(fetcher=fetcher)
+        self.email = email or ""
+
+    def search(self, query: SearchQuery) -> list[PaperRecord]:
+        params = {
+            "query": query.query,
+            "rows": str(query.per_provider_limit or query.limit),
+            "sort": "relevance",
+        }
+        filters: list[str] = []
+        if query.year_from is not None:
+            filters.append(f"from-pub-date:{query.year_from}-01-01")
+        if query.year_to is not None:
+            filters.append(f"until-pub-date:{query.year_to}-12-31")
+        if filters:
+            params["filter"] = ",".join(filters)
+        if self.email:
+            params["mailto"] = self.email
+        url = f"https://api.crossref.org/works?{urllib.parse.urlencode(params)}"
+        payload = self._fetch_json(url, {"Accept": "application/json"})
+        items = (payload.get("message") or {}).get("items") or []
+        records: list[PaperRecord] = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            title = _crossref_first(item.get("title"))
+            if not title:
+                continue
+            pdf_candidates: list[PDFCandidate] = []
+            for link in item.get("link") or []:
+                if not isinstance(link, dict) or not link.get("URL"):
+                    continue
+                content_type = str(link.get("content-type") or "").lower()
+                if "pdf" in content_type or str(link["URL"]).endswith(".pdf"):
+                    pdf_candidates.append(
+                        PDFCandidate(
+                            url=str(link["URL"]),
+                            source_type="publisher_pdf",
+                            provider=self.name,
+                            confidence=0.65,
+                        )
+                    )
+            records.append(
+                PaperRecord(
+                    title=title,
+                    authors=_crossref_authors(item.get("author") or []),
+                    year=_coerce_year(_crossref_year(item)),
+                    venue=_crossref_first(item.get("container-title")),
+                    abstract=_strip_crossref_abstract(str(item.get("abstract") or "")),
+                    doi=str(item.get("DOI") or ""),
+                    url=str(item.get("URL") or ""),
+                    provider=self.name,
+                    citation_count=_coerce_int(item.get("is-referenced-by-count")),
+                    pdf_candidates=pdf_candidates,
+                )
+            )
+        return records
+
+
+class OpenAlexProvider(HTTPProvider):
+    name = "openalex"
+
+    def __init__(
+        self,
+        api_key: str = "",
+        email: str | None = None,
+        fetcher: JsonFetcher | None = None,
+        key_pool: KeyPool | None = None,
+    ):
+        super().__init__(fetcher=fetcher)
+        # api_key kept for back-compat constructors/tests; pool is the source of truth.
+        if key_pool is not None:
+            self._pool = key_pool
+        elif api_key:
+            self._pool = KeyPool(name="openalex", keys=(api_key,))
+        else:
+            self._pool = openalex_pool()
+        self.api_key = self._pool.primary
+        self.email = email or ""
+
+    def _live_key(self) -> str:
+        return self._pool.get() or self._pool.primary
+
+    def search(self, query: SearchQuery) -> list[PaperRecord]:
+        params = {
+            "search": query.query,
+            "per-page": str(query.per_provider_limit or query.limit),
+        }
+        filters: list[str] = []
+        if query.year_from is not None:
+            filters.append(f"from_publication_date:{query.year_from}-01-01")
+        if query.year_to is not None:
+            filters.append(f"to_publication_date:{query.year_to}-12-31")
+        if query.subject_categories:
+            concept_ids = [
+                ARXIV_TO_OPENALEX_CONCEPT.get(c) for c in query.subject_categories
+            ]
+            concept_ids = [c for c in concept_ids if c]
+            if concept_ids:
+                filters.append(f"concepts.id:{'|'.join(concept_ids)}")
+        if filters:
+            params["filter"] = ",".join(filters)
+        if self.email:
+            params["mailto"] = self.email
+        key = self._live_key()
+        for _ in range(max(1, len(self._pool))):
+            if key:
+                params["api_key"] = key
+            url = f"https://api.openalex.org/works?{urllib.parse.urlencode(params)}"
+            try:
+                payload = self._fetch_json(url, {"Accept": "application/json"})
+                break
+            except urllib.error.HTTPError as exc:
+                if not key or exc.code not in {401, 403, 429}:
+                    raise
+                self._pool.cooldown(key, 60.0 if exc.code == 429 else 3600.0)
+                # A limited or refused key says nothing about the others: retry on the next live one.
+                other = self._pool.get()
+                if not other or other == key:
+                    raise
+                key = other
+        else:  # pragma: no cover - every iteration breaks or raises
+            raise RuntimeError("openalex key rotation exhausted")
+        results = payload.get("results") or []
+        records: list[PaperRecord] = []
+        for item in results:
+            if not isinstance(item, dict):
+                continue
+            pdf_candidates = _openalex_pdf_candidates(item)
+            primary_location = item.get("primary_location") or {}
+            landing = primary_location.get("landing_page_url") or item.get("doi") or ""
+            records.append(
+                PaperRecord(
+                    title=str(item.get("title") or ""),
+                    authors=[
+                        author.get("author", {}).get("display_name", "")
+                        for author in item.get("authorships") or []
+                        if isinstance(author, dict)
+                        and author.get("author", {}).get("display_name")
+                    ],
+                    affiliations=_openalex_affiliations(item),
+                    year=_coerce_year(item.get("publication_year")),
+                    venue=str(
+                        (primary_location.get("source") or {}).get("display_name") or ""
+                    ),
+                    abstract=_openalex_abstract(item),
+                    doi=_normalize_doi(str(item.get("doi") or "")),
+                    openalex_id=str(item.get("id") or "").rsplit("/", 1)[-1],
+                    url=str(landing),
+                    provider=self.name,
+                    citation_count=_coerce_int(item.get("cited_by_count")),
+                    pdf_candidates=pdf_candidates,
+                    concepts=_openalex_concepts(item),
+                )
+            )
+        return records
+
+    def _common_params(self) -> dict[str, str]:
+        params: dict[str, str] = {}
+        if self.email:
+            params["mailto"] = self.email
+        key = self._live_key()
+        if key:
+            params["api_key"] = key
+        return params
+
+    def get_work(self, openalex_id: str) -> PaperRecord | None:
+        """Fetch a single work by OpenAlex ID with full metadata."""
+        oa_id = openalex_id if openalex_id.startswith("W") else f"W{openalex_id}"
+        params = self._common_params()
+        url = f"https://api.openalex.org/works/{oa_id}"
+        if params:
+            url += f"?{urllib.parse.urlencode(params)}"
+        try:
+            item = self._fetch_json(url, {"Accept": "application/json"})
+        except Exception:
+            return None
+        if not isinstance(item, dict) or not item.get("id"):
+            return None
+        pdf_candidates = _openalex_pdf_candidates(item)
+        primary_location = item.get("primary_location") or {}
+        landing = primary_location.get("landing_page_url") or item.get("doi") or ""
+        return PaperRecord(
+            title=str(item.get("title") or ""),
+            authors=[
+                a.get("author", {}).get("display_name", "")
+                for a in item.get("authorships") or []
+                if isinstance(a, dict) and a.get("author", {}).get("display_name")
+            ],
+            affiliations=_openalex_affiliations(item),
+            year=_coerce_year(item.get("publication_year")),
+            venue=str((primary_location.get("source") or {}).get("display_name") or ""),
+            abstract=_openalex_abstract(item),
+            doi=_normalize_doi(str(item.get("doi") or "")),
+            openalex_id=str(item.get("id") or "").rsplit("/", 1)[-1],
+            url=str(landing),
+            provider=self.name,
+            citation_count=_coerce_int(item.get("cited_by_count")),
+            pdf_candidates=pdf_candidates,
+            concepts=_openalex_concepts(item),
+        )
+
+    def resolve_doi(self, doi: str) -> str | None:
+        """Resolve a DOI to an OpenAlex Work ID (W...)."""
+        clean = (
+            doi.strip().removeprefix("https://doi.org/").removeprefix("http://doi.org/")
+        )
+        if not clean:
+            return None
+        params = self._common_params()
+        url = f"https://api.openalex.org/works/doi:{clean}"
+        if params:
+            url += f"?{urllib.parse.urlencode(params)}"
+        try:
+            item = self._fetch_json(url, {"Accept": "application/json"})
+        except Exception:
+            return None
+        if not isinstance(item, dict):
+            return None
+        oa_url = str(item.get("id") or "")
+        return oa_url.rsplit("/", 1)[-1] if oa_url else None
+
+    def cited_by(self, openalex_id: str, limit: int = 100) -> list[PaperRecord]:
+        """Fetch papers that cite the given work, paginating up to limit."""
+        oa_id = openalex_id if openalex_id.startswith("W") else f"W{openalex_id}"
+        per_page = 50
+        results: list[PaperRecord] = []
+        page = 1
+        while len(results) < limit:
+            params = self._common_params()
+            params["filter"] = f"cites:{oa_id}"
+            params["per-page"] = str(per_page)
+            params["sort"] = "cited_by_count:desc"
+            params["page"] = str(page)
+            url = f"https://api.openalex.org/works?{urllib.parse.urlencode(params)}"
+            try:
+                payload = self._fetch_json(url, {"Accept": "application/json"})
+            except Exception:
+                break
+            batch = self._parse_results(payload.get("results") or [])
+            if not batch:
+                break
+            results.extend(batch)
+            page += 1
+        return results[:limit]
+
+    def venue_papers(
+        self,
+        venue_name: str,
+        year_from: int | None = None,
+        limit: int = 25,
+    ) -> list[PaperRecord]:
+        """Fetch recent papers from a specific venue."""
+        # First resolve venue name to source ID
+        v_params = self._common_params()
+        v_params["search"] = venue_name
+        v_url = f"https://api.openalex.org/sources?{urllib.parse.urlencode(v_params)}"
+        try:
+            v_payload = self._fetch_json(v_url, {"Accept": "application/json"})
+        except Exception:
+            return []
+        sources = v_payload.get("results") or []
+        if not sources:
+            return []
+        source_id = str(sources[0].get("id") or "").rsplit("/", 1)[-1]
+        if not source_id:
+            return []
+
+        # Fetch papers from that source
+        params = self._common_params()
+        filters = [f"primary_location.source.id:{source_id}"]
+        if year_from:
+            filters.append(f"from_publication_date:{year_from}-01-01")
+        params["filter"] = ",".join(filters)
+        params["per-page"] = str(min(limit, 50))
+        params["sort"] = "cited_by_count:desc"
+        url = f"https://api.openalex.org/works?{urllib.parse.urlencode(params)}"
+        try:
+            payload = self._fetch_json(url, {"Accept": "application/json"})
+        except Exception:
+            return []
+        return self._parse_results(payload.get("results") or [])
+
+    def _parse_results(self, results: list) -> list[PaperRecord]:
+        records: list[PaperRecord] = []
+        for item in results:
+            if not isinstance(item, dict):
+                continue
+            pdf_candidates = _openalex_pdf_candidates(item)
+            primary_location = item.get("primary_location") or {}
+            landing = primary_location.get("landing_page_url") or item.get("doi") or ""
+            records.append(
+                PaperRecord(
+                    title=str(item.get("title") or ""),
+                    authors=[
+                        a.get("author", {}).get("display_name", "")
+                        for a in item.get("authorships") or []
+                        if isinstance(a, dict)
+                        and a.get("author", {}).get("display_name")
+                    ],
+                    affiliations=_openalex_affiliations(item),
+                    year=_coerce_year(item.get("publication_year")),
+                    venue=str(
+                        (primary_location.get("source") or {}).get("display_name") or ""
+                    ),
+                    abstract=_openalex_abstract(item),
+                    doi=_normalize_doi(str(item.get("doi") or "")),
+                    openalex_id=str(item.get("id") or "").rsplit("/", 1)[-1],
+                    url=str(landing),
+                    provider=self.name,
+                    citation_count=_coerce_int(item.get("cited_by_count")),
+                    pdf_candidates=pdf_candidates,
+                    concepts=_openalex_concepts(item),
+                )
+            )
+        return records
+
+
+class SemanticScholarProvider(HTTPProvider):
+    """Semantic Scholar provider with built-in rate limiter.
+
+    Free tier: ~1 req/s.  Keyed tier: ~10 req/s.
+    The rate limiter sleeps *before* each request to prevent 429s,
+    which is cheaper than hitting 429 → backoff → circuit breaker trip.
+    """
+
+    name = "semantic_scholar"
+
+    FIELDS = ",".join(
+        [
+            "paperId",
+            "title",
+            "authors",
+            "authors.affiliations",
+            "year",
+            "venue",
+            "abstract",
+            "externalIds",
+            "url",
+            "citationCount",
+            "openAccessPdf",
+        ]
+    )
+
+    def __init__(
+        self,
+        api_key: str = "",
+        fetcher: JsonFetcher | None = None,
+        key_pool: KeyPool | None = None,
+    ):
+        super().__init__(fetcher=fetcher)
+        if key_pool is not None:
+            self._pool = key_pool
+        elif api_key:
+            self._pool = KeyPool(name="semantic_scholar", keys=(api_key,))
+        else:
+            self._pool = semantic_scholar_pool()
+        self.api_key = self._pool.primary
+        # S2 allows 1 request/s per API key ("introductory rate limit ... 1 RPS on all endpoints",
+        # semanticscholar.org/product/api). The pace clock is per key, so a pool of N keys
+        # rotates to about N requests/s without any one key exceeding its limit.
+        self._min_interval = 1.05
+
+    def _live_key(self) -> str:
+        return self._pool.get() or self._pool.primary
+
+    def _rate_limited_fetch(
+        self, url: str, headers: dict[str, str] | None = None
+    ) -> Any:
+        """Fetch with pre-request rate limiting to prevent 429s."""
+        # One clock per host for the free tier (limited per address); one per key once keyed, since S2
+        # limits a key, and seats with different keys must not share a clock.
+        headers = dict(headers or {})
+        # Use a more lenient circuit breaker for S2 (429 = rate limit, not outage)
+        breaker = get_breaker(self.name, _S2_BREAKER_CONFIG)
+        for _ in range(max(1, len(self._pool))):
+            key = headers.get("x-api-key", "")
+            pace(
+                "semantic_scholar"
+                + (f"-{hashlib.sha256(key.encode()).hexdigest()[:12]}" if key else ""),
+                self._min_interval,
+            )
+            try:
+                return breaker.call(self._fetcher, url, headers)
+            except urllib.error.HTTPError as exc:
+                if not key or exc.code not in {401, 403, 429}:
+                    raise
+                self._pool.cooldown(key, 60.0 if exc.code == 429 else 3600.0)
+                # A limited or refused key says nothing about the others: retry on the next live one.
+                other = self._pool.get()
+                if not other or other == key:
+                    raise
+                headers["x-api-key"] = other
+        raise RuntimeError(
+            "semantic scholar key rotation exhausted"
+        )  # pragma: no cover
+
+    def search(self, query: SearchQuery) -> list[PaperRecord]:
+        params = {
+            "query": query.query,
+            "limit": str(query.per_provider_limit or query.limit),
+            "fields": self.FIELDS,
+        }
+        if query.year_from is not None or query.year_to is not None:
+            start = query.year_from or 1900
+            end = query.year_to or 2100
+            params["year"] = f"{start}-{end}"
+        if query.subject_categories:
+            # S2 doesn't store arxiv subcategories reliably — scope to CS at the
+            # field-of-study level and let the aggregator dedup/rank downstream.
+            cs_cats = [c for c in query.subject_categories if c.startswith("cs.")]
+            if cs_cats:
+                params["fieldsOfStudy"] = "Computer Science"
+        url = f"https://api.semanticscholar.org/graph/v1/paper/search?{urllib.parse.urlencode(params)}"
+        headers = {"Accept": "application/json"}
+        key = self._live_key()
+        if key:
+            headers["x-api-key"] = key
+        payload = self._rate_limited_fetch(url, headers)
+        data = payload.get("data") or []
+        records: list[PaperRecord] = []
+        for item in data:
+            if not isinstance(item, dict):
+                continue
+            open_access = item.get("openAccessPdf") or {}
+            pdf_candidates: list[PDFCandidate] = []
+            if isinstance(open_access, dict) and open_access.get("url"):
+                pdf_candidates.append(
+                    PDFCandidate(
+                        url=str(open_access["url"]),
+                        source_type="open_access_pdf",
+                        provider=self.name,
+                        confidence=0.9,
+                    )
+                )
+            external_ids = item.get("externalIds") or {}
+            records.append(
+                PaperRecord(
+                    title=str(item.get("title") or ""),
+                    authors=[
+                        author.get("name", "")
+                        for author in item.get("authors") or []
+                        if isinstance(author, dict) and author.get("name")
+                    ],
+                    affiliations=_s2_affiliations(item.get("authors") or []),
+                    year=_coerce_year(item.get("year")),
+                    venue=str(item.get("venue") or ""),
+                    abstract=str(item.get("abstract") or ""),
+                    doi=str(external_ids.get("DOI") or ""),
+                    arxiv_id=str(external_ids.get("ArXiv") or ""),
+                    s2_id=str(item.get("paperId") or ""),
+                    url=str(item.get("url") or ""),
+                    provider=self.name,
+                    citation_count=_coerce_int(item.get("citationCount")),
+                    pdf_candidates=pdf_candidates,
+                )
+            )
+        return records
+
+    def get_references(self, paper_id: str, limit: int = 50) -> list[PaperRecord]:
+        """Fetch papers referenced by this paper (backward expansion)."""
+        fields = "paperId,title,authors,year,venue,abstract,externalIds,citationCount,openAccessPdf"
+        params = {"fields": fields, "limit": str(min(limit, 1000))}
+        url = f"https://api.semanticscholar.org/graph/v1/paper/{paper_id}/references?{urllib.parse.urlencode(params)}"
+        headers = {"Accept": "application/json"}
+        key = self._live_key()
+        if key:
+            headers["x-api-key"] = key
+        try:
+            payload = self._rate_limited_fetch(url, headers)
+        except Exception:
+            return []
+        return [
+            self._cited_paper_to_record(item.get("citedPaper") or {})
+            for item in payload.get("data") or []
+            if item.get("citedPaper")
+        ]
+
+    def get_citations(self, paper_id: str, limit: int = 50) -> list[PaperRecord]:
+        """Fetch papers that cite this paper (forward expansion)."""
+        fields = "paperId,title,authors,year,venue,abstract,externalIds,citationCount,openAccessPdf"
+        params = {"fields": fields, "limit": str(min(limit, 1000))}
+        url = f"https://api.semanticscholar.org/graph/v1/paper/{paper_id}/citations?{urllib.parse.urlencode(params)}"
+        headers = {"Accept": "application/json"}
+        key = self._live_key()
+        if key:
+            headers["x-api-key"] = key
+        try:
+            payload = self._rate_limited_fetch(url, headers)
+        except Exception:
+            return []
+        return [
+            self._cited_paper_to_record(item.get("citingPaper") or {})
+            for item in payload.get("data") or []
+            if item.get("citingPaper")
+        ]
+
+    def _cited_paper_to_record(self, item: dict) -> PaperRecord:
+        if not isinstance(item, dict):
+            return PaperRecord()
+        external_ids = item.get("externalIds") or {}
+        open_access = item.get("openAccessPdf") or {}
+        pdf_candidates: list[PDFCandidate] = []
+        if isinstance(open_access, dict) and open_access.get("url"):
+            pdf_candidates.append(
+                PDFCandidate(
+                    url=str(open_access["url"]),
+                    source_type="open_access_pdf",
+                    provider=self.name,
+                    confidence=0.9,
+                )
+            )
+        return PaperRecord(
+            title=str(item.get("title") or ""),
+            authors=[
+                a.get("name", "")
+                for a in item.get("authors") or []
+                if isinstance(a, dict) and a.get("name")
+            ],
+            affiliations=_s2_affiliations(item.get("authors") or []),
+            year=_coerce_year(item.get("year")),
+            venue=str(item.get("venue") or ""),
+            abstract=str(item.get("abstract") or ""),
+            doi=str(external_ids.get("DOI") or ""),
+            arxiv_id=str(external_ids.get("ArXiv") or ""),
+            s2_id=str(item.get("paperId") or ""),
+            provider=self.name,
+            citation_count=_coerce_int(item.get("citationCount")),
+            pdf_candidates=pdf_candidates,
+        )
+
+
+class OpenReviewProvider(HTTPProvider):
+    name = "openreview"
+
+    def __init__(
+        self,
+        base_url: str = "https://api2.openreview.net",
+        access_token: str = "",
+        fetcher: JsonFetcher | None = None,
+    ):
+        super().__init__(fetcher=fetcher)
+        self.base_url = base_url.rstrip("/")
+        self.access_token = access_token
+
+    def search(self, query: SearchQuery) -> list[PaperRecord]:
+        # api2 /notes/search takes `term`; since 2026-09 it answers `query=` with 400
+        # "request requires at least one of term, terms" on every request.
+        params = {
+            "term": query.query,
+            "content": "title",
+            "limit": str(query.limit),
+            "source": "forum",
+        }
+        url = f"{self.base_url}/notes/search?{urllib.parse.urlencode(params)}"
+        headers = {"Accept": "application/json"}
+        if self.access_token:
+            headers["Authorization"] = f"Bearer {self.access_token}"
+        payload = self._fetch_json(url, headers)
+        notes = payload.get("notes") or []
+        records: list[PaperRecord] = []
+        for item in notes:
+            if not isinstance(item, dict):
+                continue
+            content = item.get("content") or {}
+            openreview_id = str(item.get("forum") or item.get("id") or "")
+            title = _content_text(content.get("title"))
+            abstract = _content_text(content.get("abstract"))
+            authors = _content_list(content.get("authors"))
+            venue = _content_text(content.get("venue"))
+            year = _openreview_year(item, content)
+            if query.year_from is not None and (year is None or year < query.year_from):
+                continue
+            if query.year_to is not None and (year is None or year > query.year_to):
+                continue
+            pdf_candidates = []
+            pdf_url = _openreview_pdf_url(content, openreview_id)
+            if openreview_id:
+                pdf_candidates.append(
+                    PDFCandidate(
+                        url=pdf_url,
+                        source_type="openreview_pdf",
+                        provider=self.name,
+                        confidence=0.9,
+                    )
+                )
+            records.append(
+                PaperRecord(
+                    title=title,
+                    authors=authors,
+                    abstract=abstract,
+                    venue=venue,
+                    year=year,
+                    openreview_id=openreview_id,
+                    url=f"https://openreview.net/forum?id={openreview_id}"
+                    if openreview_id
+                    else "",
+                    provider=self.name,
+                    pdf_candidates=pdf_candidates,
+                )
+            )
+        return records
+
+
+class ArxivProvider:
+    name = "arxiv"
+
+    def __init__(self, fetcher: TextFetcher | None = None):
+        self._fetcher = fetcher or default_text_fetcher
+        self._min_interval = float(os.environ.get("ARXIV_MIN_INTERVAL_SEC", "3.1"))
+
+    def search(self, query: SearchQuery) -> list[PaperRecord]:
+        from research_harness.retrieval_hygiene import arxiv_query_forms
+
+        cat_prefix = ""
+        if query.subject_categories:
+            cat_clause = " OR ".join(f"cat:{c}" for c in query.subject_categories)
+            cat_prefix = f"({cat_clause}) AND "
+        limit = int(query.per_provider_limit or query.limit)
+        ns = {
+            "atom": "http://www.w3.org/2005/Atom",
+            "arxiv": "http://arxiv.org/schemas/atom",
+        }
+        records: list[PaperRecord] = []
+        seen: set[str] = set()
+        breaker = get_breaker(self.name)
+        # Union phrase + token-AND forms so multi-word queries do not collapse (E2).
+        for form in arxiv_query_forms(query.query):
+            search_query_str = f"{cat_prefix}({form})" if cat_prefix else form
+            params = {
+                "search_query": search_query_str,
+                "start": "0",
+                "max_results": str(limit),
+                "sortBy": "relevance",
+                "sortOrder": "descending",
+            }
+            url = f"https://export.arxiv.org/api/query?{urllib.parse.urlencode(params)}"
+            self._wait_for_rate_limit()
+            payload = breaker.call(
+                self._fetcher, url, {"Accept": "application/atom+xml"}
+            )
+            root = _safe_fromstring(payload)
+            for entry in root.findall("atom:entry", ns):
+                title = _xml_text(entry.find("atom:title", ns))
+                abstract = _xml_text(entry.find("atom:summary", ns))
+                published = _xml_text(entry.find("atom:published", ns))
+                year = _coerce_year(published[:4]) if published else None
+                if query.year_from is not None and (
+                    year is None or year < query.year_from
+                ):
+                    continue
+                if query.year_to is not None and (year is None or year > query.year_to):
+                    continue
+                authors = [
+                    _xml_text(item.find("atom:name", ns))
+                    for item in entry.findall("atom:author", ns)
+                ]
+                authors = [item for item in authors if item]
+                entry_id = _xml_text(entry.find("atom:id", ns))
+                arxiv_id = (
+                    entry_id.rsplit("/abs/", 1)[-1] if "/abs/" in entry_id else ""
+                )
+                key = arxiv_id or entry_id
+                if not key or key in seen:
+                    continue
+                seen.add(key)
+                doi = _xml_text(entry.find("arxiv:doi", ns))
+                pdf_candidates: list[PDFCandidate] = []
+                for link in entry.findall("atom:link", ns):
+                    href = link.attrib.get("href", "")
+                    title_attr = link.attrib.get("title", "")
+                    if href and (title_attr == "pdf" or href.endswith(".pdf")):
+                        pdf_candidates.append(
+                            PDFCandidate(
+                                url=href,
+                                source_type="arxiv_pdf",
+                                provider=self.name,
+                                confidence=0.98,
+                            )
+                        )
+                records.append(
+                    PaperRecord(
+                        title=title,
+                        authors=authors,
+                        year=year,
+                        venue="arXiv",
+                        abstract=abstract,
+                        doi=doi,
+                        arxiv_id=arxiv_id,
+                        url=entry_id,
+                        provider=self.name,
+                        pdf_candidates=pdf_candidates,
+                    )
+                )
+                if len(records) >= limit:
+                    return records
+        return records
+
+    def _wait_for_rate_limit(self) -> None:
+        pace("arxiv", self._min_interval)
+
+
+class PubMedProvider:
+    """PubMed search provider backed by NCBI E-utilities.
+
+    The provider uses ESearch to retrieve PMIDs and EFetch to load article
+    metadata. It intentionally avoids a Biopython dependency so RH can keep its
+    existing standard-library provider stack.
+    """
+
+    name = "pubmed"
+    base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+
+    def __init__(
+        self,
+        api_key: str = "",
+        email: str = "",
+        tool: str = "research_harness",
+        fetcher: TextFetcher | None = None,
+    ):
+        self.api_key = api_key
+        self.email = email
+        self.tool = tool
+        self._fetcher = fetcher or default_text_fetcher
+        # NCBI asks clients without an API key to stay under 3 requests/sec;
+        # API keys raise that ceiling. Keep a small safety margin.
+        default_interval = "0.12" if api_key else "0.34"
+        self._min_interval = float(
+            os.environ.get("PUBMED_MIN_INTERVAL_SEC", default_interval)
+        )
+
+    def search(self, query: SearchQuery) -> list[PaperRecord]:
+        ids = self._search_pmids(query)
+        if not ids:
+            return []
+        return self._fetch_records(ids)
+
+    def fetch_by_pmid(self, pmid: str) -> PaperRecord | None:
+        clean = re.sub(r"\D+", "", pmid or "")
+        if not clean:
+            return None
+        records = self._fetch_records([clean])
+        return records[0] if records else None
+
+    def fetch_by_doi(self, doi: str) -> PaperRecord | None:
+        clean = _normalize_doi(doi)
+        if not clean:
+            return None
+        query = SearchQuery(query=f"{clean}[AID]", limit=3, per_provider_limit=3)
+        ids = self._search_pmids(query)
+        if not ids:
+            return None
+        records = self._fetch_records(ids)
+        clean_lower = clean.lower()
+        # The [AID] search is fuzzy: a record for another DOI is another paper, and taking it
+        # would write that paper's title and authors into this row.
+        for record in records:
+            if _normalize_doi(record.doi).lower() == clean_lower:
+                return record
+        return None
+
+    def _search_pmids(self, query: SearchQuery) -> list[str]:
+        params = {
+            "db": "pubmed",
+            "term": self._query_term(query),
+            "retmode": "xml",
+            "retmax": str(query.per_provider_limit or query.limit),
+            "sort": "relevance",
+            **self._common_params(),
+        }
+        url = f"{self.base_url}/esearch.fcgi?{urllib.parse.urlencode(params)}"
+        root = self._fetch_xml(url)
+        return [
+            text
+            for text in (_xml_text(item) for item in root.findall(".//IdList/Id"))
+            if text
+        ]
+
+    def _fetch_records(self, pmids: list[str]) -> list[PaperRecord]:
+        params = {
+            "db": "pubmed",
+            "id": ",".join(pmids),
+            "retmode": "xml",
+            **self._common_params(),
+        }
+        url = f"{self.base_url}/efetch.fcgi?{urllib.parse.urlencode(params)}"
+        root = self._fetch_xml(url)
+        return [
+            record
+            for record in (
+                _pubmed_article_to_record(article)
+                for article in root.findall(".//PubmedArticle")
+            )
+            if record.title
+        ]
+
+    def _common_params(self) -> dict[str, str]:
+        params = {"tool": self.tool}
+        if self.email:
+            params["email"] = self.email
+        if self.api_key:
+            params["api_key"] = self.api_key
+        return params
+
+    def _query_term(self, query: SearchQuery) -> str:
+        parts = [query.query]
+        if query.year_from is not None or query.year_to is not None:
+            start = query.year_from or 1800
+            end = query.year_to or 3000
+            parts.append(f"{start}:{end}[pdat]")
+        return " AND ".join(part for part in parts if part)
+
+    def _fetch_xml(self, url: str) -> ET.Element:
+        breaker = get_breaker(self.name)
+        self._wait_for_rate_limit()
+        payload = breaker.call(self._fetcher, url, {"Accept": "application/xml"})
+        return _safe_fromstring(payload)
+
+    def _wait_for_rate_limit(self) -> None:
+        pace("pubmed", self._min_interval)
+
+
+class PASAProvider:
+    """PASA (Paper Search Agent) — public preprint search via pasa-agent.ai.
+
+    Async polling API: submit query, poll for results. Placed last in the
+    provider suite as a high-recall fallback for preprints.
+    """
+
+    name = "pasa"
+
+    def __init__(
+        self,
+        base_url: str = "",
+        timeout: float = 30.0,
+        poll_interval: float = 2.0,
+        max_polls: int = 30,
+        time_budget: float | None = None,
+    ) -> None:
+        self.base_url = (
+            base_url or os.environ.get("PASA_BASE_URL", "https://pasa-agent.ai")
+        ).rstrip("/")
+        self.timeout = timeout
+        self.poll_interval = poll_interval
+        self.max_polls = max_polls
+        if time_budget is None:
+            raw = os.environ.get("PASA_TIME_BUDGET_SEC", "").strip()
+            try:
+                time_budget = float(raw) if raw else 20.0
+            except ValueError:
+                time_budget = 20.0
+        # Wall-clock cap on one PASA search (submit + polling). PASA is a
+        # last-resort fallback; SSL EOF retry loops must not dominate the
+        # provider fan-out. Set PASA_TIME_BUDGET_SEC=0 to disable.
+        self.time_budget = time_budget
+        self._submit_path = "/paper-agent/api/v1/single_paper_agent"
+        self._result_path = "/paper-agent/api/v1/single_get_result"
+
+    def search(self, query: SearchQuery) -> list[PaperRecord]:
+        import time
+        import random
+
+        deadline = (
+            time.monotonic() + self.time_budget
+            if self.time_budget and self.time_budget > 0
+            else None
+        )
+        session_id = f"{int(time.time() * 1000)}{random.randint(100000, 999999)}"
+        # Submit query
+        submit_payload = {
+            "user_query": query.query,
+            "session_id": session_id,
+            "top_k": query.limit,
+        }
+        try:
+            self._post_json(self._submit_path, submit_payload)
+        except Exception:
+            return []
+
+        # Poll for results
+        all_items: dict[str, dict] = {}
+        stable_polls = 0
+
+        for _ in range(self.max_polls):
+            if deadline is not None and time.monotonic() >= deadline:
+                break
+            try:
+                response = self._post_json(
+                    self._result_path, {"session_id": session_id}
+                )
+            except Exception:
+                break
+
+            items = self._extract_items(response)
+            if items:
+                prev_count = len(all_items)
+                for item in items:
+                    key = self._item_key(item)
+                    all_items.setdefault(key, item)
+                stable_polls = 0 if len(all_items) > prev_count else stable_polls + 1
+                finished = self._is_finished(response)
+                if finished or (all_items and stable_polls >= 1):
+                    break
+            time.sleep(self.poll_interval)
+
+        records: list[PaperRecord] = []
+        for item in all_items.values():
+            record = self._to_paper_record(item)
+            if record.title:
+                if query.year_from and record.year and record.year < query.year_from:
+                    continue
+                if query.year_to and record.year and record.year > query.year_to:
+                    continue
+                records.append(record)
+        return records[: query.limit]
+
+    def _post_json(self, path: str, payload: dict) -> dict:
+        url = f"{self.base_url}{path}"
+        data = json.dumps(payload).encode("utf-8")
+        breaker = get_breaker(self.name)
+        # Single retry only: PASA failures here are typically SSL EOF loops,
+        # and the fallback provider must stay cheap when unhealthy.
+        return breaker.call(
+            _fetch_with_retry,
+            url,
+            {"Content-Type": "application/json", "Accept": "application/json"},
+            lambda raw: json.loads(raw.decode("utf-8")),
+            max_retries=1,
+            data=data,
+            method="POST",
+            timeout=self.timeout,
+        )
+
+    def _extract_items(self, response: Any) -> list[dict]:
+        if not isinstance(response, dict):
+            return []
+        for key in ("papers", "paper_list", "results", "items", "data"):
+            value = response.get(key)
+            if isinstance(value, str):
+                try:
+                    value = json.loads(value)
+                except (json.JSONDecodeError, TypeError):
+                    continue
+            if isinstance(value, dict) and value:
+                return [v for v in value.values() if isinstance(v, dict)]
+            if isinstance(value, list) and value:
+                return [v for v in value if isinstance(v, dict)]
+        return []
+
+    @staticmethod
+    def _is_finished(response: Any) -> bool:
+        if not isinstance(response, dict):
+            return False
+        if response.get("finish") is True:
+            return True
+        status = str(response.get("status", "")).strip().lower()
+        return status in {"done", "completed", "complete", "finished", "success"}
+
+    @staticmethod
+    def _item_key(item: dict) -> str:
+        title = str(item.get("title") or item.get("paper_title") or "").strip().lower()
+        link = str(
+            item.get("link") or item.get("url") or item.get("paper_url") or ""
+        ).strip()
+        return f"{title}||{link}"
+
+    def _to_paper_record(self, item: dict) -> PaperRecord:
+        # Unpack nested json_result if present
+        json_result = item.get("json_result")
+        if isinstance(json_result, str):
+            try:
+                json_result = json.loads(json_result)
+            except (json.JSONDecodeError, TypeError):
+                json_result = None
+        if isinstance(json_result, dict):
+            item = {**item, **json_result}
+
+        title = str(
+            item.get("title") or item.get("paper_title") or item.get("name") or ""
+        ).strip()
+        authors_raw = (
+            item.get("authors") or item.get("author_list") or item.get("creator")
+        )
+        abstract = str(item.get("abstract") or item.get("summary") or "").strip()
+        venue = str(
+            item.get("venue") or item.get("journal") or item.get("conference") or ""
+        ).strip()
+        year = _coerce_year(
+            item.get("year") or item.get("published_year") or item.get("publish_time")
+        )
+        doi = str(item.get("doi") or "").strip()
+        arxiv_id = str(item.get("arxiv_id") or item.get("arxiv") or "").strip()
+
+        # Try to extract arxiv_id from URL
+        if not arxiv_id:
+            for url_key in ("link", "url", "paper_url"):
+                link = str(item.get(url_key) or "").strip()
+                if "/abs/" in link:
+                    arxiv_id = link.split("/abs/", 1)[1].rstrip("/")
+                    break
+
+        paper_url = str(
+            item.get("paper_url") or item.get("url") or item.get("link") or ""
+        ).strip()
+
+        pdf_candidates: list[PDFCandidate] = []
+        pdf_url = str(item.get("pdf_url") or item.get("pdf") or "").strip()
+        if pdf_url:
+            pdf_candidates.append(
+                PDFCandidate(
+                    url=pdf_url,
+                    source_type="open_access_pdf",
+                    provider=self.name,
+                    confidence=0.7,
+                )
+            )
+        if arxiv_id:
+            clean_id = arxiv_id.removesuffix(".pdf").strip("/")
+            pdf_candidates.append(
+                PDFCandidate(
+                    url=f"https://arxiv.org/pdf/{clean_id}.pdf",
+                    source_type="arxiv_pdf",
+                    provider=self.name,
+                    confidence=0.95,
+                )
+            )
+
+        return PaperRecord(
+            title=title,
+            authors=_coerce_authors(authors_raw),
+            year=year,
+            venue=venue,
+            abstract=abstract,
+            doi=doi,
+            arxiv_id=arxiv_id,
+            url=paper_url,
+            provider=self.name,
+            pdf_candidates=pdf_candidates,
+        )
+
+
+class SPCProvider:
+    """Production SPC owns scholarly upstream discovery on every host."""
+
+    name = "spc"
+
+    def _lookup(self, identifier: str, kind: str) -> PaperRecord:
+        from .acquisition.spc_bridge import spc_lookup
+
+        data = spc_lookup(identifier, kind=kind)
+        identifiers = data.get("paper") or data.get("identifiers") or data
+        citation = data.get("citation") or identifiers
+        venue = citation.get("venue") or ""
+        if isinstance(venue, dict):
+            venue = venue.get("name") or ""
+        year = citation.get("year") or str(citation.get("publication_date") or "")[:4]
+        return PaperRecord(
+            title=str(citation.get("title") or ""),
+            authors=_coerce_authors(citation.get("authors")),
+            year=_coerce_year(year),
+            venue=str(venue),
+            doi=str(identifiers.get("doi") or ""),
+            arxiv_id=str(identifiers.get("arxiv_id") or ""),
+            pmid=str(identifiers.get("pubmed_id") or identifiers.get("pmid") or ""),
+            pmcid=str(identifiers.get("pmc_id") or identifiers.get("pmcid") or ""),
+            provider=self.name,
+        )
+
+    def fetch_by_pmid(self, pmid: str) -> PaperRecord:
+        return self._lookup(pmid, "pmid")
+
+    def fetch_by_doi(self, doi: str) -> PaperRecord:
+        return self._lookup(doi, "doi")
+
+    def search(self, query: SearchQuery) -> list[PaperRecord]:
+        from .acquisition.spc_bridge import spc_search
+
+        errors: list[str] = []
+        hits = spc_search(
+            query.query,
+            limit=query.per_provider_limit or query.limit,
+            min_year=query.year_from,
+            errors=errors,
+        )
+        if errors:
+            raise RuntimeError("; ".join(errors))
+        records = []
+        for hit in hits:
+            year = _coerce_year(hit.get("year"))
+            if query.year_to is not None and year is not None and year > query.year_to:
+                continue
+            records.append(
+                PaperRecord(
+                    title=str(hit["title"]),
+                    authors=_coerce_authors(hit.get("authors")),
+                    year=year,
+                    venue=str(hit.get("venue") or ""),
+                    abstract=str(hit.get("abstract") or ""),
+                    doi=str(hit.get("doi") or ""),
+                    arxiv_id=str(hit.get("arxiv_id") or ""),
+                    url=str(hit.get("url") or ""),
+                    provider=self.name,
+                    citation_count=_coerce_int(hit.get("citation_count")),
+                )
+            )
+        return records
+
+
+# Public scholarly sources queried without credentials. Keys are deliberately
+# never read: every source here works keyless at its public rate limit, so a
+# fresh checkout searches the same way on every machine.
+KEYLESS_SOURCES: tuple[tuple[str, str], ...] = (
+    ("semantic_scholar", "public Graph API, keyless rate limit"),
+    ("openalex", "public works API"),
+    ("crossref", "public REST API"),
+    ("arxiv", "public export API"),
+    ("pubmed", "NCBI E-utilities, keyless rate limit"),
+    ("openreview", "public API v2"),
+)
+
+
+def _source_enabled(name: str) -> bool:
+    """``<NAME>_ENABLE=0`` turns a keyless source off; on by default."""
+    flag = os.environ.get(f"{name.upper()}_ENABLE", "").strip().lower()
+    return flag not in {"0", "false", "no", "off"}
+
+
+def _keyless_provider(name: str, fetcher: JsonFetcher | None) -> SearchProvider:
+    no_keys = KeyPool(name=name, keys=())
+    if name == "semantic_scholar":
+        return SemanticScholarProvider(fetcher=fetcher, key_pool=no_keys)
+    if name == "openalex":
+        return OpenAlexProvider(fetcher=fetcher, key_pool=no_keys)
+    if name == "crossref":
+        return CrossrefProvider(fetcher=fetcher)
+    if name == "arxiv":
+        return ArxivProvider()
+    if name == "pubmed":
+        return PubMedProvider()
+    if name == "openreview":
+        return OpenReviewProvider(fetcher=fetcher)
+    raise ValueError(f"unknown keyless source: {name}")
+
+
+def _spc_installed() -> bool:
+    import shutil
+
+    return bool(shutil.which("spc"))
+
+
+def build_provider_suite(fetcher: JsonFetcher | None = None) -> list[SearchProvider]:
+    """Local cache, keyless public sources, and SPC when it is installed.
+
+    SPC (paperfetch) is optional: it joins the suite only when the
+    ``spc`` CLI is on PATH, and its absence is never an error.
+    """
+    from .papervault_source import PaperVaultProvider
+
+    providers: list[SearchProvider] = []
+    papervault = PaperVaultProvider()
+    if papervault.available():
+        providers.append(papervault)
+    providers.extend(
+        _keyless_provider(name, fetcher)
+        for name, _reason in KEYLESS_SOURCES
+        if _source_enabled(name)
+    )
+    if _spc_installed():
+        providers.append(SPCProvider())
+    return providers
+
+
+def available_provider_specs() -> list[ProviderSpec]:
+    from .papervault_source import PaperVaultProvider
+
+    return [
+        ProviderSpec(
+            "papervault",
+            PaperVaultProvider().available(),
+            "local cache: RESEARCH_HARNESS_PAPERVAULT_DB",
+        ),
+        *(
+            ProviderSpec(name, _source_enabled(name), reason)
+            for name, reason in KEYLESS_SOURCES
+        ),
+        ProviderSpec("spc", _spc_installed(), "optional: paperfetch CLI"),
+    ]
+
+
+def provider_status_report() -> list[dict[str, Any]]:
+    """Report exactly the sources the shared suite can select. None use keys."""
+    return [
+        {
+            "name": spec.name,
+            "enabled": spec.enabled,
+            "ready": spec.enabled,
+            "credentialed": False,
+            "reason": spec.reason,
+            "required_env": [],
+            "optional_env": (
+                [f"{spec.name.upper()}_ENABLE=0 to disable"]
+                if spec.name in dict(KEYLESS_SOURCES)
+                else []
+            ),
+        }
+        for spec in available_provider_specs()
+    ]
+
+
+def _openalex_pdf_candidates(item: dict[str, Any]) -> list[PDFCandidate]:
+    candidates: list[PDFCandidate] = []
+    ids = str(item.get("id") or "").rsplit("/", 1)
+    if ids and ids[-1]:
+        candidates.append(
+            PDFCandidate(
+                url=f"https://content.openalex.org/works/{ids[-1]}.pdf",
+                source_type="openalex_content",
+                provider="openalex",
+                confidence=0.85,
+            )
+        )
+    best_oa = item.get("best_oa_location") or {}
+    for location in [
+        best_oa,
+        item.get("primary_location") or {},
+        *(item.get("locations") or []),
+    ]:
+        if not isinstance(location, dict):
+            continue
+        pdf_url = location.get("pdf_url") or ""
+        landing_url = location.get("landing_page_url") or ""
+        if pdf_url:
+            candidates.append(
+                PDFCandidate(
+                    url=str(pdf_url),
+                    source_type="open_access_pdf",
+                    provider="openalex",
+                    confidence=0.95,
+                )
+            )
+        elif landing_url and location.get("is_oa"):
+            candidates.append(
+                PDFCandidate(
+                    url=str(landing_url),
+                    source_type="publisher_pdf",
+                    provider="openalex",
+                    confidence=0.7,
+                )
+            )
+    return _dedupe_pdf_candidates(candidates)
+
+
+def _s2_affiliations(authors: list[Any]) -> list[str]:
+    """Extract unique affiliations from Semantic Scholar author list."""
+    seen: set[str] = set()
+    result: list[str] = []
+    for author in authors:
+        if not isinstance(author, dict):
+            continue
+        for aff in author.get("affiliations") or []:
+            name = (aff if isinstance(aff, str) else "").strip()
+            if name and name not in seen:
+                seen.add(name)
+                result.append(name)
+    return result
+
+
+def _openalex_affiliations(item: dict[str, Any]) -> list[str]:
+    """Extract unique institution names from an OpenAlex work's authorships."""
+    seen: set[str] = set()
+    result: list[str] = []
+    for authorship in item.get("authorships") or []:
+        if not isinstance(authorship, dict):
+            continue
+        for inst in authorship.get("institutions") or []:
+            if not isinstance(inst, dict):
+                continue
+            name = (inst.get("display_name") or "").strip()
+            if name and name not in seen:
+                seen.add(name)
+                result.append(name)
+    return result
+
+
+def _openalex_concepts(item: dict[str, Any]) -> list[dict]:
+    """Extract hierarchical concept tags from an OpenAlex work.
+
+    Returns a list of dicts with keys: display_name, level, score.
+    Level 0 = broadest (e.g. "Computer Science"), higher = more specific.
+    """
+    raw = item.get("concepts") or item.get("topics") or []
+    concepts: list[dict] = []
+    for c in raw:
+        if not isinstance(c, dict):
+            continue
+        name = c.get("display_name") or ""
+        if not name:
+            continue
+        concepts.append(
+            {
+                "display_name": name,
+                "level": c.get("level", 0),
+                "score": round(c.get("score", 0.0), 3),
+            }
+        )
+    return concepts
+
+
+def _openalex_abstract(item: dict[str, Any]) -> str:
+    inverted = item.get("abstract_inverted_index") or {}
+    if not inverted:
+        return ""
+    size = (
+        max(
+            (max(positions) for positions in inverted.values() if positions), default=-1
+        )
+        + 1
+    )
+    if size <= 0:
+        return ""
+    tokens = [""] * size
+    for token, positions in inverted.items():
+        if not isinstance(positions, list):
+            continue
+        for pos in positions:
+            if isinstance(pos, int) and 0 <= pos < size:
+                tokens[pos] = token
+    return " ".join(token for token in tokens if token)
+
+
+def _pubmed_article_to_record(article: ET.Element) -> PaperRecord:
+    pmid = _xml_text(article.find("./MedlineCitation/PMID"))
+    pmcid = _normalize_pmcid(_pubmed_article_id(article, "pmc"))
+    title = _pubmed_text_content(article.find("./MedlineCitation/Article/ArticleTitle"))
+    pdf_candidates: list[PDFCandidate] = []
+    if pmcid:
+        pdf_candidates.extend(_pubmed_pdf_candidates(pmcid))
+    return PaperRecord(
+        title=title,
+        authors=_pubmed_authors(article),
+        year=_pubmed_year(article),
+        venue=_pubmed_venue(article),
+        abstract=_pubmed_abstract(article),
+        doi=_pubmed_article_id(article, "doi"),
+        pmid=pmid,
+        pmcid=pmcid,
+        url=f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" if pmid else "",
+        provider="pubmed",
+        pdf_candidates=pdf_candidates,
+        concepts=_pubmed_concepts(article),
+    )
+
+
+def _pubmed_authors(article: ET.Element) -> list[str]:
+    authors: list[str] = []
+    for item in article.findall("./MedlineCitation/Article/AuthorList/Author"):
+        collective = _xml_text(item.find("CollectiveName"))
+        if collective:
+            authors.append(collective)
+            continue
+        last = _xml_text(item.find("LastName"))
+        fore = _xml_text(item.find("ForeName"))
+        initials = _xml_text(item.find("Initials"))
+        name = " ".join(part for part in (fore or initials, last) if part)
+        if name:
+            authors.append(name)
+    return authors
+
+
+def _pubmed_year(article: ET.Element) -> int | None:
+    paths = [
+        "./MedlineCitation/Article/Journal/JournalIssue/PubDate/Year",
+        "./MedlineCitation/Article/ArticleDate/Year",
+        "./MedlineCitation/DateCompleted/Year",
+        "./MedlineCitation/DateRevised/Year",
+    ]
+    for path in paths:
+        year = _coerce_year(_xml_text(article.find(path)))
+        if year is not None:
+            return year
+    medline_date = _xml_text(
+        article.find(
+            "./MedlineCitation/Article/Journal/JournalIssue/PubDate/MedlineDate"
+        )
+    )
+    match = re.search(r"\b(1[0-9]{3}|2[0-9]{3})\b", medline_date)
+    return _coerce_year(match.group(1)) if match else None
+
+
+def _pubmed_venue(article: ET.Element) -> str:
+    for path in (
+        "./MedlineCitation/Article/Journal/Title",
+        "./MedlineCitation/Article/Journal/ISOAbbreviation",
+    ):
+        value = _xml_text(article.find(path))
+        if value:
+            return value
+    return ""
+
+
+def _pubmed_abstract(article: ET.Element) -> str:
+    parts: list[str] = []
+    for item in article.findall("./MedlineCitation/Article/Abstract/AbstractText"):
+        text = _pubmed_text_content(item)
+        if not text:
+            continue
+        label = (item.attrib.get("Label") or "").strip()
+        parts.append(f"{label}: {text}" if label else text)
+    return " ".join(parts)
+
+
+def _pubmed_article_id(article: ET.Element, id_type: str) -> str:
+    for item in article.findall("./PubmedData/ArticleIdList/ArticleId"):
+        if str(item.attrib.get("IdType") or "").lower() == id_type.lower():
+            return _xml_text(item)
+    return ""
+
+
+def _normalize_pmcid(value: str) -> str:
+    clean = (value or "").strip()
+    if not clean:
+        return ""
+    return clean if clean.upper().startswith("PMC") else f"PMC{clean}"
+
+
+def _pubmed_pdf_candidates(pmcid: str) -> list[PDFCandidate]:
+    return [
+        PDFCandidate(
+            url=f"https://europepmc.org/api/getPdf?pmcid={pmcid}",
+            source_type="open_access_pdf",
+            provider="pubmed",
+            confidence=0.92,
+            license_hint="Europe PMC direct PDF endpoint for PMCID open-access PDF",
+        ),
+        PDFCandidate(
+            url=f"https://europepmc.org/articles/{pmcid}?pdf=render",
+            source_type="open_access_pdf",
+            provider="pubmed",
+            confidence=0.9,
+            license_hint="Europe PMC render endpoint for PMCID open-access PDF",
+        ),
+        PDFCandidate(
+            url=f"https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id={pmcid}",
+            source_type="open_access_pdf",
+            provider="pubmed",
+            confidence=0.85,
+            license_hint="NCBI PMC OA utility; may return package/XML links",
+        ),
+        PDFCandidate(
+            url=f"https://pmc.ncbi.nlm.nih.gov/articles/{pmcid}/",
+            source_type="browser_session",
+            provider="pubmed",
+            requires_browser=True,
+            confidence=0.75,
+            license_hint="PMC full text page; downloader may extract PDF metadata",
+        ),
+    ]
+
+
+def _pubmed_concepts(article: ET.Element) -> list[dict[str, Any]]:
+    concepts: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+
+    for item in article.findall(
+        "./MedlineCitation/Article/PublicationTypeList/PublicationType"
+    ):
+        value = _pubmed_text_content(item)
+        key = ("publication_type", value.lower())
+        if value and key not in seen:
+            seen.add(key)
+            concepts.append(
+                {
+                    "source": "pubmed",
+                    "kind": "publication_type",
+                    "display_name": value,
+                }
+            )
+
+    for item in article.findall("./MedlineCitation/MeshHeadingList/MeshHeading"):
+        descriptor = item.find("DescriptorName")
+        value = _pubmed_text_content(descriptor)
+        key = ("mesh", value.lower())
+        if value and key not in seen:
+            seen.add(key)
+            concepts.append(
+                {
+                    "source": "pubmed",
+                    "kind": "mesh",
+                    "display_name": value,
+                    "major_topic": (descriptor.attrib.get("MajorTopicYN") == "Y")
+                    if descriptor is not None
+                    else False,
+                }
+            )
+        for qualifier in item.findall("QualifierName"):
+            qualifier_value = _pubmed_text_content(qualifier)
+            qualifier_key = ("mesh_qualifier", qualifier_value.lower())
+            if qualifier_value and qualifier_key not in seen:
+                seen.add(qualifier_key)
+                concepts.append(
+                    {
+                        "source": "pubmed",
+                        "kind": "mesh_qualifier",
+                        "display_name": qualifier_value,
+                        "major_topic": qualifier.attrib.get("MajorTopicYN") == "Y",
+                    }
+                )
+
+    return concepts
+
+
+def _pubmed_text_content(element: ET.Element | None) -> str:
+    if element is None:
+        return ""
+    return " ".join(part.strip() for part in element.itertext() if part.strip())
+
+
+def _normalize_doi(value: str) -> str:
+    cleaned = value.strip()
+    if cleaned.startswith("https://doi.org/"):
+        return cleaned.removeprefix("https://doi.org/")
+    if cleaned.startswith("http://doi.org/"):
+        return cleaned.removeprefix("http://doi.org/")
+    if cleaned.lower().startswith("doi:"):
+        return cleaned.split(":", 1)[1].strip()
+    return cleaned
+
+
+def _google_scholar_summary(value: Any) -> str:
+    if isinstance(value, dict):
+        return str(value.get("summary") or "")
+    return ""
+
+
+def _google_scholar_summary_year(value: Any) -> int | None:
+    summary = _google_scholar_summary(value)
+    years = [int(item) for item in re.findall(r"\b(19\d{2}|20\d{2})\b", summary)]
+    return years[-1] if years else None
+
+
+def _google_scholar_summary_venue(value: Any) -> str:
+    summary = _google_scholar_summary(value)
+    if " - " not in summary:
+        return ""
+    after_dash = summary.split(" - ", 1)[1]
+    before_year = re.split(r",\s*(?:19|20)\d{2}\b", after_dash, maxsplit=1)[0]
+    return before_year.strip()
+
+
+def _openreview_year(item: dict[str, Any], content: dict[str, Any]) -> int | None:
+    for key in ("year", "publication_year"):
+        year = _coerce_year(_content_text(content.get(key)) or content.get(key))
+        if year is not None:
+            return year
+    for key in ("pdate", "cdate", "odate"):
+        raw = item.get(key)
+        if isinstance(raw, (int, float)) and raw > 10_000_000_000:
+            return _coerce_year(time.gmtime(raw / 1000).tm_year)
+        year = _coerce_year(raw)
+        if year is not None:
+            return year
+    return None
+
+
+def _openreview_pdf_url(content: dict[str, Any], openreview_id: str) -> str:
+    raw = _content_text(content.get("pdf"))
+    if raw:
+        if raw.startswith("http://") or raw.startswith("https://"):
+            return raw
+        if raw.startswith("/"):
+            return f"https://openreview.net{raw}"
+    return f"https://openreview.net/pdf?id={openreview_id}"
+
+
+def _content_text(value: Any) -> str:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict):
+        inner = value.get("value")
+        if isinstance(inner, str):
+            return inner
+    return ""
+
+
+def _content_list(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item) for item in value if str(item).strip()]
+    if isinstance(value, dict):
+        inner = value.get("value")
+        if isinstance(inner, list):
+            return [str(item) for item in inner if str(item).strip()]
+    return []
+
+
+def _coerce_authors(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return _coerce_author_items(value)
+    if isinstance(value, dict):
+        authors = value.get("authors")
+        if isinstance(authors, list):
+            return _coerce_author_items(authors)
+        summary = value.get("summary")
+        if isinstance(summary, str):
+            author_summary = summary.split(" - ", 1)[0]
+            return [item.strip() for item in author_summary.split(",") if item.strip()]
+    if isinstance(value, str):
+        return [item.strip() for item in value.split(",") if item.strip()]
+    return []
+
+
+def _coerce_author_items(value: list[Any]) -> list[str]:
+    authors: list[str] = []
+    for item in value:
+        if isinstance(item, dict):
+            name = str(
+                item.get("name") or item.get("full_name") or item.get("author") or ""
+            ).strip()
+        else:
+            name = str(item).strip()
+        if name:
+            authors.append(name)
+    return authors
+
+
+def _crossref_first(value: Any) -> str:
+    if isinstance(value, list) and value:
+        return str(value[0] or "")
+    return str(value or "")
+
+
+def _crossref_authors(value: list[Any]) -> list[str]:
+    authors: list[str] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        name = " ".join(
+            part
+            for part in (
+                str(item.get("given") or "").strip(),
+                str(item.get("family") or "").strip(),
+            )
+            if part
+        )
+        if name:
+            authors.append(name)
+    return authors
+
+
+def _crossref_year(item: dict[str, Any]) -> int | None:
+    for key in ("published-print", "published-online", "published", "issued"):
+        raw_date = item.get(key)
+        date_parts = raw_date.get("date-parts") if isinstance(raw_date, dict) else None
+        if (
+            isinstance(date_parts, list)
+            and date_parts
+            and isinstance(date_parts[0], list)
+        ):
+            return _coerce_year(date_parts[0][0] if date_parts[0] else None)
+    return None
+
+
+def _strip_crossref_abstract(value: str) -> str:
+    return re.sub(r"<[^>]+>", " ", value).strip()
+
+
+def _coerce_year(value: Any) -> int | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, int):
+        return value if 1000 <= value <= 9999 else None
+    text = str(value)
+    if len(text) >= 4 and text[:4].isdigit():
+        year = int(text[:4])
+        return year if 1000 <= year <= 9999 else None
+    return None
+
+
+def _coerce_int(value: Any) -> int | None:
+    if value is None or value == "":
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _dedupe_pdf_candidates(items: list[PDFCandidate]) -> list[PDFCandidate]:
+    merged: dict[tuple[str, str], PDFCandidate] = {}
+    for item in items:
+        key = (item.url, item.source_type)
+        current = merged.get(key)
+        if current is None or item.confidence > current.confidence:
+            merged[key] = item
+    return list(merged.values())
+
+
+def _xml_text(element: ET.Element | None) -> str:
+    if element is None or element.text is None:
+        return ""
+    return element.text.strip()

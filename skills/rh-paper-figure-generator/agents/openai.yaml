@@ -1,0 +1,4 @@
+interface:
+  display_name: "RH Paper Figure Generator"
+  short_description: "RH illustration-route paper architecture figures."
+  default_prompt: "Use $rh-paper-figure-generator to create an architecture figure for my RH paper."

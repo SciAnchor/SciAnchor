@@ -1,0 +1,266 @@
+{
+  "$defs": {
+    "ArtifactRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "use": {
+          "$ref": "#/$defs/ArtifactUse"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "required",
+        "use"
+      ],
+      "title": "ArtifactRequirement",
+      "type": "object"
+    },
+    "ArtifactUse": {
+      "enum": [
+        "execution_input",
+        "audit_evidence",
+        "optional_metadata"
+      ],
+      "title": "ArtifactUse",
+      "type": "string"
+    },
+    "DatasetRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_requirements": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRequirement"
+          },
+          "title": "Artifact Requirements",
+          "type": "array"
+        },
+        "dataset_ref": {
+          "pattern": "^dataset:[a-z0-9][a-z0-9._-]*:[A-Za-z0-9][A-Za-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Dataset Ref",
+          "type": "string"
+        },
+        "purpose_hint": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Purpose Hint"
+        },
+        "readiness_enforcement": {
+          "$ref": "#/$defs/ReadinessEnforcement"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "requirement_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Requirement Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "requirement_id",
+        "dataset_ref",
+        "required",
+        "artifact_requirements",
+        "readiness_enforcement"
+      ],
+      "title": "DatasetRequirement",
+      "type": "object"
+    },
+    "EnvironmentRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "environment_ref": {
+          "pattern": "^environment:[a-z0-9][a-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Environment Ref",
+          "type": "string"
+        },
+        "minimum_validation_level": {
+          "$ref": "#/$defs/ValidationLevel"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "required_by_modules": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Required By Modules",
+          "type": "array"
+        },
+        "requirement_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Requirement Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "requirement_id",
+        "environment_ref",
+        "required",
+        "required_by_modules",
+        "minimum_validation_level"
+      ],
+      "title": "EnvironmentRequirement",
+      "type": "object"
+    },
+    "LifecycleStatus": {
+      "enum": [
+        "provisional",
+        "frozen",
+        "retired"
+      ],
+      "title": "LifecycleStatus",
+      "type": "string"
+    },
+    "ReadinessEnforcement": {
+      "enum": [
+        "resource_only",
+        "operation_advisory",
+        "operation_required"
+      ],
+      "title": "ReadinessEnforcement",
+      "type": "string"
+    },
+    "ValidationLevel": {
+      "enum": [
+        "IMPORT_PASS",
+        "SMOKE_PASS",
+        "REAL_PASS"
+      ],
+      "title": "ValidationLevel",
+      "type": "string"
+    },
+    "WorkflowSource": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Authority Id",
+          "type": "string"
+        },
+        "authority_type": {
+          "enum": [
+            "static_manifest",
+            "rh_workflow_graph",
+            "other"
+          ],
+          "title": "Authority Type",
+          "type": "string"
+        },
+        "exported_at": {
+          "format": "date-time",
+          "title": "Exported At",
+          "type": "string"
+        },
+        "source_revision": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Source Revision",
+          "type": "string"
+        }
+      },
+      "required": [
+        "authority_type",
+        "authority_id",
+        "source_revision",
+        "exported_at"
+      ],
+      "title": "WorkflowSource",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Content Digest",
+      "type": "string"
+    },
+    "dataset_requirements": {
+      "items": {
+        "$ref": "#/$defs/DatasetRequirement"
+      },
+      "title": "Dataset Requirements",
+      "type": "array"
+    },
+    "environment_requirements": {
+      "items": {
+        "$ref": "#/$defs/EnvironmentRequirement"
+      },
+      "title": "Environment Requirements",
+      "type": "array"
+    },
+    "lifecycle_status": {
+      "$ref": "#/$defs/LifecycleStatus"
+    },
+    "manifest_revision": {
+      "minimum": 1,
+      "title": "Manifest Revision",
+      "type": "integer"
+    },
+    "platforms": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Platforms",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "spc.workflow-resource-manifest.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "selected_modules": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Selected Modules",
+      "type": "array"
+    },
+    "workflow_ref": {
+      "pattern": "^workflow:[a-z0-9][a-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Workflow Ref",
+      "type": "string"
+    },
+    "workflow_source": {
+      "$ref": "#/$defs/WorkflowSource"
+    }
+  },
+  "required": [
+    "schema_version",
+    "workflow_ref",
+    "workflow_source",
+    "manifest_revision",
+    "lifecycle_status",
+    "platforms",
+    "selected_modules",
+    "environment_requirements",
+    "dataset_requirements",
+    "content_digest"
+  ],
+  "title": "WorkflowResourceManifest",
+  "type": "object"
+}

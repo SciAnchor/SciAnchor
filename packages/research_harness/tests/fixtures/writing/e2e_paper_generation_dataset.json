@@ -1,0 +1,611 @@
+{
+  "schema_version": "rh.e2e_paper_generation_dataset.v1",
+  "status": "local_fixture_only",
+  "purpose": "Validate RH end-to-end paper generation readiness with deterministic local fixtures and code graders.",
+  "boundaries": {
+    "uses_network": false,
+    "uses_real_llm": false,
+    "uses_real_zotero": false,
+    "runs_external_provider": false,
+    "writes_project_db": false,
+    "adds_public_surface": false,
+    "authorizes_submission": false
+  },
+  "stage_order": [
+    "PW01_TOPIC_AND_VENUE_CONTRACT",
+    "PW02_EVIDENCE_ACQUISITION_AND_READING",
+    "PW03_GAP_BASELINE_NOVELTY_VALIDATION",
+    "PW04_EXPERIMENT_RESULT_INGESTION",
+    "PW05_PAPER_PLAN_AND_STORYLINE",
+    "PW06_SECTION_DRAFTING_AND_REVISION",
+    "PW06B_SKELETON_SOURCE_AND_CITATION_INTEGRITY",
+    "PW07_FIGURE_TABLE_AND_ASSET_QUALITY",
+    "PW08_LATEX_CITATION_AND_FINAL_BUNDLE",
+    "PW09_REVIEW_AUDIT_AND_PUBLICATION_PACK",
+    "PW10_REBUTTAL_CAMERA_READY_AND_REPLAY"
+  ],
+  "required_artifacts": [
+    "RESEARCH_BRIEF",
+    "IDEA_REPORT",
+    "RESEARCH_PROPOSAL",
+    "EVALUATION",
+    "EXPERIMENT_GOAL",
+    "EXPERIMENT_PLAN",
+    "IMPACT_REPORT",
+    "CLAIMS_FROM_RESULTS",
+    "PAPER_PLAN",
+    "AUTO_REVIEW",
+    "PRESUBMISSION_AUDIT",
+    "PAPER_PACKAGE",
+    "REBUTTAL_PACKAGE"
+  ],
+  "required_control_artifacts": [
+    "PAPER_PROFILE",
+    "DOMAIN_WRITING_PROFILE",
+    "DOMAIN_METHOD_SEARCH_PROFILE",
+    "EVALUATION_GATE_PROFILE",
+    "PROBLEM_ANCHOR",
+    "EXPERIMENT_GROUNDING_PROFILE",
+    "RESULT_TO_CLAIM_ANALYSIS_PROFILE",
+    "SKELETON_SOURCE_INTEGRITY_PROFILE",
+    "PRESUBMISSION_SEVERITY_GATE_PROFILE",
+    "REBUTTAL_READINESS_GATE_PROFILE",
+    "VENUE_OVERLAY"
+  ],
+  "graders": [
+    {
+      "name": "artifact_chain_complete",
+      "type": "code",
+      "pass_condition": "positive cases have every required artifact current; blocker cases name the missing or stale artifact"
+    },
+    {
+      "name": "stage_coverage_complete",
+      "type": "code",
+      "pass_condition": "positive cases cover the full PW stage order"
+    },
+    {
+      "name": "evidence_bound_claims",
+      "type": "code",
+      "pass_condition": "claims link to paper IDs, claim IDs, result artifacts, source artifacts, or explicit weak/unsupported markers"
+    },
+    {
+      "name": "domain_route_not_silent_stem",
+      "type": "code",
+      "pass_condition": "non-STEM cases carry a non-STEM paper profile and domain writing profile"
+    },
+    {
+      "name": "result_claim_boundary",
+      "type": "code",
+      "pass_condition": "result-backed claims require a result-to-claim profile and allowed claim strength"
+    },
+    {
+      "name": "package_readiness_boundary",
+      "type": "code",
+      "pass_condition": "package readiness requires source trace, citation integrity, final bundle quality, presubmission severity, and venue constraints"
+    },
+    {
+      "name": "external_action_boundary",
+      "type": "code",
+      "pass_condition": "no case authorizes network, provider, Zotero, commit, push, PR, release, publication, or third-party write actions"
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "stem_event_forecasting_full_chain",
+      "kind": "capability_positive",
+      "domain": "stem",
+      "paper_profile": {
+        "discipline": "ai",
+        "research_type": "empirical_ml",
+        "study_design": "benchmark_plus_ablation",
+        "paper_type": "original_research",
+        "target_venue": "ICLR",
+        "reporting_map": "ml_benchmark_reporting",
+        "evidence_rule": "result_claims_require_dataset_metric_baseline_and_ablation"
+      },
+      "domain_writing_profile": "domain-writing-stem",
+      "venue_overlay": {
+        "venue_family": "ml_conference",
+        "review_model": "double_blind",
+        "anonymization_required": true,
+        "format_family": "conference_pdf",
+        "required_declarations": [
+          "limitations",
+          "ethics",
+          "reproducibility"
+        ]
+      },
+      "artifact_states": {
+        "RESEARCH_BRIEF": "current",
+        "IDEA_REPORT": "current",
+        "RESEARCH_PROPOSAL": "current",
+        "EVALUATION": "current",
+        "EXPERIMENT_GOAL": "current",
+        "EXPERIMENT_PLAN": "current",
+        "IMPACT_REPORT": "current",
+        "CLAIMS_FROM_RESULTS": "current",
+        "PAPER_PLAN": "current",
+        "AUTO_REVIEW": "current",
+        "PRESUBMISSION_AUDIT": "current",
+        "PAPER_PACKAGE": "current",
+        "REBUTTAL_PACKAGE": "current"
+      },
+      "control_artifact_states": {
+        "PAPER_PROFILE": "current",
+        "DOMAIN_WRITING_PROFILE": "current",
+        "DOMAIN_METHOD_SEARCH_PROFILE": "current",
+        "EVALUATION_GATE_PROFILE": "current",
+        "PROBLEM_ANCHOR": "current",
+        "EXPERIMENT_GROUNDING_PROFILE": "current",
+        "RESULT_TO_CLAIM_ANALYSIS_PROFILE": "current",
+        "SKELETON_SOURCE_INTEGRITY_PROFILE": "current",
+        "PRESUBMISSION_SEVERITY_GATE_PROFILE": "current",
+        "REBUTTAL_READINESS_GATE_PROFILE": "current",
+        "VENUE_OVERLAY": "current"
+      },
+      "stage_expectations": [
+        {
+          "stage": "PW01_TOPIC_AND_VENUE_CONTRACT",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW02_EVIDENCE_ACQUISITION_AND_READING",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW03_GAP_BASELINE_NOVELTY_VALIDATION",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW04_EXPERIMENT_RESULT_INGESTION",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW05_PAPER_PLAN_AND_STORYLINE",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW06_SECTION_DRAFTING_AND_REVISION",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW06B_SKELETON_SOURCE_AND_CITATION_INTEGRITY",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW07_FIGURE_TABLE_AND_ASSET_QUALITY",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW08_LATEX_CITATION_AND_FINAL_BUNDLE",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW09_REVIEW_AUDIT_AND_PUBLICATION_PACK",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW10_REBUTTAL_CAMERA_READY_AND_REPLAY",
+          "expected_status": "pass"
+        }
+      ],
+      "evidence_inventory": {
+        "paper_ids": [
+          "paper:forecast-origin-visibility",
+          "paper:event-conditioned-forecasting",
+          "paper:time-series-leakage-audit"
+        ],
+        "claim_ids": [
+          "claim:origin-safe-state",
+          "claim:rollback-reduces-harmful-revisions"
+        ],
+        "result_artifacts": [
+          "result:forecast-origin-audit",
+          "result:rollback-ablation"
+        ],
+        "source_artifacts": [
+          "source:paper-card-pack",
+          "source:claims-evidence-matrix",
+          "source:bib-doi-verification"
+        ],
+        "weak_or_unsupported_markers": []
+      },
+      "expected_decision": "reviewable_package_ready",
+      "expected_blockers": [],
+      "external_actions": []
+    },
+    {
+      "case_id": "social_science_education_intervention_full_chain",
+      "kind": "capability_positive",
+      "domain": "social_science",
+      "paper_profile": {
+        "discipline": "education",
+        "research_type": "intervention_study",
+        "study_design": "quasi_experiment",
+        "paper_type": "original_research",
+        "target_venue": "AERA",
+        "reporting_map": "education_intervention_reporting",
+        "evidence_rule": "claims_require_construct_scale_population_and_effect_evidence"
+      },
+      "domain_writing_profile": "domain-writing-social-science",
+      "venue_overlay": {
+        "venue_family": "workshop",
+        "review_model": "single_blind",
+        "anonymization_required": false,
+        "format_family": "conference_pdf",
+        "required_declarations": [
+          "ethics",
+          "data_availability",
+          "participant_protection"
+        ]
+      },
+      "artifact_states": {
+        "RESEARCH_BRIEF": "current",
+        "IDEA_REPORT": "current",
+        "RESEARCH_PROPOSAL": "current",
+        "EVALUATION": "current",
+        "EXPERIMENT_GOAL": "current",
+        "EXPERIMENT_PLAN": "current",
+        "IMPACT_REPORT": "current",
+        "CLAIMS_FROM_RESULTS": "current",
+        "PAPER_PLAN": "current",
+        "AUTO_REVIEW": "current",
+        "PRESUBMISSION_AUDIT": "current",
+        "PAPER_PACKAGE": "current",
+        "REBUTTAL_PACKAGE": "current"
+      },
+      "control_artifact_states": {
+        "PAPER_PROFILE": "current",
+        "DOMAIN_WRITING_PROFILE": "current",
+        "DOMAIN_METHOD_SEARCH_PROFILE": "current",
+        "EVALUATION_GATE_PROFILE": "current",
+        "PROBLEM_ANCHOR": "current",
+        "EXPERIMENT_GROUNDING_PROFILE": "current",
+        "RESULT_TO_CLAIM_ANALYSIS_PROFILE": "current",
+        "SKELETON_SOURCE_INTEGRITY_PROFILE": "current",
+        "PRESUBMISSION_SEVERITY_GATE_PROFILE": "current",
+        "REBUTTAL_READINESS_GATE_PROFILE": "current",
+        "VENUE_OVERLAY": "current"
+      },
+      "stage_expectations": [
+        {
+          "stage": "PW01_TOPIC_AND_VENUE_CONTRACT",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW02_EVIDENCE_ACQUISITION_AND_READING",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW03_GAP_BASELINE_NOVELTY_VALIDATION",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW04_EXPERIMENT_RESULT_INGESTION",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW05_PAPER_PLAN_AND_STORYLINE",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW06_SECTION_DRAFTING_AND_REVISION",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW06B_SKELETON_SOURCE_AND_CITATION_INTEGRITY",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW07_FIGURE_TABLE_AND_ASSET_QUALITY",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW08_LATEX_CITATION_AND_FINAL_BUNDLE",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW09_REVIEW_AUDIT_AND_PUBLICATION_PACK",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW10_REBUTTAL_CAMERA_READY_AND_REPLAY",
+          "expected_status": "pass"
+        }
+      ],
+      "evidence_inventory": {
+        "paper_ids": [
+          "paper:education-intervention-design",
+          "paper:construct-validity-scale",
+          "paper:quasi-experimental-analysis"
+        ],
+        "claim_ids": [
+          "claim:intervention-improves-transfer",
+          "claim:effect-bound-to-sampled-classrooms"
+        ],
+        "result_artifacts": [
+          "result:classroom-transfer-effect",
+          "result:robustness-sensitivity"
+        ],
+        "source_artifacts": [
+          "source:scale-validation-table",
+          "source:claims-evidence-matrix",
+          "source:bib-doi-verification"
+        ],
+        "weak_or_unsupported_markers": []
+      },
+      "expected_decision": "reviewable_package_ready",
+      "expected_blockers": [],
+      "external_actions": []
+    },
+    {
+      "case_id": "biomedical_clinical_review_full_chain",
+      "kind": "capability_positive",
+      "domain": "biomedical",
+      "paper_profile": {
+        "discipline": "biomedical",
+        "research_type": "clinical_review",
+        "study_design": "systematic_review",
+        "paper_type": "review",
+        "target_venue": "BMJ",
+        "reporting_map": "prisma_like_reporting",
+        "evidence_rule": "claims_require_source_trace_and_clinical_scope"
+      },
+      "domain_writing_profile": "domain-writing-biomedical",
+      "venue_overlay": {
+        "venue_family": "clinical_journal",
+        "review_model": "single_blind",
+        "anonymization_required": false,
+        "format_family": "journal_article",
+        "required_declarations": [
+          "ethics",
+          "data_availability",
+          "funding",
+          "conflicts_of_interest"
+        ]
+      },
+      "artifact_states": {
+        "RESEARCH_BRIEF": "current",
+        "IDEA_REPORT": "current",
+        "RESEARCH_PROPOSAL": "current",
+        "EVALUATION": "current",
+        "EXPERIMENT_GOAL": "current",
+        "EXPERIMENT_PLAN": "current",
+        "IMPACT_REPORT": "current",
+        "CLAIMS_FROM_RESULTS": "current",
+        "PAPER_PLAN": "current",
+        "AUTO_REVIEW": "current",
+        "PRESUBMISSION_AUDIT": "current",
+        "PAPER_PACKAGE": "current",
+        "REBUTTAL_PACKAGE": "current"
+      },
+      "control_artifact_states": {
+        "PAPER_PROFILE": "current",
+        "DOMAIN_WRITING_PROFILE": "current",
+        "DOMAIN_METHOD_SEARCH_PROFILE": "current",
+        "EVALUATION_GATE_PROFILE": "current",
+        "PROBLEM_ANCHOR": "current",
+        "EXPERIMENT_GROUNDING_PROFILE": "current",
+        "RESULT_TO_CLAIM_ANALYSIS_PROFILE": "current",
+        "SKELETON_SOURCE_INTEGRITY_PROFILE": "current",
+        "PRESUBMISSION_SEVERITY_GATE_PROFILE": "current",
+        "REBUTTAL_READINESS_GATE_PROFILE": "current",
+        "VENUE_OVERLAY": "current"
+      },
+      "stage_expectations": [
+        {
+          "stage": "PW01_TOPIC_AND_VENUE_CONTRACT",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW02_EVIDENCE_ACQUISITION_AND_READING",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW03_GAP_BASELINE_NOVELTY_VALIDATION",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW04_EXPERIMENT_RESULT_INGESTION",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW05_PAPER_PLAN_AND_STORYLINE",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW06_SECTION_DRAFTING_AND_REVISION",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW06B_SKELETON_SOURCE_AND_CITATION_INTEGRITY",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW07_FIGURE_TABLE_AND_ASSET_QUALITY",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW08_LATEX_CITATION_AND_FINAL_BUNDLE",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW09_REVIEW_AUDIT_AND_PUBLICATION_PACK",
+          "expected_status": "pass"
+        },
+        {
+          "stage": "PW10_REBUTTAL_CAMERA_READY_AND_REPLAY",
+          "expected_status": "pass"
+        }
+      ],
+      "evidence_inventory": {
+        "paper_ids": [
+          "pmid:123456",
+          "pmcid:PMC123456",
+          "doi:10.1000/clinical-review"
+        ],
+        "claim_ids": [
+          "claim:clinical-scope-limited",
+          "claim:source-trace-complete"
+        ],
+        "result_artifacts": [
+          "result:screening-flow",
+          "result:evidence-table-summary"
+        ],
+        "source_artifacts": [
+          "source:screening-table",
+          "source:claims-evidence-matrix",
+          "source:bib-doi-verification"
+        ],
+        "weak_or_unsupported_markers": []
+      },
+      "expected_decision": "reviewable_package_ready",
+      "expected_blockers": [],
+      "external_actions": []
+    },
+    {
+      "case_id": "social_science_missing_source_access",
+      "kind": "capability_blocker",
+      "domain": "social_science",
+      "paper_profile": {
+        "discipline": "education",
+        "research_type": "intervention_study",
+        "study_design": "quasi_experiment",
+        "paper_type": "original_research",
+        "target_venue": "AERA",
+        "reporting_map": "education_intervention_reporting",
+        "evidence_rule": "claims_require_construct_scale_population_and_effect_evidence"
+      },
+      "domain_writing_profile": "domain-writing-social-science",
+      "block_stage": "PW02_EVIDENCE_ACQUISITION_AND_READING",
+      "artifact_states": {
+        "RESEARCH_BRIEF": "current",
+        "IDEA_REPORT": "blocked"
+      },
+      "evidence_inventory": {
+        "paper_ids": [],
+        "claim_ids": [],
+        "result_artifacts": [],
+        "source_artifacts": [],
+        "weak_or_unsupported_markers": [
+          "missing:scale_validation",
+          "missing:population_source",
+          "missing:paper_access"
+        ]
+      },
+      "expected_decision": "blocked",
+      "expected_blockers": [
+        "missing:paper_access",
+        "missing:scale_validation",
+        "missing:population_source"
+      ],
+      "external_actions": []
+    },
+    {
+      "case_id": "stem_result_overclaim",
+      "kind": "capability_blocker",
+      "domain": "stem",
+      "paper_profile": {
+        "discipline": "ai",
+        "research_type": "empirical_ml",
+        "study_design": "benchmark_only",
+        "paper_type": "original_research",
+        "target_venue": "NeurIPS",
+        "reporting_map": "ml_benchmark_reporting",
+        "evidence_rule": "claims_require_dataset_metric_baseline_and_ablation"
+      },
+      "domain_writing_profile": "domain-writing-stem",
+      "block_stage": "PW04_EXPERIMENT_RESULT_INGESTION",
+      "artifact_states": {
+        "RESEARCH_BRIEF": "current",
+        "IDEA_REPORT": "current",
+        "RESEARCH_PROPOSAL": "current",
+        "EVALUATION": "current",
+        "EXPERIMENT_GOAL": "current",
+        "EXPERIMENT_PLAN": "current",
+        "IMPACT_REPORT": "blocked",
+        "CLAIMS_FROM_RESULTS": "blocked"
+      },
+      "result_state": "partial",
+      "requested_claim_strength": "confirmed_general_improvement",
+      "allowed_claim_strength": "exploratory_signal",
+      "evidence_inventory": {
+        "paper_ids": [
+          "paper:event-conditioned-forecasting"
+        ],
+        "claim_ids": [
+          "claim:exploratory-signal"
+        ],
+        "result_artifacts": [
+          "result:single-dataset-pilot"
+        ],
+        "source_artifacts": [
+          "source:pilot-run-log"
+        ],
+        "weak_or_unsupported_markers": [
+          "unsupported:general_improvement",
+          "missing:ablation",
+          "missing:statistical_summary"
+        ]
+      },
+      "expected_decision": "blocked",
+      "expected_blockers": [
+        "overclaim:result_strength",
+        "missing:ablation",
+        "missing:statistical_summary"
+      ],
+      "external_actions": []
+    },
+    {
+      "case_id": "biomedical_package_integrity_block",
+      "kind": "capability_blocker",
+      "domain": "biomedical",
+      "paper_profile": {
+        "discipline": "biomedical",
+        "research_type": "clinical_review",
+        "study_design": "systematic_review",
+        "paper_type": "review",
+        "target_venue": "BMJ",
+        "reporting_map": "prisma_like_reporting",
+        "evidence_rule": "claims_require_source_trace_and_clinical_scope"
+      },
+      "domain_writing_profile": "domain-writing-biomedical",
+      "block_stage": "PW09_REVIEW_AUDIT_AND_PUBLICATION_PACK",
+      "artifact_states": {
+        "RESEARCH_BRIEF": "current",
+        "IDEA_REPORT": "current",
+        "RESEARCH_PROPOSAL": "current",
+        "EVALUATION": "current",
+        "PAPER_PLAN": "current",
+        "AUTO_REVIEW": "current",
+        "PRESUBMISSION_AUDIT": "blocked",
+        "PAPER_PACKAGE": "blocked"
+      },
+      "evidence_inventory": {
+        "paper_ids": [
+          "pmid:123456",
+          "pmcid:PMC123456"
+        ],
+        "claim_ids": [
+          "claim:clinical-scope-limited"
+        ],
+        "result_artifacts": [],
+        "source_artifacts": [
+          "source:screening-table"
+        ],
+        "weak_or_unsupported_markers": [
+          "missing:bib_doi_verification",
+          "missing:figure_table_reference",
+          "critical:source_trace_gap"
+        ]
+      },
+      "expected_decision": "blocked",
+      "expected_blockers": [
+        "critical:source_trace_gap",
+        "missing:bib_doi_verification",
+        "missing:figure_table_reference"
+      ],
+      "external_actions": []
+    }
+  ]
+}

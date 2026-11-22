@@ -1,0 +1,30 @@
+{
+  "schema_version": "spc.dataset-manifest.v1",
+  "dataset_ref": "dataset:external:GLASS@provisional-1",
+  "lifecycle_status": "provisional",
+  "source_identity": {
+    "namespace": "external",
+    "accession": "GLASS",
+    "official_url": null
+  },
+  "source_snapshot": {
+    "observed_at": null,
+    "remote_snapshot_digest": null
+  },
+  "artifacts": [],
+  "acquisition_sources": [
+    {
+      "source_id": "glass-external",
+      "mode": "external_managed",
+      "priority": 10
+    }
+  ],
+  "content_identity": {
+    "identity_status": "unfrozen_resource_definition",
+    "raw_archive_member_count": null,
+    "raw_archive_member_manifest_sha256": null,
+    "workflow_baseline_package_sha256": null,
+    "server_wsl_package_sha256": null
+  },
+  "content_digest": "sha256:58e9fbba9c9ddd0bf6a72bc2486809bad8f6599633bc58a79adfbc9815922343"
+}

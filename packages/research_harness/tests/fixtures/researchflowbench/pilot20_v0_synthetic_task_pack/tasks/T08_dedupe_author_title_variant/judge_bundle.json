@@ -1,0 +1,26 @@
+{
+  "expected_rh_axes": [
+    "literature.set_completion",
+    "paper_selection.precision",
+    "retrieval.provenance_coverage"
+  ],
+  "judge_only": true,
+  "leakage_canaries": [
+    "SYNTHETIC_JUDGE_CANARY_T08"
+  ],
+  "schema_version": "researchflowbench.judge_bundle.v0.synthetic",
+  "scoring": {
+    "combined": {
+      "axis_separation_required": true,
+      "rubric": "synthetic combined axis"
+    },
+    "outcome": {
+      "rubric": "synthetic outcome axis"
+    },
+    "process": {
+      "rubric": "synthetic process axis"
+    }
+  },
+  "synthetic": true,
+  "task_id": "rfb.synthetic.dedupe_author_title_variant.0001"
+}

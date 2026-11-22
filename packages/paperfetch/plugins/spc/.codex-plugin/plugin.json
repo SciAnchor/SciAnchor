@@ -1,0 +1,34 @@
+{
+  "name": "spc",
+  "version": "2.0.0+codex.20260901015244",
+  "description": "Codex skill for safe, typed use of the SPC CLI.",
+  "author": {
+    "name": "SPC Team"
+  },
+  "license": "MIT",
+  "keywords": [
+    "research",
+    "papers",
+    "datasets",
+    "seed-pack"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SPC",
+    "shortDescription": "Use the SPC CLI for verified open-access papers and public research data.",
+    "longDescription": "Selects SPC CLI commands for paper search and lookup, verified open-access PDF download, local PDF parsing, Seed Pack updates, jobs, and supported public dataset archives.",
+    "developerName": "SPC Team",
+    "category": "Research",
+    "capabilities": [
+      "Local CLI",
+      "Research"
+    ],
+    "defaultPrompt": [
+      "Check whether SPC is ready for this research task.",
+      "Add these identifiers to an existing Seed Pack safely.",
+      "Parse this local PDF without treating it as official paper fulltext.",
+      "Download and verify the open-access PDF for this DOI.",
+      "Inspect a supported public archive after checking live capabilities."
+    ]
+  }
+}

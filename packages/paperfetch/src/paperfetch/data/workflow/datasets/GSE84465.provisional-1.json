@@ -1,0 +1,30 @@
+{
+  "schema_version": "spc.dataset-manifest.v1",
+  "dataset_ref": "dataset:geo:GSE84465@provisional-1",
+  "lifecycle_status": "provisional",
+  "source_identity": {
+    "namespace": "geo",
+    "accession": "GSE84465",
+    "official_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE84nnn/GSE84465"
+  },
+  "source_snapshot": {
+    "observed_at": null,
+    "remote_snapshot_digest": null
+  },
+  "artifacts": [],
+  "acquisition_sources": [
+    {
+      "source_id": "ncbi-geo",
+      "mode": "automatic",
+      "priority": 10
+    }
+  ],
+  "content_identity": {
+    "identity_status": "unfrozen_resource_definition",
+    "raw_archive_member_count": null,
+    "raw_archive_member_manifest_sha256": null,
+    "workflow_baseline_package_sha256": null,
+    "server_wsl_package_sha256": null
+  },
+  "content_digest": "sha256:c7796af6dfa162a1a204a25efae1a3ab13e3156edbe6b002e655bc5ab23ab1c3"
+}

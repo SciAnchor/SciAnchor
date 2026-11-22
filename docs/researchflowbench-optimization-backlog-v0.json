@@ -1,0 +1,551 @@
+{
+  "schema_version": "researchflowbench.optimization_backlog.v0",
+  "generated_on": "2026-06-02",
+  "status": "downstream_prioritized_optimization_backlog",
+  "source_score_report": "/tmp/rh-rfb-downstream-2026-06-02/pilot20_deterministic_visible_score.json",
+  "benchmark_id": "researchflowbench.synthetic_public_pilot20_v0",
+  "baseline_id": "deterministic_visible",
+  "split": "draft_dev",
+  "model_execution_performed": false,
+  "external_search_used": false,
+  "automatic_mutation_enabled": false,
+  "metrics": {
+    "score_count": 20,
+    "mean_outcome_score": 0.0,
+    "mean_process_score": 0.0,
+    "mean_combined_score": 0.0,
+    "mean_expected_object_coverage": 0.164762
+  },
+  "implementation_progress": [
+    {
+      "date": "2026-06-03",
+      "backlog_item_id": "RFB-OPT-P0-001",
+      "status": "partially_implemented",
+      "summary": "Added typed EvidenceLink contract fields support_status, evidence_span, and citation_candidate; evidence_link schema and local backend preserve legacy calls while accepting the new contract."
+    },
+    {
+      "date": "2026-06-03",
+      "backlog_item_id": "RFB-OPT-P0-001",
+      "status": "partially_implemented",
+      "summary": "Post-search Pilot-5 P03 records typed evidence-link replay output and scores typed_contract_coverage alongside support-label accuracy and span match."
+    },
+    {
+      "date": "2026-06-03",
+      "backlog_item_id": "RFB-OPT-P0-002",
+      "status": "partially_implemented",
+      "summary": "Write-stage gates block active evidence_links or evidence_pack artifacts containing support_status=unsupported or support_status=contradicts."
+    },
+    {
+      "date": "2026-06-03",
+      "backlog_item_id": "RFB-OPT-P0-002",
+      "status": "implemented_for_current_replay_scope",
+      "summary": "Failed citation checks persist replayable citation_verification, review_issue, and gate_decision objects for unsupported/contradictory evidence links, hallucinated citation rows, and cross-topic draft references; Post-search Pilot-5 P03 scores citation_governance_replay_coverage and a deterministic PDF demo was generated at .tmp/rfb-opt-p0-002-demo/rfb-opt-p0-002-citation-governance.pdf."
+    }
+  ],
+  "axis_failure_counts": {
+    "citation.candidate_generation": 8,
+    "governance.rollback_blocking": 8,
+    "evidence_linking.support_accuracy": 6,
+    "retrieval.provenance_coverage": 5,
+    "baseline_identification.coverage": 4,
+    "gap_detection.novelty_accuracy": 4,
+    "section_drafting.citation_grounding": 4,
+    "literature.set_completion": 3,
+    "paper_reading.claim_quality": 3,
+    "paper_search.recall": 3,
+    "paper_search.rerank_quality": 2,
+    "deep_research.discovery_accuracy": 2,
+    "final_bundle.pdf_quality": 1,
+    "paper_selection.precision": 1
+  },
+  "category_definitions": {
+    "claim_extraction": "Scoped claim extraction without overclaiming or paper identity loss.",
+    "evidence_linking": "Claim-to-span-to-citation support records, including partial or negative support.",
+    "citation_integrity": "Citation candidate generation, identifier validation, support status, and hallucination prevention.",
+    "gap_detection": "Real-gap detection, false-novelty blocking, and negative-evidence preservation.",
+    "baseline_identification": "Strong baseline coverage, family boundaries, and stale-baseline invalidation.",
+    "section_drafting": "Draft sections that preserve evidence, citation, stale-data, and scope boundaries.",
+    "pdf_final_bundle": "Final bundle or PDF-facing citation integrity checks before export.",
+    "governance": "Gate, rollback, abstention, cross-topic guard, and artifact trace policy evidence.",
+    "retrieval_health_check": "Search, reranking, set completion, dedupe, deep anchor selection, and retrieval trace capture monitored as dependencies."
+  },
+  "backlog_items": [
+    {
+      "id": "RFB-OPT-P0-001",
+      "priority": "P0",
+      "title": "Preserve evidence links from claim to citation to span",
+      "rh_axis_ids": [
+        "paper_reading.claim_quality",
+        "evidence_linking.support_accuracy",
+        "citation.candidate_generation"
+      ],
+      "category": "evidence_linking",
+      "failed_task_nos": [
+        "T01",
+        "T03",
+        "T04",
+        "T11",
+        "T13",
+        "T17"
+      ],
+      "finding": "Downstream tasks require scoped claim, exact evidence_span, and support-aware citation_link objects.",
+      "optimization_target": "Add a typed evidence-link contract that records claim scope, supporting span, contradiction or partial-support status, and the citation candidate that justifies the link.",
+      "approval_gate": "Replay on current draft_dev tasks first; do not promote without held-out or promotion-test examples."
+    },
+    {
+      "id": "RFB-OPT-P0-002",
+      "priority": "P0",
+      "title": "Block hallucinated or unsupported citations before drafting",
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "section_drafting.citation_grounding",
+        "governance.rollback_blocking"
+      ],
+      "category": "citation_integrity",
+      "failed_task_nos": [
+        "T01",
+        "T02",
+        "T04",
+        "T09",
+        "T12",
+        "T13",
+        "T18",
+        "T19",
+        "T20"
+      ],
+      "finding": "Citation-heavy tasks require identifier validation, support status, cross-topic guards, and block/rollback evidence before unsupported claims reach drafts.",
+      "optimization_target": "Make citation verification statuses first-class replay objects and require failed citation checks to create review_issue and gate_decision records.",
+      "approval_gate": "Citation changes must keep gold and judge bundles hidden and must not add external search to the v0 synthetic pack."
+    },
+    {
+      "id": "RFB-OPT-P0-003",
+      "priority": "P0",
+      "title": "Calibrate gap, baseline, and direction quality",
+      "rh_axis_ids": [
+        "gap_detection.novelty_accuracy",
+        "baseline_identification.coverage",
+        "proposal.direction_quality"
+      ],
+      "category": "gap_baseline_proposal_quality",
+      "failed_task_nos": [
+        "T05",
+        "T10",
+        "T15",
+        "T19"
+      ],
+      "finding": "The weaker downstream behavior is deciding whether prior work already closes a claimed gap and whether a proposed direction remains defensible.",
+      "optimization_target": "Score baseline family coverage, stale-baseline invalidation, false-novelty detection, and direction ranking from explicit evidence.",
+      "approval_gate": "Do not tune proposal prompts from retrieval-only scores; require downstream score reports first."
+    },
+    {
+      "id": "RFB-OPT-P1-004",
+      "priority": "P1",
+      "title": "Add section-draft safeguards for stale or overreaching evidence",
+      "rh_axis_ids": [
+        "section_drafting.citation_grounding",
+        "evidence_linking.support_accuracy",
+        "governance.rollback_blocking"
+      ],
+      "category": "section_drafting",
+      "failed_task_nos": [
+        "T01",
+        "T04",
+        "T13",
+        "T20"
+      ],
+      "finding": "Section-producing tasks expect the system to avoid stale propagation, claim scope overreach, and final citation drift before bundle assembly.",
+      "optimization_target": "Make section_draft output carry evidence-link IDs, citation verification state, and rollback/block decisions when support is partial or stale."
+    },
+    {
+      "id": "RFB-OPT-P1-005",
+      "priority": "P1",
+      "title": "Add final-bundle citation integrity replay checks",
+      "rh_axis_ids": [
+        "final_bundle.pdf_quality",
+        "section_drafting.citation_grounding",
+        "citation.candidate_generation"
+      ],
+      "category": "pdf_final_bundle",
+      "failed_task_nos": [
+        "T20"
+      ],
+      "finding": "Pilot-20 distinguishes final-bundle failures from upstream citation and section-drafting failures.",
+      "optimization_target": "Add a final-bundle replay check that verifies every final citation resolves to a visible evidence link and no stale or hallucinated identifiers survive export.",
+      "approval_gate": "Do not change public dataset readiness or release labels without human approval."
+    },
+    {
+      "id": "RFB-OPT-P1-006",
+      "priority": "P1",
+      "title": "Turn gate, rollback, and abstention behavior into policy evidence",
+      "rh_axis_ids": [
+        "governance.rollback_blocking"
+      ],
+      "category": "governance",
+      "failed_task_nos": [
+        "T02",
+        "T04",
+        "T05",
+        "T09",
+        "T12",
+        "T18",
+        "T19",
+        "T20"
+      ],
+      "finding": "Several failures require the correct behavior to abstain, block, rollback, or mark cross-topic provenance invalid, not simply produce an answer.",
+      "optimization_target": "Ensure orchestrator gates emit gate_decision, rollback_event, review_issue, and artifact_ref objects with reason codes tied to RH axes."
+    },
+    {
+      "id": "RFB-OPT-P1-007",
+      "priority": "P1",
+      "title": "Keep retrieval and provenance as downstream health checks",
+      "rh_axis_ids": [
+        "paper_search.recall",
+        "paper_search.rerank_quality",
+        "retrieval.provenance_coverage",
+        "literature.set_completion",
+        "paper_selection.precision",
+        "deep_research.discovery_accuracy"
+      ],
+      "category": "retrieval_health_check",
+      "failed_task_nos": [
+        "T06",
+        "T07",
+        "T08",
+        "T12",
+        "T14",
+        "T16",
+        "T18"
+      ],
+      "finding": "Retrieval and deep-reading remain important dependencies, but operator feedback says they are not the main quality bottleneck.",
+      "optimization_target": "Monitor these axes for regressions while prioritizing downstream semantic quality."
+    },
+    {
+      "id": "RFB-OPT-P2-008",
+      "priority": "P2",
+      "title": "Separate infrastructure floor failures from semantic model failures",
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "evidence_linking.support_accuracy",
+        "section_drafting.citation_grounding",
+        "paper_search.recall",
+        "governance.rollback_blocking",
+        "paper_reading.claim_quality",
+        "gap_detection.novelty_accuracy",
+        "baseline_identification.coverage",
+        "literature.set_completion",
+        "paper_search.rerank_quality",
+        "retrieval.provenance_coverage",
+        "paper_selection.precision",
+        "deep_research.discovery_accuracy",
+        "final_bundle.pdf_quality"
+      ],
+      "category": "governance",
+      "failed_task_nos": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "T07",
+        "T08",
+        "T09",
+        "T10",
+        "T11",
+        "T12",
+        "T13",
+        "T14",
+        "T15",
+        "T16",
+        "T17",
+        "T18",
+        "T19",
+        "T20"
+      ],
+      "finding": "The current baseline is a deliberate visible-contract floor, so it proves archive wiring and axis attribution but not model behavior.",
+      "optimization_target": "Keep stub_zero as the reproducible floor and add human-approved model baselines for comparison."
+    },
+    {
+      "id": "RFB-OPT-P2-009",
+      "priority": "P2",
+      "title": "Add archive queries for axis and category regressions",
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "evidence_linking.support_accuracy",
+        "section_drafting.citation_grounding",
+        "paper_search.recall",
+        "governance.rollback_blocking",
+        "paper_reading.claim_quality",
+        "gap_detection.novelty_accuracy",
+        "baseline_identification.coverage",
+        "literature.set_completion",
+        "paper_search.rerank_quality",
+        "retrieval.provenance_coverage",
+        "paper_selection.precision",
+        "deep_research.discovery_accuracy",
+        "final_bundle.pdf_quality"
+      ],
+      "category": "governance",
+      "failed_task_nos": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "T07",
+        "T08",
+        "T09",
+        "T10",
+        "T11",
+        "T12",
+        "T13",
+        "T14",
+        "T15",
+        "T16",
+        "T17",
+        "T18",
+        "T19",
+        "T20"
+      ],
+      "finding": "Score reports can be archived, but operators still need a direct way to ask which RH axis and optimization category regressed across replay runs.",
+      "optimization_target": "Expose an archive summary that groups researchflowbench_score_report records by benchmark, split, RH axis, backlog category, task, and candidate id."
+    }
+  ],
+  "task_category_map": {
+    "T01": {
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "evidence_linking",
+        "citation_integrity",
+        "orchestrator_policy"
+      ]
+    },
+    "T02": {
+      "rh_axis_ids": [
+        "paper_search.recall",
+        "citation.candidate_generation"
+      ],
+      "categories": [
+        "retrieval",
+        "citation_integrity",
+        "orchestrator_policy"
+      ]
+    },
+    "T03": {
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "evidence_linking",
+        "citation_integrity",
+        "orchestrator_policy"
+      ]
+    },
+    "T04": {
+      "rh_axis_ids": [
+        "retrieval.provenance_coverage",
+        "citation.candidate_generation"
+      ],
+      "categories": [
+        "evidence_linking",
+        "citation_integrity",
+        "section_drafting",
+        "orchestrator_policy"
+      ]
+    },
+    "T05": {
+      "rh_axis_ids": [
+        "paper_search.recall",
+        "literature.set_completion"
+      ],
+      "categories": [
+        "retrieval",
+        "orchestrator_policy"
+      ]
+    },
+    "T06": {
+      "rh_axis_ids": [
+        "paper_search.recall",
+        "literature.set_completion"
+      ],
+      "categories": [
+        "retrieval"
+      ]
+    },
+    "T07": {
+      "rh_axis_ids": [
+        "paper_search.rerank_quality",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "retrieval",
+        "orchestrator_policy"
+      ]
+    },
+    "T08": {
+      "rh_axis_ids": [
+        "literature.set_completion",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "retrieval"
+      ]
+    },
+    "T09": {
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "citation_integrity",
+        "orchestrator_policy"
+      ]
+    },
+    "T10": {
+      "rh_axis_ids": [
+        "literature.set_completion",
+        "deep_research.discovery_accuracy"
+      ],
+      "categories": [
+        "retrieval",
+        "evidence_linking"
+      ]
+    },
+    "T11": {
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "evidence_linking",
+        "citation_integrity",
+        "orchestrator_policy"
+      ]
+    },
+    "T12": {
+      "rh_axis_ids": [
+        "retrieval.provenance_coverage",
+        "citation.candidate_generation"
+      ],
+      "categories": [
+        "retrieval",
+        "citation_integrity",
+        "orchestrator_policy"
+      ]
+    },
+    "T13": {
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "evidence_linking",
+        "section_drafting",
+        "orchestrator_policy"
+      ]
+    },
+    "T14": {
+      "rh_axis_ids": [
+        "paper_search.rerank_quality",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "retrieval",
+        "orchestrator_policy"
+      ]
+    },
+    "T15": {
+      "rh_axis_ids": [
+        "literature.set_completion",
+        "paper_search.recall"
+      ],
+      "categories": [
+        "retrieval"
+      ]
+    },
+    "T16": {
+      "rh_axis_ids": [
+        "deep_research.discovery_accuracy",
+        "paper_search.recall"
+      ],
+      "categories": [
+        "retrieval",
+        "evidence_linking"
+      ]
+    },
+    "T17": {
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "evidence_linking",
+        "citation_integrity"
+      ]
+    },
+    "T18": {
+      "rh_axis_ids": [
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "retrieval",
+        "orchestrator_policy"
+      ]
+    },
+    "T19": {
+      "rh_axis_ids": [
+        "literature.set_completion",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "retrieval",
+        "orchestrator_policy"
+      ]
+    },
+    "T20": {
+      "rh_axis_ids": [
+        "citation.candidate_generation",
+        "retrieval.provenance_coverage"
+      ],
+      "categories": [
+        "evidence_linking",
+        "citation_integrity",
+        "section_drafting",
+        "pdf_final_bundle",
+        "orchestrator_policy"
+      ]
+    }
+  },
+  "operator_priority_overlay": {
+    "date": "2026-06-02",
+    "retrieval_and_deep_reading": "health_check_not_primary_optimization_target",
+    "primary_focus": [
+      "claim extraction quality",
+      "evidence-link support accuracy",
+      "citation grounding and unsupported-citation blocking",
+      "gap detection and baseline identification",
+      "section drafting, final-bundle integrity, and self-evolution decisions"
+    ]
+  },
+  "rh_axis_ids": [
+    "citation.candidate_generation",
+    "evidence_linking.support_accuracy",
+    "section_drafting.citation_grounding",
+    "paper_search.recall",
+    "governance.rollback_blocking",
+    "paper_reading.claim_quality",
+    "gap_detection.novelty_accuracy",
+    "baseline_identification.coverage",
+    "literature.set_completion",
+    "paper_search.rerank_quality",
+    "retrieval.provenance_coverage",
+    "paper_selection.precision",
+    "deep_research.discovery_accuracy",
+    "final_bundle.pdf_quality"
+  ]
+}

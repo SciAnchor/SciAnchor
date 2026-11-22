@@ -1,0 +1,10 @@
+{
+  "schema": "rh.schema.release_coverage_threshold_decision.v1",
+  "generated_at": "2026-06-15T00:00:00Z",
+  "coverage_json": ".tmp/coverage-baseline/coverage.json",
+  "current_total_percent": 24.29298755021678,
+  "threshold_percent": 24.0,
+  "target_percent": 80.0,
+  "decision": "non_regression_baseline",
+  "rationale": "Current measured coverage is below 80%, so the release follow-up gate enforces the rounded-down current total as a non-regression floor while tracking the 80% target as debt."
+}

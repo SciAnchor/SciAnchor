@@ -1,0 +1,103 @@
+schema_version: rh.skill.v2
+name: final-bundle-quality
+version: 0.1.2
+license: MIT
+capability_type: evaluator
+description: Evaluate and replay final_bundle PDF/LaTeX quality for Research Harness project-level self-evolution.
+input_schema: rh.schema.input.final_bundle_quality.v0
+output_schema: rh.schema.artifact.final_bundle_quality_report.v0
+allowed_tools:
+  - artifact.read
+  - pdf.scan_quality_bundle
+  - pdf.quality_replay_trajectory
+  - lifecycle.evaluate_skill_pack
+  - orchestrator.record_artifact
+forbidden_tools:
+  - external.publish
+  - git.push
+  - topic_strategy.mutate
+required_artifacts:
+  - final_bundle
+optional_artifacts:
+  - pdf_quality_replay_trajectory
+  - skill_lifecycle_pack
+  - held_out_final_bundle
+  - multi_route_review_report
+  - skill_bank_management_report
+produced_artifacts:
+  - final_bundle_quality_report
+contracts:
+  input: contracts/input.yaml
+  output: contracts/output.yaml
+  guardrails: contracts/guardrails.yaml
+guardrails:
+  input:
+    - active_final_bundle_required
+    - path_safe_bundle_paths
+    - target_profile_declared
+    - promotion_context_required_for_promotion_gate
+  tool:
+    - no_mutable_path_rescan_for_history
+    - no_external_publication
+  output:
+    - issue_classes_present
+    - promotion_evidence_classified
+    - reviewer_consensus_veto_preserved
+replay_tests:
+  - id: topic8_source_trajectory_gate
+    artifact_ref: project_artifacts:742
+    kind: source_trajectory_gate
+    profile_match: source
+    promotion_eligible: false
+    purpose: Verify source trajectory thresholds before held-out replay.
+  - id: topic5_controlled_replay_plumbing
+    artifact_ref: project_artifacts:752
+    kind: controlled_replay
+    profile_match: controlled_plumbing
+    promotion_eligible: false
+    purpose: Exercise replay plumbing without counting as promotion evidence.
+  - id: topic5_compatible_profile_replay
+    artifact_ref: project_artifacts:757
+    kind: held_out_replay
+    profile_match: compatible
+    promotion_eligible: true
+    promotion_strength: compatible_profile_held_out
+    purpose: Historical compatible-profile validation; must not be reported as exact.
+  - id: topic5_exact_profile_replay
+    artifact_ref: project_artifacts:771
+    kind: held_out_replay
+    profile_match: exact
+    promotion_eligible: true
+    promotion_strength: exact_profile_held_out
+    purpose: Current strongest promotion evidence for AAAI-style replay.
+promotion_policy:
+  held_out_replay_required: true
+  required_strength: exact_profile_held_out
+  controlled_replay_counts_for_promotion: false
+  compatible_profile_must_be_explicit: true
+  final_blocking_issue_count_max: 0
+  final_recompile_repairable_issue_count_max: 0
+  reviewer_consensus_reject_blocks_readiness: true
+  scope_objections_do_not_mutate_topic_strategy: true
+  excluded_promotion_evidence:
+    - project_artifacts:752
+  current_promotion_evidence:
+    - project_artifacts:771
+    - project_artifacts:772
+  historical_evidence:
+    - project_artifacts:757
+source_attribution:
+  external_sources: []
+memory_policy:
+  transferable:
+    - issue_category
+    - severity
+    - target_profile
+    - gate_outcome
+    - repair_policy
+  topic_local:
+    - topic_id
+    - artifact_id
+    - file_path
+    - source_path
+    - one_off_bundle_layout

@@ -1,0 +1,22 @@
+{
+  "object_types": [
+    "artifact_ref",
+    "baseline",
+    "citation_link",
+    "claim",
+    "dedupe_decision",
+    "evidence_span",
+    "gate_decision",
+    "paper",
+    "paper_cluster",
+    "query",
+    "ranked_result",
+    "retrieval_trace",
+    "review_issue",
+    "rollback_event",
+    "run_trace",
+    "section_draft",
+    "selection_rationale"
+  ],
+  "synthetic": true
+}

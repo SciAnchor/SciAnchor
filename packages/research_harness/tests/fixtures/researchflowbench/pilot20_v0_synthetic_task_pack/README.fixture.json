@@ -1,0 +1,8 @@
+{
+  "description": "Synthetic Pilot-20 task pack used for public validator tests.",
+  "model_execution_performed": false,
+  "pack_id": "researchflowbench.synthetic_public_pilot20_v0",
+  "synthetic": true,
+  "task_count": 20,
+  "visibility": "public_safe_synthetic_fixture"
+}

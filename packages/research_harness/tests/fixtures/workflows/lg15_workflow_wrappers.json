@@ -1,0 +1,109 @@
+{
+  "schema_version": "rh.workflow_wrappers.v1",
+  "status": "local_fixture_only",
+  "public_surface": "none",
+  "boundaries": {
+    "adds_public_tool": false,
+    "adds_cli_command": false,
+    "adds_http_route": false,
+    "adds_python_facade_method": false,
+    "uses_real_zotero": false,
+    "uses_network": false,
+    "uses_real_llm": false
+  },
+  "wrappers": [
+    {
+      "id": "literature_search_ingest",
+      "contract": "Search fixture papers, ingest topic-linked evidence, record a literature-map artifact, and expose recovery through service next actions plus gate output.",
+      "entrypoint_type": "skill_runtime_orchestration",
+      "adds_public_tool": false,
+      "uses_real_zotero": false,
+      "uses_network": false,
+      "uses_real_llm": false,
+      "fixture_only": true,
+      "composed_tools": [
+        "paper_search",
+        "paper_ingest",
+        "orchestrator_record_artifact",
+        "orchestrator_gate_check"
+      ],
+      "requires_records": {
+        "topic": true,
+        "paper": true,
+        "primitive_result": true,
+        "provenance": true,
+        "artifact": true,
+        "next_actions": true,
+        "gate_decision": true
+      },
+      "failure_recovery": {
+        "resume_from": "service_next_actions",
+        "fallback": "orchestrator_gate",
+        "record_handoff": true,
+        "checkpoint_required": true
+      }
+    },
+    {
+      "id": "evidence_to_draft",
+      "contract": "Convert fixture claims, gaps, baselines, and draft output into an auditable draft artifact with source-linked next actions.",
+      "entrypoint_type": "skill_runtime_orchestration",
+      "adds_public_tool": false,
+      "uses_real_zotero": false,
+      "uses_network": false,
+      "uses_real_llm": false,
+      "fixture_only": true,
+      "composed_tools": [
+        "claim_extract",
+        "gap_detect",
+        "baseline_identify",
+        "section_draft",
+        "orchestrator_record_artifact"
+      ],
+      "requires_records": {
+        "topic": true,
+        "paper": true,
+        "primitive_result": true,
+        "provenance": true,
+        "artifact": true,
+        "next_actions": true,
+        "gate_decision": false
+      },
+      "failure_recovery": {
+        "resume_from": "service_next_actions",
+        "fallback": "workflow_handoff",
+        "record_handoff": true,
+        "checkpoint_required": true
+      }
+    },
+    {
+      "id": "artifact_provenance_gate_audit",
+      "contract": "Audit fixture primitive provenance, workflow artifacts, and orchestrator gate output as a closed local recovery record.",
+      "entrypoint_type": "skill_runtime_orchestration",
+      "adds_public_tool": false,
+      "uses_real_zotero": false,
+      "uses_network": false,
+      "uses_real_llm": false,
+      "fixture_only": true,
+      "composed_tools": [
+        "consistency_check",
+        "orchestrator_record_artifact",
+        "orchestrator_gate_check"
+      ],
+      "requires_records": {
+        "topic": true,
+        "paper": true,
+        "primitive_result": true,
+        "provenance": true,
+        "artifact": true,
+        "next_actions": true,
+        "gate_decision": true
+      },
+      "failure_recovery": {
+        "resume_from": "orchestrator_gate",
+        "fallback": "service_next_actions",
+        "record_handoff": true,
+        "checkpoint_required": true
+      }
+    }
+  ]
+}

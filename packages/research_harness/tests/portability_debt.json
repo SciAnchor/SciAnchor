@@ -1,0 +1,42 @@
+{
+  "_": "Committed paths that exist on one developer's machine only. The set may only shrink: tests/test_portability.py refuses a new entry and refuses a stale one. Every entry here is a fallback or a detector's own pattern -- nothing in this list is a path the engine requires to run, which is the property that has to stay true.",
+  "developer_path_debt": {
+    "/Users/": {
+      "sites": [
+        "packages/research_harness/research_harness/eval/researchflowbench/release_readiness.py:19"
+      ],
+      "reason": "the detector's own pattern: release_readiness scans a bundle for host paths, and this is one of the strings it looks for"
+    },
+    "/opt/homebrew/bin/codex": {
+      "sites": [
+        "packages/research_harness_mcp/research_harness_mcp/codex_app_server.py:160",
+        "packages/research_harness_mcp/research_harness_mcp/codex_app_server.py:161"
+      ],
+      "reason": "guarded by Path.exists() and falls back to bare `codex` on PATH, so the literal is a Mac shortcut and never a requirement"
+    },
+    "~/Zotero/zotero.sqlite": {
+      "sites": [
+        "packages/research_harness/research_harness/zotero_resource.py:338"
+      ],
+      "reason": "Zotero's own documented default location; the caller passes db_path on any host that differs"
+    },
+    "~/code/research-harness": {
+      "sites": [
+        "packages/research_harness/research_harness/acquisition/pdf_resolver.py:41"
+      ],
+      "reason": "last candidate in a search that starts from this file's own parents, so it is only reached in a layout the package was not installed from"
+    },
+    "~/code/research-harness/.research-harness": {
+      "sites": [
+        "packages/research_harness_mcp/research_harness_mcp/pdf_roots.py:15"
+      ],
+      "reason": "legacy location for checkouts upgraded from the pre-OSS layout, searched after the package-relative one"
+    },
+    "~/code/rh-workspace": {
+      "sites": [
+        "packages/research_harness/research_harness/_core/config.py:82"
+      ],
+      "reason": "last resort of find_workspace_root, guarded by exists(); returns None on a host without it rather than failing"
+    }
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "schema_version": "spc.biomedical-domain-policy.v0.1",
+  "policy_id": "spc.transcriptomics-core",
+  "policy_version": "provisional-1",
+  "lifecycle_status": "provisional",
+  "operations": {
+    "descriptive_exploratory": {
+      "operation_version": "v1",
+      "rules": [
+        {
+          "code": "SINGLE_CELL_OBSERVATION_REQUIRED",
+          "fact": "single_cell_observation_available",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "来源必须明确支持单细胞或单细胞核观测层级"
+        },
+        {
+          "code": "PROCESSED_EXPRESSION_REQUIRED",
+          "fact": "processed_expression_artifact_available",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "必须存在可定位的处理后表达数据制品"
+        },
+        {
+          "code": "LOCAL_ARTIFACT_VERIFICATION_REQUIRED",
+          "fact": "processed_expression_artifact_local_verified",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "conditional",
+          "unknown_signal": "conditional",
+          "message": "执行分析前仍需下载并验证处理后表达数据制品"
+        },
+        {
+          "code": "BIOLOGICAL_REPLICATION_LIMITATION",
+          "fact": "biological_group_units_recoverable",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "conditional",
+          "unknown_signal": "conditional",
+          "message": "独立生物学单位不足或映射未恢复，只能限制在描述性用途"
+        }
+      ]
+    },
+    "animal_or_patient_level_pseudobulk": {
+      "operation_version": "v1",
+      "rules": [
+        {
+          "code": "SINGLE_CELL_OBSERVATION_REQUIRED",
+          "fact": "single_cell_observation_available",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "pseudobulk 输入必须具有单细胞或单细胞核观测"
+        },
+        {
+          "code": "SUBJECT_SAMPLE_MAPPING_REQUIRED",
+          "fact": "subject_sample_mapping_complete",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "必须恢复受试者或动物到样本、细胞和文库的映射"
+        },
+        {
+          "code": "PRE_LIBRARY_POOLING_FORBIDDEN",
+          "fact": "pooling_before_library",
+          "operator": "equals",
+          "expected": false,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "建库前按组池化会丢失个体表达，不能进行个体层 pseudobulk 推断"
+        },
+        {
+          "code": "BIOLOGICAL_GROUP_UNITS_REQUIRED",
+          "fact": "biological_group_units_recoverable",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "必须存在可恢复的独立生物学分组单位"
+        },
+        {
+          "code": "LOCAL_ARTIFACT_VERIFICATION_REQUIRED",
+          "fact": "processed_expression_artifact_local_verified",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "conditional",
+          "unknown_signal": "conditional",
+          "message": "执行分析前仍需下载并验证处理后表达数据制品"
+        }
+      ]
+    },
+    "longitudinal_paired_change": {
+      "operation_version": "v1",
+      "rules": [
+        {
+          "code": "PAIRED_LONGITUDINAL_DESIGN_REQUIRED",
+          "fact": "paired_longitudinal_design",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "纵向变化分析要求同一独立对象的配对时点"
+        },
+        {
+          "code": "SUBJECT_SAMPLE_MAPPING_REQUIRED",
+          "fact": "subject_sample_mapping_complete",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "必须恢复对象、时点与样本的配对映射"
+        }
+      ]
+    },
+    "matrix_level_integration": {
+      "operation_version": "v1",
+      "rules": [
+        {
+          "code": "SINGLE_MEASUREMENT_SPACE_REQUIRED",
+          "fact": "single_measurement_space",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "直接矩阵整合要求测量平台和 feature space 可证明兼容"
+        },
+        {
+          "code": "LOCAL_ARTIFACT_VERIFICATION_REQUIRED",
+          "fact": "processed_expression_artifact_local_verified",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "conditional",
+          "unknown_signal": "conditional",
+          "message": "执行整合前仍需下载并验证处理后表达数据制品"
+        }
+      ]
+    },
+    "separate_direction_comparison": {
+      "operation_version": "v1",
+      "rules": [
+        {
+          "code": "PROCESSED_EXPRESSION_REQUIRED",
+          "fact": "processed_expression_artifact_available",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "分队列方向比较要求每个数据集具有可定位的表达制品"
+        },
+        {
+          "code": "LOCAL_ARTIFACT_VERIFICATION_REQUIRED",
+          "fact": "processed_expression_artifact_local_verified",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "conditional",
+          "unknown_signal": "conditional",
+          "message": "执行比较前仍需下载并验证表达数据制品"
+        },
+        {
+          "code": "SUBJECT_MAPPING_ADVISORY",
+          "fact": "subject_sample_mapping_complete",
+          "operator": "equals",
+          "expected": true,
+          "failure_signal": "conditional",
+          "unknown_signal": "conditional",
+          "message": "受试者到样本的映射不完整，比较解释必须保持在可验证层级"
+        }
+      ]
+    },
+    "cross_cohort_independent_replication": {
+      "operation_version": "v1",
+      "rules": [
+        {
+          "code": "TWO_INDEPENDENT_DATASETS_REQUIRED",
+          "fact": "independent_dataset_count",
+          "operator": "at_least",
+          "expected": 2,
+          "failure_signal": "blocked",
+          "unknown_signal": "not_assessable",
+          "message": "独立复现至少需要两个经样本重叠审计的数据集"
+        }
+      ]
+    }
+  }
+}

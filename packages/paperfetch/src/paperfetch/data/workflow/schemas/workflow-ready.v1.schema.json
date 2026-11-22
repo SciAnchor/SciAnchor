@@ -1,0 +1,505 @@
+{
+  "$defs": {
+    "ArtifactResult": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "size_bytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Size Bytes"
+        },
+        "status": {
+          "$ref": "#/$defs/ItemStatus"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "required",
+        "status"
+      ],
+      "title": "ArtifactResult",
+      "type": "object"
+    },
+    "Blocker": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "remediation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remediation"
+        },
+        "resource_ref": {
+          "title": "Resource Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "resource_ref",
+        "message"
+      ],
+      "title": "Blocker",
+      "type": "object"
+    },
+    "DatasetResult": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_results": {
+          "items": {
+            "$ref": "#/$defs/ArtifactResult"
+          },
+          "title": "Artifact Results",
+          "type": "array"
+        },
+        "dataset_manifest_digest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dataset Manifest Digest"
+        },
+        "dataset_ref": {
+          "pattern": "^dataset:[a-z0-9][a-z0-9._-]*:[A-Za-z0-9][A-Za-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Dataset Ref",
+          "type": "string"
+        },
+        "materialization_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Materialization Path"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "requirement_id": {
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ItemStatus"
+        }
+      },
+      "required": [
+        "requirement_id",
+        "dataset_ref",
+        "required",
+        "status",
+        "artifact_results"
+      ],
+      "title": "DatasetResult",
+      "type": "object"
+    },
+    "EnvironmentResult": {
+      "additionalProperties": false,
+      "properties": {
+        "environment_ref": {
+          "pattern": "^environment:[a-z0-9][a-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Environment Ref",
+          "type": "string"
+        },
+        "launcher": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Launcher"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "prefix": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prefix"
+        },
+        "probe_results": {
+          "items": {
+            "$ref": "#/$defs/ProbeResult"
+          },
+          "title": "Probe Results",
+          "type": "array"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "requirement_id": {
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ItemStatus"
+        },
+        "validation_level": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ValidationLevel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "requirement_id",
+        "environment_ref",
+        "required",
+        "status",
+        "probe_results"
+      ],
+      "title": "EnvironmentResult",
+      "type": "object"
+    },
+    "ItemStatus": {
+      "enum": [
+        "ready",
+        "missing",
+        "blocked",
+        "unsupported",
+        "invalid",
+        "optional_missing"
+      ],
+      "title": "ItemStatus",
+      "type": "string"
+    },
+    "Launcher": {
+      "additionalProperties": false,
+      "properties": {
+        "argv_prefix": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Argv Prefix",
+          "type": "array"
+        }
+      },
+      "required": [
+        "argv_prefix"
+      ],
+      "title": "Launcher",
+      "type": "object"
+    },
+    "LifecycleStatus": {
+      "enum": [
+        "provisional",
+        "frozen",
+        "retired"
+      ],
+      "title": "LifecycleStatus",
+      "type": "string"
+    },
+    "ProbeResult": {
+      "additionalProperties": false,
+      "properties": {
+        "detail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail"
+        },
+        "level": {
+          "$ref": "#/$defs/ValidationLevel"
+        },
+        "status": {
+          "$ref": "#/$defs/ItemStatus"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "level",
+        "status"
+      ],
+      "title": "ProbeResult",
+      "type": "object"
+    },
+    "ReportHost": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "pattern": "^host:[a-z0-9][a-z0-9._-]*$",
+          "title": "Host Id",
+          "type": "string"
+        },
+        "platform": {
+          "title": "Platform",
+          "type": "string"
+        },
+        "profile_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Profile Digest",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "platform",
+        "profile_digest"
+      ],
+      "title": "ReportHost",
+      "type": "object"
+    },
+    "ReportProducer": {
+      "additionalProperties": false,
+      "properties": {
+        "produced_at": {
+          "format": "date-time",
+          "title": "Produced At",
+          "type": "string"
+        },
+        "producer_actor": {
+          "title": "Producer Actor",
+          "type": "string"
+        },
+        "spc_git_sha": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spc Git Sha"
+        },
+        "spc_version": {
+          "title": "Spc Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "spc_version",
+        "producer_actor",
+        "produced_at"
+      ],
+      "title": "ReportProducer",
+      "type": "object"
+    },
+    "ReportWorkflow": {
+      "additionalProperties": false,
+      "properties": {
+        "manifest_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Manifest Digest",
+          "type": "string"
+        },
+        "manifest_revision": {
+          "minimum": 1,
+          "title": "Manifest Revision",
+          "type": "integer"
+        },
+        "workflow_ref": {
+          "pattern": "^workflow:[a-z0-9][a-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Workflow Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "workflow_ref",
+        "manifest_revision",
+        "manifest_digest"
+      ],
+      "title": "ReportWorkflow",
+      "type": "object"
+    },
+    "ResourceStatus": {
+      "enum": [
+        "ready",
+        "ready_with_optional_missing",
+        "blocked",
+        "unsupported"
+      ],
+      "title": "ResourceStatus",
+      "type": "string"
+    },
+    "ValidationLevel": {
+      "enum": [
+        "IMPORT_PASS",
+        "SMOKE_PASS",
+        "REAL_PASS"
+      ],
+      "title": "ValidationLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "blockers": {
+      "items": {
+        "$ref": "#/$defs/Blocker"
+      },
+      "title": "Blockers",
+      "type": "array"
+    },
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Content Digest",
+      "type": "string"
+    },
+    "contract_lifecycle": {
+      "$ref": "#/$defs/LifecycleStatus"
+    },
+    "datasets": {
+      "items": {
+        "$ref": "#/$defs/DatasetResult"
+      },
+      "title": "Datasets",
+      "type": "array"
+    },
+    "environments": {
+      "items": {
+        "$ref": "#/$defs/EnvironmentResult"
+      },
+      "title": "Environments",
+      "type": "array"
+    },
+    "host": {
+      "$ref": "#/$defs/ReportHost"
+    },
+    "producer": {
+      "$ref": "#/$defs/ReportProducer"
+    },
+    "report_id": {
+      "title": "Report Id",
+      "type": "string"
+    },
+    "resource_status": {
+      "$ref": "#/$defs/ResourceStatus"
+    },
+    "schema_version": {
+      "const": "spc.workflow-ready.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "selected_modules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Selected Modules",
+      "type": "array"
+    },
+    "workflow": {
+      "$ref": "#/$defs/ReportWorkflow"
+    }
+  },
+  "required": [
+    "schema_version",
+    "report_id",
+    "workflow",
+    "contract_lifecycle",
+    "host",
+    "producer",
+    "selected_modules",
+    "environments",
+    "datasets",
+    "resource_status",
+    "blockers",
+    "content_digest"
+  ],
+  "title": "WorkflowReady",
+  "type": "object"
+}

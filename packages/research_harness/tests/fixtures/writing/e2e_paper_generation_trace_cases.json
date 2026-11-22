@@ -1,0 +1,558 @@
+{
+  "schema_version": "rh.e2e_paper_generation_trace_cases.v1",
+  "status": "local_fixture_only",
+  "dataset_schema_version": "rh.e2e_paper_generation_dataset.v1",
+  "purpose": "Canonical local candidate traces for the private LG78 trace-shape validator.",
+  "boundaries": {
+    "uses_network": false,
+    "uses_real_llm": false,
+    "uses_real_zotero": false,
+    "runs_external_provider": false,
+    "writes_project_db": false,
+    "adds_public_surface": false,
+    "authorizes_submission": false
+  },
+  "traces": [
+    {
+      "schema_version": "rh.e2e_paper_generation_trace.v1",
+      "case_id": "social_science_education_intervention_full_chain",
+      "run": {
+        "run_id": "trace-social-science-education-intervention-full-chain",
+        "origin": "local_dry_run_fixture",
+        "status": "completed"
+      },
+      "context_refs": [
+        {
+          "kind": "fixture",
+          "ref_id": "e2e_paper_generation_dataset.json#social_science_education_intervention_full_chain",
+          "content_hash": "sha256:lg78-social-science-positive"
+        }
+      ],
+      "spans": [
+        {
+          "span_type": "context_selection",
+          "status": "completed"
+        },
+        {
+          "span_type": "model_call",
+          "status": "completed"
+        },
+        {
+          "span_type": "tool_call",
+          "status": "completed"
+        },
+        {
+          "span_type": "gate_check",
+          "status": "completed"
+        },
+        {
+          "span_type": "artifact_write",
+          "status": "completed"
+        },
+        {
+          "span_type": "eval_scoring",
+          "status": "completed"
+        }
+      ],
+      "events": [
+        {
+          "event_type": "run_started",
+          "status": "running"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW01_TOPIC_AND_VENUE_CONTRACT",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW02_EVIDENCE_ACQUISITION_AND_READING",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW03_GAP_BASELINE_NOVELTY_VALIDATION",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW04_EXPERIMENT_RESULT_INGESTION",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW05_PAPER_PLAN_AND_STORYLINE",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW06_SECTION_DRAFTING_AND_REVISION",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW06B_SKELETON_SOURCE_AND_CITATION_INTEGRITY",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW07_FIGURE_TABLE_AND_ASSET_QUALITY",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW08_LATEX_CITATION_AND_FINAL_BUNDLE",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW09_REVIEW_AUDIT_AND_PUBLICATION_PACK",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW10_REBUTTAL_CAMERA_READY_AND_REPLAY",
+          "status": "pass"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "RESEARCH_BRIEF",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "IDEA_REPORT",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "RESEARCH_PROPOSAL",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "EVALUATION",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "EXPERIMENT_GOAL",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "EXPERIMENT_PLAN",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "IMPACT_REPORT",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "CLAIMS_FROM_RESULTS",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "PAPER_PLAN",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "AUTO_REVIEW",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "PRESUBMISSION_AUDIT",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "PAPER_PACKAGE",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "REBUTTAL_PACKAGE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "PAPER_PROFILE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "DOMAIN_WRITING_PROFILE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "DOMAIN_METHOD_SEARCH_PROFILE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "EVALUATION_GATE_PROFILE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "PROBLEM_ANCHOR",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "EXPERIMENT_GROUNDING_PROFILE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "RESULT_TO_CLAIM_ANALYSIS_PROFILE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "SKELETON_SOURCE_INTEGRITY_PROFILE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "PRESUBMISSION_SEVERITY_GATE_PROFILE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "REBUTTAL_READINESS_GATE_PROFILE",
+          "state": "current"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "VENUE_OVERLAY",
+          "state": "current"
+        },
+        {
+          "event_type": "gate_decision",
+          "stage": "PW09_REVIEW_AUDIT_AND_PUBLICATION_PACK",
+          "decision": "allow"
+        },
+        {
+          "event_type": "durable_completion",
+          "status": "completed",
+          "decision": "reviewable_package_ready"
+        }
+      ],
+      "artifacts": {
+        "RESEARCH_BRIEF": {
+          "artifact_id": "social:RESEARCH_BRIEF",
+          "state": "current",
+          "content_hash": "sha256:social-research-brief"
+        },
+        "IDEA_REPORT": {
+          "artifact_id": "social:IDEA_REPORT",
+          "state": "current",
+          "content_hash": "sha256:social-idea-report"
+        },
+        "RESEARCH_PROPOSAL": {
+          "artifact_id": "social:RESEARCH_PROPOSAL",
+          "state": "current",
+          "content_hash": "sha256:social-research-proposal"
+        },
+        "EVALUATION": {
+          "artifact_id": "social:EVALUATION",
+          "state": "current",
+          "content_hash": "sha256:social-evaluation"
+        },
+        "EXPERIMENT_GOAL": {
+          "artifact_id": "social:EXPERIMENT_GOAL",
+          "state": "current",
+          "content_hash": "sha256:social-experiment-goal"
+        },
+        "EXPERIMENT_PLAN": {
+          "artifact_id": "social:EXPERIMENT_PLAN",
+          "state": "current",
+          "content_hash": "sha256:social-experiment-plan"
+        },
+        "IMPACT_REPORT": {
+          "artifact_id": "social:IMPACT_REPORT",
+          "state": "current",
+          "content_hash": "sha256:social-impact-report"
+        },
+        "CLAIMS_FROM_RESULTS": {
+          "artifact_id": "social:CLAIMS_FROM_RESULTS",
+          "state": "current",
+          "content_hash": "sha256:social-claims-from-results"
+        },
+        "PAPER_PLAN": {
+          "artifact_id": "social:PAPER_PLAN",
+          "state": "current",
+          "content_hash": "sha256:social-paper-plan"
+        },
+        "AUTO_REVIEW": {
+          "artifact_id": "social:AUTO_REVIEW",
+          "state": "current",
+          "content_hash": "sha256:social-auto-review"
+        },
+        "PRESUBMISSION_AUDIT": {
+          "artifact_id": "social:PRESUBMISSION_AUDIT",
+          "state": "current",
+          "content_hash": "sha256:social-presubmission-audit"
+        },
+        "PAPER_PACKAGE": {
+          "artifact_id": "social:PAPER_PACKAGE",
+          "state": "current",
+          "content_hash": "sha256:social-paper-package"
+        },
+        "REBUTTAL_PACKAGE": {
+          "artifact_id": "social:REBUTTAL_PACKAGE",
+          "state": "current",
+          "content_hash": "sha256:social-rebuttal-package"
+        }
+      },
+      "control_artifacts": {
+        "PAPER_PROFILE": {
+          "artifact_id": "social:PAPER_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:social-paper-profile"
+        },
+        "DOMAIN_WRITING_PROFILE": {
+          "artifact_id": "social:DOMAIN_WRITING_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:social-domain-writing-profile"
+        },
+        "DOMAIN_METHOD_SEARCH_PROFILE": {
+          "artifact_id": "social:DOMAIN_METHOD_SEARCH_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:social-domain-method-search-profile"
+        },
+        "EVALUATION_GATE_PROFILE": {
+          "artifact_id": "social:EVALUATION_GATE_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:social-evaluation-gate-profile"
+        },
+        "PROBLEM_ANCHOR": {
+          "artifact_id": "social:PROBLEM_ANCHOR",
+          "state": "current",
+          "content_hash": "sha256:social-problem-anchor"
+        },
+        "EXPERIMENT_GROUNDING_PROFILE": {
+          "artifact_id": "social:EXPERIMENT_GROUNDING_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:social-experiment-grounding-profile"
+        },
+        "RESULT_TO_CLAIM_ANALYSIS_PROFILE": {
+          "artifact_id": "social:RESULT_TO_CLAIM_ANALYSIS_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:social-result-to-claim-analysis-profile"
+        },
+        "SKELETON_SOURCE_INTEGRITY_PROFILE": {
+          "artifact_id": "social:SKELETON_SOURCE_INTEGRITY_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:social-skeleton-source-integrity-profile"
+        },
+        "PRESUBMISSION_SEVERITY_GATE_PROFILE": {
+          "artifact_id": "social:PRESUBMISSION_SEVERITY_GATE_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:social-presubmission-severity-gate-profile"
+        },
+        "REBUTTAL_READINESS_GATE_PROFILE": {
+          "artifact_id": "social:REBUTTAL_READINESS_GATE_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:social-rebuttal-readiness-gate-profile"
+        },
+        "VENUE_OVERLAY": {
+          "artifact_id": "social:VENUE_OVERLAY",
+          "state": "current",
+          "content_hash": "sha256:social-venue-overlay"
+        }
+      },
+      "evidence_inventory": {
+        "paper_ids": [
+          "paper:education-intervention:001",
+          "paper:education-intervention:002"
+        ],
+        "claim_ids": [
+          "claim:attendance-outcome",
+          "claim:randomized-design"
+        ],
+        "result_artifacts": [
+          "result:attendance-effect-table"
+        ],
+        "source_artifacts": [
+          "source:protocol",
+          "source:dataset-codebook"
+        ],
+        "weak_or_unsupported_markers": []
+      },
+      "external_actions": [],
+      "final_decision": "reviewable_package_ready",
+      "expected_blockers": []
+    },
+    {
+      "schema_version": "rh.e2e_paper_generation_trace.v1",
+      "case_id": "stem_result_overclaim",
+      "run": {
+        "run_id": "trace-stem-result-overclaim",
+        "origin": "local_dry_run_fixture",
+        "status": "completed"
+      },
+      "context_refs": [
+        {
+          "kind": "fixture",
+          "ref_id": "e2e_paper_generation_dataset.json#stem_result_overclaim",
+          "content_hash": "sha256:lg78-stem-overclaim-block"
+        }
+      ],
+      "spans": [
+        {
+          "span_type": "context_selection",
+          "status": "completed"
+        },
+        {
+          "span_type": "model_call",
+          "status": "completed"
+        },
+        {
+          "span_type": "tool_call",
+          "status": "completed"
+        },
+        {
+          "span_type": "gate_check",
+          "status": "blocked"
+        },
+        {
+          "span_type": "artifact_write",
+          "status": "completed"
+        },
+        {
+          "span_type": "eval_scoring",
+          "status": "completed"
+        }
+      ],
+      "events": [
+        {
+          "event_type": "run_started",
+          "status": "running"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW01_TOPIC_AND_VENUE_CONTRACT",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW02_EVIDENCE_ACQUISITION_AND_READING",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_completed",
+          "stage": "PW03_GAP_BASELINE_NOVELTY_VALIDATION",
+          "status": "pass"
+        },
+        {
+          "event_type": "stage_blocked",
+          "stage": "PW04_EXPERIMENT_RESULT_INGESTION",
+          "status": "blocked"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "RESEARCH_BRIEF",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "IDEA_REPORT",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "RESEARCH_PROPOSAL",
+          "state": "current"
+        },
+        {
+          "event_type": "artifact_recorded",
+          "artifact": "EVALUATION",
+          "state": "blocked"
+        },
+        {
+          "event_type": "control_artifact_recorded",
+          "artifact": "RESULT_TO_CLAIM_ANALYSIS_PROFILE",
+          "state": "blocked"
+        },
+        {
+          "event_type": "gate_decision",
+          "stage": "PW04_EXPERIMENT_RESULT_INGESTION",
+          "decision": "block"
+        },
+        {
+          "event_type": "durable_completion",
+          "status": "completed",
+          "decision": "blocked"
+        }
+      ],
+      "artifacts": {
+        "RESEARCH_BRIEF": {
+          "artifact_id": "overclaim:RESEARCH_BRIEF",
+          "state": "current",
+          "content_hash": "sha256:overclaim-research-brief"
+        },
+        "IDEA_REPORT": {
+          "artifact_id": "overclaim:IDEA_REPORT",
+          "state": "current",
+          "content_hash": "sha256:overclaim-idea-report"
+        },
+        "RESEARCH_PROPOSAL": {
+          "artifact_id": "overclaim:RESEARCH_PROPOSAL",
+          "state": "current",
+          "content_hash": "sha256:overclaim-research-proposal"
+        },
+        "EVALUATION": {
+          "artifact_id": "overclaim:EVALUATION",
+          "state": "blocked",
+          "content_hash": "sha256:overclaim-evaluation"
+        }
+      },
+      "control_artifacts": {
+        "PAPER_PROFILE": {
+          "artifact_id": "overclaim:PAPER_PROFILE",
+          "state": "current",
+          "content_hash": "sha256:overclaim-paper-profile"
+        },
+        "RESULT_TO_CLAIM_ANALYSIS_PROFILE": {
+          "artifact_id": "overclaim:RESULT_TO_CLAIM_ANALYSIS_PROFILE",
+          "state": "blocked",
+          "content_hash": "sha256:overclaim-result-to-claim-analysis-profile"
+        }
+      },
+      "evidence_inventory": {
+        "paper_ids": [
+          "paper:event-forecasting:001"
+        ],
+        "claim_ids": [
+          "claim:partial-result"
+        ],
+        "result_artifacts": [
+          "result:partial-accuracy-table"
+        ],
+        "source_artifacts": [
+          "source:experiment-log"
+        ],
+        "weak_or_unsupported_markers": [
+          "overclaim:result_strength",
+          "missing:ablation",
+          "missing:statistical_summary"
+        ]
+      },
+      "external_actions": [],
+      "final_decision": "blocked",
+      "expected_blockers": [
+        "overclaim:result_strength",
+        "missing:ablation",
+        "missing:statistical_summary"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+# 凭证与环境变量（敏感信息，禁止提交）
+.env
+.env.*
+!.env.example
+secrets.env
+
+# 本地抓取数据与成果包
+seed_pack/
+parsed_markdowns/
+parsed_results/
+pdfs/
+.spc_cache/
+.spc/
+.spc_test_out/
+download_temp/
+test_out/
+output/
+research_outputs/
+dummy.pdf
+
+# Python 运行时及编译缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+
+# 编辑器与系统临时文件
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 本地临时调试文件
+scratch/
+tmp/
+tmp_*
+logs/
+*.log
+.playwright-cli/
+.playwright-mcp/
+
+# 测试目录只跟踪测试代码与固定样本
+/tests/*
+!/tests/*.py
+!/tests/fixtures/
+
+# 参考数据的本地原始输入与备份
+src/paperfetch/data/reference/raw/
+src/paperfetch/data/reference/**/*.bak
+
+# 本地 Agent 状态；仓库内 Skill 与插件 marketplace 需要入库
+.codex/
+.claude/
+.agents/*
+!.agents/plugins/
+!.agents/skills/

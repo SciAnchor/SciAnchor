@@ -1,0 +1,19 @@
+{
+  "schema_version": "spc.environment-definition.v1",
+  "environment_ref": "environment:npj-gene-geneformer@provisional-1",
+  "lifecycle_status": "provisional",
+  "runtime": "external_managed",
+  "platforms": [
+    "linux-x86_64"
+  ],
+  "lock_digest": null,
+  "external_identity": "autodl:glioma-topic16:geneformer",
+  "probes": [
+    {
+      "type": "validation_ledger",
+      "level": "REAL_PASS",
+      "path": "validation-ledger.json"
+    }
+  ],
+  "content_digest": "sha256:64c185de43805309ce523ec0e6703e6eefd3e76fda831683f6b27f0c5b58b825"
+}

@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C17_overbroad_evidence_span"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.evidence_link_granularity.0001"
+}

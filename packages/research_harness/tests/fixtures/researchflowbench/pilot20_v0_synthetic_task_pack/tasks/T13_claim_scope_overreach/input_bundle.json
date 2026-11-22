@@ -1,0 +1,18 @@
+{
+  "allowed_tools": [
+    "local_static_corpus"
+  ],
+  "expected_rh_axes": [
+    "paper_reading.claim_quality",
+    "evidence_linking.support_accuracy",
+    "section_drafting.citation_grounding"
+  ],
+  "external_search_policy": "forbidden_in_v0",
+  "prompt_context": "Synthetic public-safe context for T13.",
+  "schema_version": "researchflowbench.input_bundle.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.claim_scope_overreach.0001",
+  "visible_local_corpus_record_ids": [
+    "evidence.T13.synthetic_public"
+  ]
+}

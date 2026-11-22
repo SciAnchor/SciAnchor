@@ -1,0 +1,81 @@
+{
+  "schema_version": "spc.dataset-manifest.v1",
+  "dataset_ref": "dataset:geo:GSE131928@provisional-1",
+  "lifecycle_status": "provisional",
+  "source_identity": {
+    "namespace": "geo",
+    "accession": "GSE131928",
+    "official_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE131nnn/GSE131928"
+  },
+  "source_snapshot": {
+    "observed_at": "2026-08-01T17:30:44Z",
+    "remote_snapshot_digest": "sha256:bd8653fc88e5747e0fe6a4319c65d7a95f340151dc040a51ddc6d25aebbb71dc"
+  },
+  "artifacts": [
+    {
+      "artifact_id": "raw-archive",
+      "filename": "GSE131928_RAW.tar",
+      "kind": "supplementary",
+      "size_bytes": 669112320,
+      "sha256": "f0edd741959b8c4ab375df7aec95c696095894bc5b9752e0ad3a977a978d602e",
+      "source_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE131nnn/GSE131928/suppl/GSE131928_RAW.tar",
+      "last_modified": "2019-07-08T18:04:40Z",
+      "etag": null
+    },
+    {
+      "artifact_id": "adult-pediatric-annotation",
+      "filename": "GSE131928_single_cells_tumor_name_and_adult_or_peidatric.xlsx",
+      "kind": "sample_annotation",
+      "size_bytes": 848063,
+      "sha256": "4bcee2ff8b093c699adaffcf1fc0872b618241be2c3be882ceea3c142dd3e45b",
+      "source_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE131nnn/GSE131928/suppl/GSE131928_single_cells_tumor_name_and_adult_or_peidatric.xlsx",
+      "last_modified": "2019-05-29T19:48:24Z",
+      "etag": null
+    },
+    {
+      "artifact_id": "family-soft",
+      "filename": "GSE131928_family.soft.gz",
+      "kind": "soft",
+      "size_bytes": 3767,
+      "sha256": "b22c5c04b28099be74a46366a225f3e1ed7bff7a33238dd5016498a644b7dc52",
+      "source_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE131nnn/GSE131928/soft/GSE131928_family.soft.gz",
+      "last_modified": "2026-07-30T05:36:05Z",
+      "etag": null
+    },
+    {
+      "artifact_id": "series-matrix",
+      "filename": "GSE131928_series_matrix.txt.gz",
+      "kind": "series_matrix",
+      "size_bytes": 3705,
+      "sha256": "e24c3114023d84ba6118ccd020c656cf64c2e1cad4f0fe59115a1f4659a01112",
+      "source_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE131nnn/GSE131928/matrix/GSE131928_series_matrix.txt.gz",
+      "last_modified": "2026-07-30T05:36:05Z",
+      "etag": null
+    },
+    {
+      "artifact_id": "filelist",
+      "filename": "filelist.txt",
+      "kind": "supplementary_index",
+      "size_bytes": 270,
+      "sha256": "2ff2c28449543101c76f3988646f118e3f5e0bf98d5ad88bb4da5060d04fb3dc",
+      "source_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE131nnn/GSE131928/suppl/filelist.txt",
+      "last_modified": "2019-07-08T18:04:40Z",
+      "etag": null
+    }
+  ],
+  "acquisition_sources": [
+    {
+      "source_id": "ncbi-geo",
+      "mode": "automatic",
+      "priority": 10
+    }
+  ],
+  "content_identity": {
+    "identity_status": "verified",
+    "raw_archive_member_count": 2,
+    "raw_archive_member_manifest_sha256": "fdb2b8f6caab51a6c99901139bff52e90fdb620729eb51708f40d94dc6cc1f55",
+    "workflow_baseline_package_sha256": "f0edd741959b8c4ab375df7aec95c696095894bc5b9752e0ad3a977a978d602e",
+    "server_wsl_package_sha256": null
+  },
+  "content_digest": "sha256:fa848b60cb5c1467c925e2623a7d6a41c76d8ec0a33bdb886267de79c222de93"
+}

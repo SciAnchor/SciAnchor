@@ -1,0 +1,23 @@
+{
+  "corrupted_case_ids": [
+    "C12_cross_topic_source_contamination"
+  ],
+  "gold_asset_ids": [
+    "evidence.T12.synthetic_public"
+  ],
+  "human_calibration_required": true,
+  "judge_only": true,
+  "leakage_canaries": [
+    "SYNTHETIC_HIDDEN_CANARY_T12"
+  ],
+  "outcome_oracle": {
+    "expected": "Synthetic outcome oracle for T12."
+  },
+  "process_oracle": {
+    "expected": "Synthetic process oracle for T12."
+  },
+  "release_grade": false,
+  "schema_version": "researchflowbench.gold_bundle.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.cross_topic_provenance_guard.0001"
+}

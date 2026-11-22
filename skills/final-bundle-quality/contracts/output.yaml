@@ -1,0 +1,97 @@
+schema_version: rh.schema.artifact.final_bundle_quality_report.v0
+type: object
+description: Artifact payload emitted after final_bundle quality evaluation and replay gating.
+required:
+  - summary
+  - issue_counts
+  - issue_groups
+  - replay_decision
+  - promotion_decision
+properties:
+  summary:
+    type: string
+  issue_counts:
+    type: object
+    required:
+      - blocking
+      - recompile_repairable
+      - layout_only
+      - encoding
+    properties:
+      blocking:
+        type: integer
+        minimum: 0
+      recompile_repairable:
+        type: integer
+        minimum: 0
+      layout_only:
+        type: integer
+        minimum: 0
+      encoding:
+        type: integer
+        minimum: 0
+  issue_groups:
+    type: object
+    properties:
+      blocking:
+        type: array
+      recompile_repairable:
+        type: array
+      layout_only:
+        type: array
+      encoding:
+        type: array
+  replay_decision:
+    type: object
+    required:
+      - source_trajectory_passed
+      - held_out_replay_passed
+      - target_profile_match
+      - promotion_strength
+    properties:
+      source_trajectory_passed:
+        type: boolean
+      held_out_replay_passed:
+        type: boolean
+      target_profile_match:
+        type: string
+        enum:
+          - exact
+          - compatible
+          - none
+      promotion_strength:
+        type: string
+        enum:
+          - exact_profile_held_out
+          - compatible_profile_held_out
+          - none
+  promotion_decision:
+    type: object
+    required:
+      - action
+      - reasons
+    properties:
+      action:
+        type: string
+        enum:
+          - promote
+          - evaluate
+          - refine
+          - reject
+      reasons:
+        type: array
+        items:
+          type: string
+  artifact_refs:
+    type: object
+    properties:
+      gate_report:
+        type: string
+      replay_report:
+        type: string
+      management_report:
+        type: string
+guardrails:
+  - issue_classes_present
+  - promotion_evidence_classified
+  - reviewer_consensus_veto_preserved

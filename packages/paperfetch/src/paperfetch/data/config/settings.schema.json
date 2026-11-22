@@ -1,0 +1,365 @@
+{
+  "schema": "spc.settings.v1",
+  "fields": [
+    {
+      "name": "SPC_ENVIRONMENT",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "development 或 production；未设则按解释器位置推断"
+    },
+    {
+      "name": "SPC_STATE_ROOT",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "运行状态根"
+    },
+    {
+      "name": "SPC_CACHE_ROOT",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "缓存根"
+    },
+    {
+      "name": "SPC_DATA_ROOT",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "数据根"
+    },
+    {
+      "name": "SPC_CONFIG_FILE",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "非密 spc.toml 路径"
+    },
+    {
+      "name": "SPC_LOG_MODE",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "development 或 production"
+    },
+    {
+      "name": "SPC_LOG_LEVEL",
+      "type": "str",
+      "default": "INFO",
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "日志级别"
+    },
+    {
+      "name": "SPC_LOG_FILE",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "UTF-8 日志文件"
+    },
+    {
+      "name": "SPC_EVENT_FILE",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "脱敏事件 JSONL"
+    },
+    {
+      "name": "SPC_NO_PROGRESS",
+      "type": "bool",
+      "default": false,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "关闭动态进度"
+    },
+    {
+      "name": "SPC_RUN_ID",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "运行标识"
+    },
+    {
+      "name": "SPC_JOB_ID",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "作业标识"
+    },
+    {
+      "name": "SPC_JOB_ROOT",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "作业状态根"
+    },
+    {
+      "name": "SPC_HOST_ID",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "主机标识"
+    },
+    {
+      "name": "SPC_PHASE1_PAPER_CONCURRENCY",
+      "type": "int",
+      "default": 2,
+      "secrecy": "public",
+      "capability": "paper.download",
+      "description": "第一阶段论文并发"
+    },
+    {
+      "name": "SPC_EXIT_IP_PROBE_URL",
+      "type": "secret",
+      "default": null,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "出口探测 URL，不输出实值"
+    },
+    {
+      "name": "SPC_DRYAD_DATA_ROOT",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "dataset.dryad",
+      "description": "Dryad 数据根"
+    },
+    {
+      "name": "SPC_GEO_DATA_ROOT",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "dataset.geo",
+      "description": "GEO 数据根"
+    },
+    {
+      "name": "SPC_GEO_MAX_DOWNLOAD_GB",
+      "type": "float",
+      "default": null,
+      "secrecy": "public",
+      "capability": "dataset.geo",
+      "description": "GEO 下载上限 GB"
+    },
+    {
+      "name": "SPC_GEO_CONNECT_TIMEOUT",
+      "type": "float",
+      "default": 30.0,
+      "secrecy": "public",
+      "capability": "dataset.geo",
+      "description": "GEO 连接超时"
+    },
+    {
+      "name": "SPC_GEO_READ_TIMEOUT",
+      "type": "float",
+      "default": 60.0,
+      "secrecy": "public",
+      "capability": "dataset.geo",
+      "description": "GEO 读取超时"
+    },
+    {
+      "name": "SPC_GEO_PROGRESS_BYTES",
+      "type": "int",
+      "default": 10485760,
+      "secrecy": "public",
+      "capability": "dataset.geo",
+      "description": "GEO 进度更新字节间隔"
+    },
+    {
+      "name": "SPC_GEO_PROGRESS_INTERVAL",
+      "type": "float",
+      "default": 2.0,
+      "secrecy": "public",
+      "capability": "dataset.geo",
+      "description": "GEO 进度更新时间间隔"
+    },
+    {
+      "name": "SPC_GEO_PROXY",
+      "type": "secret",
+      "default": null,
+      "secrecy": "public",
+      "capability": "dataset.geo",
+      "description": "GEO 代理 URL"
+    },
+    {
+      "name": "SPC_GEO_PROXY_MODE",
+      "type": "str",
+      "default": "direct",
+      "secrecy": "public",
+      "capability": "dataset.geo",
+      "description": "GEO 代理模式"
+    },
+    {
+      "name": "SPC_GEO_STREAM_RETRIES",
+      "type": "int",
+      "default": 3,
+      "secrecy": "public",
+      "capability": "dataset.geo",
+      "description": "GEO 流重试次数"
+    },
+    {
+      "name": "SPC_API_KEY_STATE_DB",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "paper.metadata",
+      "description": "API key 状态库"
+    },
+    {
+      "name": "SPC_CODE_AUDIT_TIMEOUT_SECONDS",
+      "type": "float",
+      "default": 30.0,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "代码审计超时"
+    },
+    {
+      "name": "SPC_METADATA_CACHE_DB",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "paper.metadata",
+      "description": "元数据缓存库"
+    },
+    {
+      "name": "SPC_JOURNAL_MASTER_DB",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "paper.metadata",
+      "description": "用户自备的期刊主库 SQLite（CAS 分区等受限数据），未配置时相关字段为空"
+    },
+    {
+      "name": "SPC_BIOMEDICAL_DATA_ROOT",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "dataset.biomedical",
+      "description": "生物医学数据根"
+    },
+    {
+      "name": "SPC_DOWNLOAD_COORDINATION_ROOT",
+      "type": "str",
+      "default": null,
+      "secrecy": "public",
+      "capability": "dataset",
+      "description": "数据下载协调根"
+    },
+    {
+      "name": "METADATA_PROXY",
+      "type": "secret",
+      "default": null,
+      "secrecy": "public",
+      "capability": "paper.metadata",
+      "description": "元数据能力代理 URL"
+    },
+    {
+      "name": "DOWNLOAD_PROXY",
+      "type": "secret",
+      "default": null,
+      "secrecy": "public",
+      "capability": "paper.download",
+      "description": "公开下载能力代理 URL"
+    },
+    {
+      "name": "MINERU_PROXY",
+      "type": "secret",
+      "default": null,
+      "secrecy": "public",
+      "capability": "paper.parse",
+      "description": "MinerU 能力代理 URL"
+    },
+    {
+      "name": "ARCHIVE_PROXY",
+      "type": "secret",
+      "default": null,
+      "secrecy": "public",
+      "capability": "dataset.archive",
+      "description": "归档能力代理 URL"
+    },
+    {
+      "name": "DOWNLOAD_PROXY_MODE",
+      "type": "str",
+      "default": "route-aware",
+      "secrecy": "public",
+      "capability": "paper.download",
+      "description": "公开下载代理模式"
+    },
+    {
+      "name": "PDF_DOWNLOAD_NO_PROXY",
+      "type": "bool",
+      "default": false,
+      "secrecy": "public",
+      "capability": "paper.download",
+      "description": "公开下载强制直连"
+    },
+    {
+      "name": "PDF_DOWNLOAD_NO_PROXY_ROUTES",
+      "type": "str",
+      "default": "public_http,public_browser,elsevier_api,publisher_api_springer",
+      "secrecy": "public",
+      "capability": "paper.download",
+      "description": "route-aware 下直连的公开路由"
+    },
+    {
+      "name": "ARCHIVE_PROXY_MODE",
+      "type": "str",
+      "default": "direct",
+      "secrecy": "public",
+      "capability": "dataset.archive",
+      "description": "归档代理模式"
+    },
+    {
+      "name": "METADATA_CONNECT_TIMEOUT",
+      "type": "float",
+      "default": 10.0,
+      "secrecy": "public",
+      "capability": "paper.metadata",
+      "description": "元数据连接超时"
+    },
+    {
+      "name": "METADATA_READ_TIMEOUT",
+      "type": "float",
+      "default": 20.0,
+      "secrecy": "public",
+      "capability": "paper.metadata",
+      "description": "元数据读超时"
+    },
+    {
+      "name": "METADATA_WRITE_TIMEOUT",
+      "type": "float",
+      "default": 15.0,
+      "secrecy": "public",
+      "capability": "paper.metadata",
+      "description": "元数据写超时"
+    },
+    {
+      "name": "METADATA_POOL_TIMEOUT",
+      "type": "float",
+      "default": 15.0,
+      "secrecy": "public",
+      "capability": "paper.metadata",
+      "description": "元数据连接池超时"
+    },
+    {
+      "name": "HTTP_RETRY_AFTER_MAX_SECONDS",
+      "type": "float",
+      "default": 120.0,
+      "secrecy": "public",
+      "capability": "system.core",
+      "description": "Retry-After 上限"
+    }
+  ]
+}

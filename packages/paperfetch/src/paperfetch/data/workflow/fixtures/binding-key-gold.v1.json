@@ -1,0 +1,24 @@
+{
+  "schema_version": "spc.binding-key-gold.v1",
+  "canonicalization": "UTF-8, sorted object keys, compact separators, arrays preserved, ensure_ascii=false, allow_nan=false",
+  "cases": [
+    {
+      "case_id": "topic-id-integer",
+      "input": {
+        "topic_id": 16,
+        "workflow_ref": "workflow:npj-gene.glioma@provisional-1",
+        "host_id": "host:desktop-d29igt8-wsl"
+      },
+      "binding_key": "sha256:0f19186d73e456a43af55fa17e94843daabe9625bb60f07aacf8e4427bb3795e"
+    },
+    {
+      "case_id": "topic-id-string-is-distinct",
+      "input": {
+        "topic_id": "16",
+        "workflow_ref": "workflow:npj-gene.glioma@provisional-1",
+        "host_id": "host:desktop-d29igt8-wsl"
+      },
+      "binding_key": "sha256:a746de632dedc1580723cac19d796939e80901c02a3682a835cede48392d69d1"
+    }
+  ]
+}

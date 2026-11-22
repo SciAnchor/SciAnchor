@@ -1,0 +1,26 @@
+schema_version: rh.schema.guardrails.publication_pack.v0
+type: guardrail_set
+input:
+  - name: topic_artifacts_required
+    severity: blocking
+    rule: Runtime invocation must reference both the current draft_pack and evidence_pack artifacts.
+  - name: draft_and_evidence_topic_match
+    severity: blocking
+    rule: Referenced draft_pack and evidence_pack artifacts must belong to the same topic as the RunSpec.
+tool:
+  - name: no_external_publication
+    severity: blocking
+    rule: The evaluator may generate and record local artifacts but must not publish, submit, push, or mutate third-party systems.
+  - name: deterministic_inventory_only
+    severity: blocking
+    rule: The evaluator inventories recorded RH artifacts and must not invent missing science, citations, figures, data, or reviewer responses.
+output:
+  - name: required_components_classified
+    severity: blocking
+    rule: The output must distinguish required manuscript/evidence components from optional submission-readiness components.
+  - name: qa_checks_present
+    severity: blocking
+    rule: The output must include citation, figure, final bundle, provenance, orchestrator, and venue/readiness checks.
+  - name: readiness_not_overstated
+    severity: blocking
+    rule: A publication_pack artifact is review-ready only when required components exist and submission-ready only when all QA checks pass.

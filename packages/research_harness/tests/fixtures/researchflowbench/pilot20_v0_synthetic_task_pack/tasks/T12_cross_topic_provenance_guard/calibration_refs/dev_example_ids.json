@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C12_cross_topic_source_contamination"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.cross_topic_provenance_guard.0001"
+}

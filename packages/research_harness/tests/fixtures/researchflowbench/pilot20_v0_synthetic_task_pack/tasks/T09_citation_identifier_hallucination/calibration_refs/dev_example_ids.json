@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C09_hallucinated_identifier_in_citation"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.citation_identifier_hallucination.0001"
+}

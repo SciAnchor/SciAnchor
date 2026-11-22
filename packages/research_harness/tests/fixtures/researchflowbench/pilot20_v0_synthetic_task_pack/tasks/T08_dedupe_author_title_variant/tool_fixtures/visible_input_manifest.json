@@ -1,0 +1,21 @@
+{
+  "external_search_policy": "forbidden_in_v0",
+  "file_hashes_sha256": {
+    "input_bundle.json": "7586ab133235dd4e7e6a40d4269011d01b72093b4a8e9f475737f1a1c51d01f5",
+    "prompt.md": "ea11ab648375234328a7a886b99cd316773bce145f749020a45e06b77fecd507",
+    "tool_fixtures/local_static_corpus.jsonl": "03342ecb3f37fbf22760128f338f2521153e6f17e36bb3a01ff75c83560571c7"
+  },
+  "gold_blind": true,
+  "judge_only_hidden": [
+    "gold_bundle.json",
+    "judge_bundle.json"
+  ],
+  "schema_version": "researchflowbench.visible_input_manifest.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.dedupe_author_title_variant.0001",
+  "visible_to_agent": [
+    "prompt.md",
+    "input_bundle.json",
+    "tool_fixtures/local_static_corpus.jsonl"
+  ]
+}

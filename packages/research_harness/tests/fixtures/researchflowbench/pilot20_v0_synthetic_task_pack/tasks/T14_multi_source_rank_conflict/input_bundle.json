@@ -1,0 +1,17 @@
+{
+  "allowed_tools": [
+    "local_static_corpus"
+  ],
+  "expected_rh_axes": [
+    "paper_search.rerank_quality",
+    "retrieval.provenance_coverage"
+  ],
+  "external_search_policy": "forbidden_in_v0",
+  "prompt_context": "Synthetic public-safe context for T14.",
+  "schema_version": "researchflowbench.input_bundle.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.multi_source_rank_conflict.0001",
+  "visible_local_corpus_record_ids": [
+    "evidence.T14.synthetic_public"
+  ]
+}

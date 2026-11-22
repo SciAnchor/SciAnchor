@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C06_query_intent_under_specification"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.query_intent_decomposition.0001"
+}

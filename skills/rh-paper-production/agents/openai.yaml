@@ -1,0 +1,4 @@
+interface:
+  display_name: "RH Paper Production"
+  short_description: "Research paper workflow with RH provenance"
+  default_prompt: "Use $rh-paper-production for a research topic and target journal."

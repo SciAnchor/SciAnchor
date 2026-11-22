@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C18_missing_artifact_trace_edge"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.artifact_trace_completeness.0001"
+}

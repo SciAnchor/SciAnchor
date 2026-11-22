@@ -1,0 +1,45 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Content Digest",
+      "type": "string"
+    },
+    "datasets": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Datasets",
+      "type": "object"
+    },
+    "environments": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Environments",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "spc.workflow-registry.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "workflows": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Workflows",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "workflows",
+    "environments",
+    "datasets",
+    "content_digest"
+  ],
+  "title": "WorkflowRegistry",
+  "type": "object"
+}

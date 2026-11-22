@@ -1,0 +1,331 @@
+{
+  "$defs": {
+    "AcquisitionSource": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "automatic",
+            "preinstalled",
+            "manual_transfer",
+            "controlled_access",
+            "external_managed"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "priority": {
+          "minimum": 0,
+          "title": "Priority",
+          "type": "integer"
+        },
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "mode",
+        "priority"
+      ],
+      "title": "AcquisitionSource",
+      "type": "object"
+    },
+    "DatasetArtifact": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "etag": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Etag"
+        },
+        "filename": {
+          "maxLength": 255,
+          "minLength": 1,
+          "title": "Filename",
+          "type": "string"
+        },
+        "kind": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Kind",
+          "type": "string"
+        },
+        "last_modified": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Modified"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "size_bytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Size Bytes"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "filename",
+        "kind"
+      ],
+      "title": "DatasetArtifact",
+      "type": "object"
+    },
+    "DatasetContentIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "identity_status": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Identity Status",
+          "type": "string"
+        },
+        "raw_archive_member_count": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Archive Member Count"
+        },
+        "raw_archive_member_manifest_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Archive Member Manifest Sha256"
+        },
+        "server_wsl_package_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Server Wsl Package Sha256"
+        },
+        "workflow_baseline_package_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Workflow Baseline Package Sha256"
+        }
+      },
+      "required": [
+        "identity_status"
+      ],
+      "title": "DatasetContentIdentity",
+      "type": "object"
+    },
+    "DatasetSourceIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "accession": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Accession",
+          "type": "string"
+        },
+        "namespace": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Namespace",
+          "type": "string"
+        },
+        "official_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Official Url"
+        }
+      },
+      "required": [
+        "namespace",
+        "accession"
+      ],
+      "title": "DatasetSourceIdentity",
+      "type": "object"
+    },
+    "DatasetSourceSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "observed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed At"
+        },
+        "remote_snapshot_digest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remote Snapshot Digest"
+        }
+      },
+      "title": "DatasetSourceSnapshot",
+      "type": "object"
+    },
+    "LifecycleStatus": {
+      "enum": [
+        "provisional",
+        "frozen",
+        "retired"
+      ],
+      "title": "LifecycleStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "acquisition_sources": {
+      "items": {
+        "$ref": "#/$defs/AcquisitionSource"
+      },
+      "minItems": 1,
+      "title": "Acquisition Sources",
+      "type": "array"
+    },
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/DatasetArtifact"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Content Digest",
+      "type": "string"
+    },
+    "content_identity": {
+      "$ref": "#/$defs/DatasetContentIdentity"
+    },
+    "dataset_ref": {
+      "pattern": "^dataset:[a-z0-9][a-z0-9._-]*:[A-Za-z0-9][A-Za-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Dataset Ref",
+      "type": "string"
+    },
+    "lifecycle_status": {
+      "$ref": "#/$defs/LifecycleStatus"
+    },
+    "schema_version": {
+      "const": "spc.dataset-manifest.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_identity": {
+      "$ref": "#/$defs/DatasetSourceIdentity"
+    },
+    "source_snapshot": {
+      "$ref": "#/$defs/DatasetSourceSnapshot"
+    }
+  },
+  "required": [
+    "schema_version",
+    "dataset_ref",
+    "lifecycle_status",
+    "source_identity",
+    "source_snapshot",
+    "artifacts",
+    "acquisition_sources",
+    "content_identity",
+    "content_digest"
+  ],
+  "title": "DatasetManifest",
+  "type": "object"
+}

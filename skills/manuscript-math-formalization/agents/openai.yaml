@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manuscript Math Formalization"
+  short_description: "Strict formula QA for manuscript prose"
+  default_prompt: "Use $manuscript-math-formalization to audit and convert manuscript prose symbols into Word/LaTeX math form."

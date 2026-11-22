@@ -1,0 +1,4 @@
+interface:
+  display_name: "Figure Quality"
+  short_description: "Generate and audit publication figures with Codex ImageGen"
+  default_prompt: "Improve manuscript figure quality using Codex ImageGen and RH figure artifacts."

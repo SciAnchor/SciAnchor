@@ -1,0 +1,23 @@
+{
+  "schema_version": "spc.workflow-registry.v1",
+  "workflows": {
+    "workflow:npj-gene.glioma@provisional-1": "manifests/npj-gene.glioma.provisional-1.json"
+  },
+  "environments": {
+    "environment:npj-gene-r@1": "environments/npj-gene-r.1.json",
+    "environment:npj-gene-py@1": "environments/npj-gene-py.1.json",
+    "environment:npj-gene-geneformer@provisional-1": "environments/npj-gene-geneformer.provisional-1.json"
+  },
+  "datasets": {
+    "dataset:geo:GSE274546@provisional-2026-08-01": "datasets/GSE274546.provisional-2026-08-01.json",
+    "dataset:geo:GSE131928@2026-08-01": "datasets/GSE131928.2026-08-01.json",
+    "dataset:geo:GSE131928@provisional-1": "datasets/GSE131928.provisional-1.json",
+    "dataset:geo:GSE274548@provisional-1": "datasets/GSE274548.provisional-1.json",
+    "dataset:geo:GSE84465@provisional-1": "datasets/GSE84465.provisional-1.json",
+    "dataset:external:DepMap@provisional-1": "datasets/DepMap.provisional-1.json",
+    "dataset:external:PRJNA1005229@provisional-1": "datasets/PRJNA1005229.provisional-1.json",
+    "dataset:external:TCGA@provisional-1": "datasets/TCGA.provisional-1.json",
+    "dataset:external:GLASS@provisional-1": "datasets/GLASS.provisional-1.json"
+  },
+  "content_digest": "sha256:fa0391cceda002b3be352111e4ddc536761104dbf27f1e419dbe7ece72e628d9"
+}

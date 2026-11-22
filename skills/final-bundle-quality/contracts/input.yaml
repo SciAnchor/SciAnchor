@@ -1,0 +1,73 @@
+schema_version: rh.schema.input.final_bundle_quality.v0
+type: object
+description: Inputs required to evaluate a final_bundle and replay promotion evidence.
+required:
+  - topic_id
+  - final_bundle_artifact_id
+  - mode
+  - target_profile
+  - bundle_paths
+properties:
+  topic_id:
+    type: integer
+    minimum: 1
+  final_bundle_artifact_id:
+    type: integer
+    minimum: 1
+  mode:
+    type: string
+    enum:
+      - quality_scan
+      - trajectory_gate
+      - promotion_gate
+  target_profile:
+    type: string
+    examples:
+      - AAAI-style-science-discovery
+  compatible_target_profiles:
+    type: array
+    items:
+      type: string
+  bundle_paths:
+    type: object
+    required:
+      - tex_path
+      - pdf_path
+    properties:
+      tex_path:
+        type: string
+      pdf_path:
+        type: string
+      log_path:
+        type: string
+      bibliography_path:
+        type: string
+      output_dir:
+        type: string
+  promotion_context:
+    type: object
+    required:
+      - source_trajectory_artifact_ref
+      - held_out_replay_refs
+    properties:
+      source_trajectory_artifact_ref:
+        type: string
+      held_out_replay_refs:
+        type: array
+        items:
+          type: string
+      controlled_replay_refs:
+        type: array
+        items:
+          type: string
+  review_artifacts:
+    type: object
+    properties:
+      multi_route_review_report_ref:
+        type: string
+      skill_lifecycle_gate_ref:
+        type: string
+guardrails:
+  - active_final_bundle_required
+  - path_safe_bundle_paths
+  - target_profile_declared

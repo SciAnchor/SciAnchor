@@ -1,0 +1,898 @@
+{
+  "asset_counts": {
+    "evidence_span_seed": 20
+  },
+  "expected_rh_axes": [
+    "baseline_identification.coverage",
+    "citation.candidate_generation",
+    "deep_research.discovery_accuracy",
+    "evidence_linking.support_accuracy",
+    "final_bundle.pdf_quality",
+    "gap_detection.novelty_accuracy",
+    "governance.rollback_blocking",
+    "literature.set_completion",
+    "paper_reading.claim_quality",
+    "paper_search.recall",
+    "paper_search.rerank_quality",
+    "paper_selection.precision",
+    "retrieval.provenance_coverage",
+    "section_drafting.citation_grounding"
+  ],
+  "file_hashes_sha256": {
+    "README.md": "e761a37bee8ad51efbd7eb7dbd1d46e32b7565409a93bacd44f82a02f03cdbda",
+    "corrupted_evidence_cases.jsonl": "2b574c643e247d3916734a805354f62b6b4df05cde611c5c103aa3ceb8fc229f",
+    "goldgraph_seed_assets.jsonl": "112faa6d010a262cfd7ba5757e0d7056ab0366c88e61e6c1ed3e347f9b4b3102",
+    "schemas/goldgraph_asset_schema_v0.json": "d1b5d86cd07c7b75599c33222dafca19c0a419e3514439bccb310ac90d86f778",
+    "schemas/semantic_object_contract_v0_1.json": "3f4530a2cb04d3cdac225b3d15af178221e4214e72e85ac87efaef4cb5a2d083",
+    "tasks/T01_full_context_citation_eval/calibration_refs/dev_example_ids.json": "012858c34a866e5a39ee98a980429e20275966a7f83bbbe1ac3fd71866592447",
+    "tasks/T01_full_context_citation_eval/gold_bundle.json": "17100ab804c094628839e5bb92755c01fb71b3c458b62c35136169c0f91c3add",
+    "tasks/T01_full_context_citation_eval/input_bundle.json": "ef2c4b3443db7303d1ec6f981f652f946522f0bfb3d28d3c9db74239409bead5",
+    "tasks/T01_full_context_citation_eval/judge_bundle.json": "76aaecec003b295a24fbc3077ba3abd2ea14ceae0102f7e4c978491394e393e0",
+    "tasks/T01_full_context_citation_eval/prompt.md": "6161342eb89a0c98f0822cb6c8fb1227658c2bd0e62627fb1504344b8d9246db",
+    "tasks/T01_full_context_citation_eval/task.json": "e0b311b33c877e4f7cba3bab408dd7de6bea06849a9d85c24e012cb5fcf36205",
+    "tasks/T01_full_context_citation_eval/tool_fixtures/allowed_tools_contract.json": "979b8c0228fc9140803e1febe32165f57af4d4868db94554c8f554060a4845c1",
+    "tasks/T01_full_context_citation_eval/tool_fixtures/local_static_corpus.jsonl": "42c319603ccecc8f2a31cb8bc57487cf2e90aa921b096615d9dad52c84efbb8f",
+    "tasks/T01_full_context_citation_eval/tool_fixtures/visible_input_manifest.json": "dee78b81fc46d3c35ab30d744e5095be401b611ba8b76d5e5e4c102459f65871",
+    "tasks/T02_open_world_attribution_abstain/calibration_refs/dev_example_ids.json": "dd9c7fd15427a14f887042e7c622756266677eb6db3b2fcb87914c10862b0c23",
+    "tasks/T02_open_world_attribution_abstain/gold_bundle.json": "9e1517b17122626deb73035b5dd72c8b2a04c13003cbc0370a4b5c39d2f9cb9a",
+    "tasks/T02_open_world_attribution_abstain/input_bundle.json": "3e901a55a0ed35dedca3c875b3221bcfafb16c25f125d67142037aa25b4116c9",
+    "tasks/T02_open_world_attribution_abstain/judge_bundle.json": "c356d92f1aca33ff655c27673ad518895697e8d4eaa98ec452f631e0b5a23616",
+    "tasks/T02_open_world_attribution_abstain/prompt.md": "8b2829f8278b92f60d342c1c9d6ce7988a288bc5ad4aaa384488756736eb48c0",
+    "tasks/T02_open_world_attribution_abstain/task.json": "c7ce70f56362bb58bebf3caca815f7fe25a8a342063e46453d4564256805554a",
+    "tasks/T02_open_world_attribution_abstain/tool_fixtures/allowed_tools_contract.json": "b6e8f070a905b91fed75918c8a9f0b3c5f233fffd4699697536cd948c7635101",
+    "tasks/T02_open_world_attribution_abstain/tool_fixtures/local_static_corpus.jsonl": "12354dbb6a1c9e316cb3d9060c97e38370b8327b2dacce4638b1bed4a83ab62a",
+    "tasks/T02_open_world_attribution_abstain/tool_fixtures/visible_input_manifest.json": "45ac57c8c1c0cfc8a86949e4ad5be45a263a8d3892d32b6969a15bece4cf35fe",
+    "tasks/T03_partial_support_claim/calibration_refs/dev_example_ids.json": "dc1d467157d3509182399aeb86113d1a0a2a700e52108d6aae621132b4a6a963",
+    "tasks/T03_partial_support_claim/gold_bundle.json": "fcccca5e7024f34ada18587f7234c7fd6216c5db61d4de846008b177b09660f9",
+    "tasks/T03_partial_support_claim/input_bundle.json": "484883002f1790753423c795360662c243b6f9e65f17c48d833ff5bc9bbe79dd",
+    "tasks/T03_partial_support_claim/judge_bundle.json": "b2a6fffa1ff7155a34d516dd829699a9d76c0136010675e25a1281478d4f6b3f",
+    "tasks/T03_partial_support_claim/prompt.md": "c92e406ed9408969106b5d4637e7c0e0fd375a315cda83953e0d8ded0ff1ecf4",
+    "tasks/T03_partial_support_claim/task.json": "a645cb9bc348183d9864dd44c248c9ea514dea202b718a1c13eda318329fef01",
+    "tasks/T03_partial_support_claim/tool_fixtures/allowed_tools_contract.json": "5ad943a4494f39592eb8548f2eb6fd18fe2893326438e0c7f674413c6578676c",
+    "tasks/T03_partial_support_claim/tool_fixtures/local_static_corpus.jsonl": "f7fa27e7fe3edb88e3b5639cc568f7420663d56acb8e8f398863a582c8bd7dcc",
+    "tasks/T03_partial_support_claim/tool_fixtures/visible_input_manifest.json": "c2bea340743c2f92aa83a47cb3ed80655491221f7339af51572cfecf05b8a309",
+    "tasks/T04_evidence_stale_propagation/calibration_refs/dev_example_ids.json": "672561ccd20e554045e9459fb1ca3b0aee009991eb9c192b7c8d67f2087fe004",
+    "tasks/T04_evidence_stale_propagation/gold_bundle.json": "f9560f2a03c7c06f6a7fe31afa26b42f59ffcf172adb924e7ef89e699616ba08",
+    "tasks/T04_evidence_stale_propagation/input_bundle.json": "b6cfbc3a4ce10348e55e5429bf3fff1fa86b32c384022c294316928554860488",
+    "tasks/T04_evidence_stale_propagation/judge_bundle.json": "f2fed54e57f57377f83e58c53dc74dfc77d7b91e055a01acce093fb41ce722ab",
+    "tasks/T04_evidence_stale_propagation/prompt.md": "02022e65a1eca506b17dbc7604c8204d35b8fd759cbe70813be08bf8c47e3b73",
+    "tasks/T04_evidence_stale_propagation/task.json": "f5e30e7343aa4729cbee7f8b6ca6ea7c1acc439364a8dee01ee9c0d47284a726",
+    "tasks/T04_evidence_stale_propagation/tool_fixtures/allowed_tools_contract.json": "442505572d8ef587eaf4943981fee751b37946973352d3e0ffbbbe520008e0e2",
+    "tasks/T04_evidence_stale_propagation/tool_fixtures/local_static_corpus.jsonl": "08a3ad94cbb64331ae65e27352862201dc814dc91a7bc3a4e2ebb2cf02cb5522",
+    "tasks/T04_evidence_stale_propagation/tool_fixtures/visible_input_manifest.json": "294099c61f86d4ee6a4ef8d1a09dc2b8f8e244e2a53329567c7106a3fc0e1220",
+    "tasks/T05_false_novelty_baseline_gap/calibration_refs/dev_example_ids.json": "102622cfde9743f7e6627c9ab8fcf0cabd1439420674625b1c42571941bef199",
+    "tasks/T05_false_novelty_baseline_gap/gold_bundle.json": "d3b30968c1c03c92df1260e73cb608d0c66cc228bf454dd678cfd002c444b405",
+    "tasks/T05_false_novelty_baseline_gap/input_bundle.json": "3810d8ddfaf66b9be626f05a473ad6ba5898a1e886af9e367f88c96f17385152",
+    "tasks/T05_false_novelty_baseline_gap/judge_bundle.json": "eb137c6b0c53d8b361f274ed9f34282f892a03fc66f8e613b0a6704e3feae9b9",
+    "tasks/T05_false_novelty_baseline_gap/prompt.md": "71c69dcf8f3f1444034df5bdc4260026beddbada7814313f07d2b43e2782e001",
+    "tasks/T05_false_novelty_baseline_gap/task.json": "0a47edb547709f0d85c3ca4f86e695804e6d803c9f6882210e8622f6e98c7246",
+    "tasks/T05_false_novelty_baseline_gap/tool_fixtures/allowed_tools_contract.json": "69d391bb7b37cad76df8381e72dd918a671c5f2cda8c2258a25187c1c6d9d6cf",
+    "tasks/T05_false_novelty_baseline_gap/tool_fixtures/local_static_corpus.jsonl": "1bc0f43063459662549343a98b2100c1745946a946a354df8fb2d2f9fd755680",
+    "tasks/T05_false_novelty_baseline_gap/tool_fixtures/visible_input_manifest.json": "f9f512ff93a15b84dfc52d4f0469b76f5527480203a3873923fbad68c1907124",
+    "tasks/T06_query_intent_decomposition/calibration_refs/dev_example_ids.json": "0b3631559f5d4aa833ebce2ccf566afe30ab16338184aa1c491018da0ccc296c",
+    "tasks/T06_query_intent_decomposition/gold_bundle.json": "1c4503169b56577c47487f72e7243d3894fd9d58f0e65a505900e8487d2169fe",
+    "tasks/T06_query_intent_decomposition/input_bundle.json": "5b505418a78cefc236e692b780ac59fefc5f3aaa6236326096b0938345f85b6f",
+    "tasks/T06_query_intent_decomposition/judge_bundle.json": "aec43e33cf2e28c19c357946058b0dee97ae7bda97640e3ffe185e7b501ca84b",
+    "tasks/T06_query_intent_decomposition/prompt.md": "d457116f0eeec934890a6077a114809dece1c89efcfc7f48a22e83e836655f58",
+    "tasks/T06_query_intent_decomposition/task.json": "2ad1b276efedc12f841285302de5f8ae2089cf4ec26b271f287a9c53b55da292",
+    "tasks/T06_query_intent_decomposition/tool_fixtures/allowed_tools_contract.json": "03a1c5012ddc9adb2719f1a1c357bc0ac6198788807ccc8c1ed2fbaa4fa13c3e",
+    "tasks/T06_query_intent_decomposition/tool_fixtures/local_static_corpus.jsonl": "a8e8db3fc86530bb4b882b24dddb26831c31105abedef4b15ca27be0eb0323b2",
+    "tasks/T06_query_intent_decomposition/tool_fixtures/visible_input_manifest.json": "24c5423eca4da8ecc091afb30860487f77492f3281d110f419f225f940b980dd",
+    "tasks/T07_rerank_near_miss/calibration_refs/dev_example_ids.json": "aa054acb4ee80ad0435c0c6879202f1b8a194ec2feefa870170401ce46853ed8",
+    "tasks/T07_rerank_near_miss/gold_bundle.json": "a4f2374594fbef26bc7ac6b14904948ad6914b49a6ee97dee8c022af21dcbf3f",
+    "tasks/T07_rerank_near_miss/input_bundle.json": "2aa8451239028772533503d92657da562b786872b24c0b0225dc564fd9cafb22",
+    "tasks/T07_rerank_near_miss/judge_bundle.json": "394b69aa53ae03c4315c5c4ee3408e877fdd8ff0450168468cf1a08cacae221f",
+    "tasks/T07_rerank_near_miss/prompt.md": "213a476cc93e3574b055c5b37991ce5c089d23ba3ffcd666969cf079d7aaa292",
+    "tasks/T07_rerank_near_miss/task.json": "28f1051845042aa7b6b8a5b8c6fa8439d6fc57dbe64149739e4cde021ebd033b",
+    "tasks/T07_rerank_near_miss/tool_fixtures/allowed_tools_contract.json": "66823ebbba9ae84b2f223bbd5be5e76042da31e521fc9b87a2d411c10927fc41",
+    "tasks/T07_rerank_near_miss/tool_fixtures/local_static_corpus.jsonl": "54208a95b42695547d79a93278acb510aa525429fa2635e18516f707525cac24",
+    "tasks/T07_rerank_near_miss/tool_fixtures/visible_input_manifest.json": "a8491044ddf84bd9444d171003d32380748f15bb2be8bd2cc9539009f9d054a4",
+    "tasks/T08_dedupe_author_title_variant/calibration_refs/dev_example_ids.json": "324b908fc12e30e85e182f14096ece19e648fb2cf19fca9d2242c45bad4991ff",
+    "tasks/T08_dedupe_author_title_variant/gold_bundle.json": "7300e4c1a46c1a63f2ca889ea2c2ac01fa85a6fb0ce14085896c2e5f403fca12",
+    "tasks/T08_dedupe_author_title_variant/input_bundle.json": "7586ab133235dd4e7e6a40d4269011d01b72093b4a8e9f475737f1a1c51d01f5",
+    "tasks/T08_dedupe_author_title_variant/judge_bundle.json": "142a31c20b219ea7aa318a93ea58143ccd76a6f2727c7248910c32692f1dadb0",
+    "tasks/T08_dedupe_author_title_variant/prompt.md": "ea11ab648375234328a7a886b99cd316773bce145f749020a45e06b77fecd507",
+    "tasks/T08_dedupe_author_title_variant/task.json": "fd39ad9d5d9cabdd52f507e61ec3886f164b017f2c051d516b95212389b6fd9e",
+    "tasks/T08_dedupe_author_title_variant/tool_fixtures/allowed_tools_contract.json": "6795cf5aa9b3238dad5e115c7265f4fdbf2917ac73a8cdffa37479810ca23d2a",
+    "tasks/T08_dedupe_author_title_variant/tool_fixtures/local_static_corpus.jsonl": "03342ecb3f37fbf22760128f338f2521153e6f17e36bb3a01ff75c83560571c7",
+    "tasks/T08_dedupe_author_title_variant/tool_fixtures/visible_input_manifest.json": "e32a1b0d9cef3eae85abdacb0ca372a08803c5d1689e021ab824de04f79ee4f4",
+    "tasks/T09_citation_identifier_hallucination/calibration_refs/dev_example_ids.json": "7257a9a0c1cba6330e87bf6952e096ef05c84252394168d1b2c319cd4e2ed808",
+    "tasks/T09_citation_identifier_hallucination/gold_bundle.json": "e68c5647985750e9c6665965ee76809a242bc87b2b0d750335bf9dd94c050de2",
+    "tasks/T09_citation_identifier_hallucination/input_bundle.json": "1e079270fffd35da19b37e9d84077a9d6028bb762a62be97a124f194f7dd1212",
+    "tasks/T09_citation_identifier_hallucination/judge_bundle.json": "72489009961bec59a8ff8b1b8d646f06e3e2910ba68cc14c4e7cf8e57849f42c",
+    "tasks/T09_citation_identifier_hallucination/prompt.md": "d44d730db00384b116d49b660c8d9e4674befb47f346e80a5166f800a80ca2e6",
+    "tasks/T09_citation_identifier_hallucination/task.json": "97a57bf32c5ea9f04847c5bc3e9c4ee1a444dd673c87550862f6898ac8a30418",
+    "tasks/T09_citation_identifier_hallucination/tool_fixtures/allowed_tools_contract.json": "fba9b892ba7df7182d449a233cb975f11b67e9b75ac2370ab80ed33e5b0c24e0",
+    "tasks/T09_citation_identifier_hallucination/tool_fixtures/local_static_corpus.jsonl": "3528544dfc2fa6184fa494f2857a6feb6322dc1c56a34d23c7f3a4c189312ca3",
+    "tasks/T09_citation_identifier_hallucination/tool_fixtures/visible_input_manifest.json": "76cdd5bfd021aabc2b60d2ff97ed6faa14c13d714fc9117c993ee2c4478bc86f",
+    "tasks/T10_baseline_cluster_boundary/calibration_refs/dev_example_ids.json": "fce95d271d6756f45a993393b8a16934aa616fa08e8337145104106d7d122a2e",
+    "tasks/T10_baseline_cluster_boundary/gold_bundle.json": "2e5a97a2f413c63c957844a32d411184d000ec2a485f7b6906a2536ad8567f5c",
+    "tasks/T10_baseline_cluster_boundary/input_bundle.json": "34ce8b9000eafc606950e7a1acdfe79c5e1e7976a3656790deec877d4cb43ad4",
+    "tasks/T10_baseline_cluster_boundary/judge_bundle.json": "55165a9ff0c0ec41567a4fb805692254905dfb19598f40c28dd8cfab755dc309",
+    "tasks/T10_baseline_cluster_boundary/prompt.md": "ebbb8981f6133d11a801b8b1b8b4c3e8ed415a225f656acd51bc6fdf6f1a48bd",
+    "tasks/T10_baseline_cluster_boundary/task.json": "76538153ad746e66931581c269e0dd85c240909ed395e9889bb8bc3b5fcedea1",
+    "tasks/T10_baseline_cluster_boundary/tool_fixtures/allowed_tools_contract.json": "52c54f3011c061a49ef0c840a2420dc5df5a8c3fbfce4de42c18cb29399bb7b5",
+    "tasks/T10_baseline_cluster_boundary/tool_fixtures/local_static_corpus.jsonl": "66c5b89c09275175a1c76f7dcac1b0aaa2131310a904b142b28985dbdeee564d",
+    "tasks/T10_baseline_cluster_boundary/tool_fixtures/visible_input_manifest.json": "b83ab6b0db18ed498808c6c99f45c90b90be52f0e576b8ed9e97d8401127e913",
+    "tasks/T11_negative_evidence_preservation/calibration_refs/dev_example_ids.json": "47524dff6c13b05adeab00083551ebeb5c387622f46daf508b157e4b724c481c",
+    "tasks/T11_negative_evidence_preservation/gold_bundle.json": "9dc9b5041a40322270f5d75b23d3ee46b00810b4bbdb4fa1ebe38b9bfbb59419",
+    "tasks/T11_negative_evidence_preservation/input_bundle.json": "29f40b685af0b5b16aba1f3356258d88c778b4d35e54f56e128fa0636c1f6a01",
+    "tasks/T11_negative_evidence_preservation/judge_bundle.json": "5ad61a075081749af571f3c927ca8a200fd7c8368a0ee9e14467c4e901ec2a2e",
+    "tasks/T11_negative_evidence_preservation/prompt.md": "f955f50eb7c97b2943ab4af4f7c4544de6c080641621765fb80ee2e6081c7bbd",
+    "tasks/T11_negative_evidence_preservation/task.json": "024fdeda5cded3268752f0396f7a7b16995ca5c94ab02c0e824078868cd91bff",
+    "tasks/T11_negative_evidence_preservation/tool_fixtures/allowed_tools_contract.json": "6e9980444e087ee0c9fd6ed06e56c9952027b0b0f0a7fa78df07ffdec9033a70",
+    "tasks/T11_negative_evidence_preservation/tool_fixtures/local_static_corpus.jsonl": "229ba8d4199fc319fe3a4903c2507a0a2433f24fa18dc58ce74faf588c5b25e3",
+    "tasks/T11_negative_evidence_preservation/tool_fixtures/visible_input_manifest.json": "c291a2ffdf45617d22e2035564449c92f8b7a9269c44317b09650de595c74a1b",
+    "tasks/T12_cross_topic_provenance_guard/calibration_refs/dev_example_ids.json": "ced1c379ada6749755c1de12afd99b59152faf578a7dccb8eee3f7a1eda8001d",
+    "tasks/T12_cross_topic_provenance_guard/gold_bundle.json": "6bb44ee583513cfd5827a4abc1cdfd48e42859710d28b810cb1781e46c5e010e",
+    "tasks/T12_cross_topic_provenance_guard/input_bundle.json": "9c2c18ea6f7d871873196eaea13503f878f5d724dfebf5d01ce15db222fc5dfe",
+    "tasks/T12_cross_topic_provenance_guard/judge_bundle.json": "eea8fd8ab0d9a9324b52e3d8223bc152e880eeeb9254d8b0a2d8d2899529c678",
+    "tasks/T12_cross_topic_provenance_guard/prompt.md": "e53cff340ec221dadc6cd92ee687f3e980d59646eec55f4ffcf4784f3e9078ac",
+    "tasks/T12_cross_topic_provenance_guard/task.json": "5a8e0b8e631780680be80979bcedf5730fdaf249c9e9c9aa94e005acf1c37187",
+    "tasks/T12_cross_topic_provenance_guard/tool_fixtures/allowed_tools_contract.json": "2b8902ab3894e586704a9021ad992613658d42896b830c004c3bf269f913c083",
+    "tasks/T12_cross_topic_provenance_guard/tool_fixtures/local_static_corpus.jsonl": "377f2b487bf729c6ecd65ef930b7d611aa8bf260bbd3d0c36f74c4373f66d1e3",
+    "tasks/T12_cross_topic_provenance_guard/tool_fixtures/visible_input_manifest.json": "e9fa0128f0f6ccb45da04af2d876b5c79d612a02e60ffcd45fdfc5b2ee246288",
+    "tasks/T13_claim_scope_overreach/calibration_refs/dev_example_ids.json": "0a70ae3e218ad2cdc464b21b7b13c001d1e651386e4942ce4c188ad3c85fa029",
+    "tasks/T13_claim_scope_overreach/gold_bundle.json": "4f8ba743b9fd2fe16da70a260ae9ccddaad5525ad1b2fbd6f509a25d289677c3",
+    "tasks/T13_claim_scope_overreach/input_bundle.json": "d0e1b359b427cf0ff81cf6c8cb8c40873d71334905f564d917a608a1f4d6ae1f",
+    "tasks/T13_claim_scope_overreach/judge_bundle.json": "25952871a2e4cb345e46011619609633ce8928bb4ce72fa64a5fc4586f6f3f53",
+    "tasks/T13_claim_scope_overreach/prompt.md": "98dad8b98b9a87d95a55f3885edf8d1196da1568f02c6493299c1493728c21d5",
+    "tasks/T13_claim_scope_overreach/task.json": "1774a6540e89005a17f7c85a3d3dd6dbf111dd6e3cf0188e9b6dbeedb7bfcaf8",
+    "tasks/T13_claim_scope_overreach/tool_fixtures/allowed_tools_contract.json": "c74e0be837f1ff224a449f9ac85be05ab12e9ef3ed860548943440670c4c50e4",
+    "tasks/T13_claim_scope_overreach/tool_fixtures/local_static_corpus.jsonl": "adc24d9014695fb6467b0841401bf35144f949fecacc9efa07b2e6500c81a5a8",
+    "tasks/T13_claim_scope_overreach/tool_fixtures/visible_input_manifest.json": "8abc9e08a21f31fc5e7992469e5e13d4fa0c37439a535ff0553a45b95298f903",
+    "tasks/T14_multi_source_rank_conflict/calibration_refs/dev_example_ids.json": "d7cafe4bf242544b8d04c5986baece19867454ece2ac90688695427ca71e2b61",
+    "tasks/T14_multi_source_rank_conflict/gold_bundle.json": "a13984d833933f343f2c49dbe3c6094cb2d3c25506b27ef9804a46351a03b6c1",
+    "tasks/T14_multi_source_rank_conflict/input_bundle.json": "daf7f3eb1d1859e81acb5445126665ba9bec3e052c1f218ae0d7f69390342a11",
+    "tasks/T14_multi_source_rank_conflict/judge_bundle.json": "2c9fc398627b612e18eb6a002642a6863e98025624e9d6eccc3b2bd3873d7bb0",
+    "tasks/T14_multi_source_rank_conflict/prompt.md": "7b3a51f261030017b22436619c03a2923bd6d5ad99da23a829baeb9326ab09ea",
+    "tasks/T14_multi_source_rank_conflict/task.json": "d821cba791f7e70ea60b844a6cdf071e92f8eb766270ade2c1f3b44c8baaf413",
+    "tasks/T14_multi_source_rank_conflict/tool_fixtures/allowed_tools_contract.json": "fbcbe1de17c79f73624013e160706c40106934127e55f1015628cec6451e161f",
+    "tasks/T14_multi_source_rank_conflict/tool_fixtures/local_static_corpus.jsonl": "e0b7d677a041cf53d67f6f396d950c1b704205bd6cc8ceae011f935d9c123b3d",
+    "tasks/T14_multi_source_rank_conflict/tool_fixtures/visible_input_manifest.json": "8bc46c9e135da0881144982d4572a05a50d875ea50d5edb169cbf77c5365a175",
+    "tasks/T15_survey_facet_gap/calibration_refs/dev_example_ids.json": "7be3b7a165816c140857e5e977c727a0f4791cfcb1673a0c8e13ca6803d94b1d",
+    "tasks/T15_survey_facet_gap/gold_bundle.json": "b257c8ce188e0fb2d4e19802862024d68dc018365e452f6764d112fbaa9600d4",
+    "tasks/T15_survey_facet_gap/input_bundle.json": "bcd35108eb2ef3a1cbd5be0a4a93913990568fcb92a33866eec26a11631fd13e",
+    "tasks/T15_survey_facet_gap/judge_bundle.json": "46cc61fdbd07f9357bf85a28bd0130de7e44d71267281fdfbfbefd24f86ac0ac",
+    "tasks/T15_survey_facet_gap/prompt.md": "c44c5ecf4c20f981bda377eb73d1ec15dea45c38cdc250478414895cf96b2384",
+    "tasks/T15_survey_facet_gap/task.json": "0d5ed4edaaefe636cf339a4cff3e88c1f526f91eafa481de15704bb1ba5cafee",
+    "tasks/T15_survey_facet_gap/tool_fixtures/allowed_tools_contract.json": "b7f34c173b72e47870f2516b5a1b8d1b75f6d777f81edf2c593cbe976c762a8d",
+    "tasks/T15_survey_facet_gap/tool_fixtures/local_static_corpus.jsonl": "38f4530e89299cad0a8b5b3a21ef7ab88fcc853713ffa13e318b75ee880d042b",
+    "tasks/T15_survey_facet_gap/tool_fixtures/visible_input_manifest.json": "8ceeb376af3c4b8366dffe16f19bef145a8940e0f2a053059d00a230511a05fe",
+    "tasks/T16_deep_anchor_selection/calibration_refs/dev_example_ids.json": "976a7b60be483e134bf8e57f4a13cb56cc08f66c180ca6ec49bd931e85bd2e5a",
+    "tasks/T16_deep_anchor_selection/gold_bundle.json": "f454640742b017e53cde2fea4734c5674b5f76a085830b8df0d54d7fb5cc399f",
+    "tasks/T16_deep_anchor_selection/input_bundle.json": "1bede92f19956f5ff2fc749154a594aacb782696aba7d8760115dc31899457c0",
+    "tasks/T16_deep_anchor_selection/judge_bundle.json": "94398b442e7c592e5ad559199dbb32bdd3a0e8a79e33e2021af3dc4f2f7a798d",
+    "tasks/T16_deep_anchor_selection/prompt.md": "475b991e0333de980b73eceb00d653f916a6b18b092be802a19741747a7760d6",
+    "tasks/T16_deep_anchor_selection/task.json": "b92200647508218ab38ad652becab58a0752b6dff8e7c888b39e26e48476fc51",
+    "tasks/T16_deep_anchor_selection/tool_fixtures/allowed_tools_contract.json": "561865e8b076df0d9269afa8a004b92a6f706ce14ffe465cb714ad841e4477af",
+    "tasks/T16_deep_anchor_selection/tool_fixtures/local_static_corpus.jsonl": "360209fb320d787da957864b772ac690f43c99cbe9368c75050af8525e7ab97f",
+    "tasks/T16_deep_anchor_selection/tool_fixtures/visible_input_manifest.json": "e6686eb1c3e229c5d15228976b3c093c86d4996183ebd2b4783c5da3db272d85",
+    "tasks/T17_evidence_link_granularity/calibration_refs/dev_example_ids.json": "82af54cbb4d18a90a8cbaa4592b0fd2087b6c46fc0e6d4a649ef0d6d0d032756",
+    "tasks/T17_evidence_link_granularity/gold_bundle.json": "6ab73de90242112a79fbbda7821e96fcc10ce04fcaa0281d63d8406f7dd03306",
+    "tasks/T17_evidence_link_granularity/input_bundle.json": "11af57f64ca3159af39c6f38179c4118090ee422fb096c8e040706f35cb9714b",
+    "tasks/T17_evidence_link_granularity/judge_bundle.json": "5624002624972414822d54519ffaf00ab84aba96d8aad484d3be4f691bdbc2d7",
+    "tasks/T17_evidence_link_granularity/prompt.md": "61f25a8dd115500bd7bdaf190b3061d6fef626d5da3e73c4477f5bfffcf68fb2",
+    "tasks/T17_evidence_link_granularity/task.json": "89c1b072013828576b5342eb1b68b5ef54bafdfcbb30dad70e0e073ac85b955f",
+    "tasks/T17_evidence_link_granularity/tool_fixtures/allowed_tools_contract.json": "14d1b1061dcf4cc36585bdfe3754eb8dfa28335a2610d5bd9ca84f365b9843c7",
+    "tasks/T17_evidence_link_granularity/tool_fixtures/local_static_corpus.jsonl": "284a2b61196c0f348be613b5d7f0b7ca86f0bf166434bc480d7f930e03ed20b3",
+    "tasks/T17_evidence_link_granularity/tool_fixtures/visible_input_manifest.json": "7e8255b2ce40fb52dd2740b8e8f88ba4a79e1ec460ea20b91dd17d045b35531a",
+    "tasks/T18_artifact_trace_completeness/calibration_refs/dev_example_ids.json": "99893c9468744a67a194019049467e5fc6d8e232d56db1c0143843cdfc32859a",
+    "tasks/T18_artifact_trace_completeness/gold_bundle.json": "a29c22c54f068171cef18aa0e45649ce62a68eecd35f82b54a27c63f16700637",
+    "tasks/T18_artifact_trace_completeness/input_bundle.json": "a8be6892fb9816ca1d31f710cbb44667431dede7c8e265db0ad77e70bb5d3f8a",
+    "tasks/T18_artifact_trace_completeness/judge_bundle.json": "c992034167e62ea25047318d4178deabc9c99c3d8650b6eb20f5d9b41b1e1997",
+    "tasks/T18_artifact_trace_completeness/prompt.md": "7e4f2dd53646f1e6a249803176b258c2e78a4c9fe392a60e9687c731143ea960",
+    "tasks/T18_artifact_trace_completeness/task.json": "d9810c94675e8007215f9b3091a129d2126ea7b147af5422fb700654df801e5b",
+    "tasks/T18_artifact_trace_completeness/tool_fixtures/allowed_tools_contract.json": "4e275473b8408eaf3d4a94c566e9cf7232a5ac667bacd739ed4411ab13a44de6",
+    "tasks/T18_artifact_trace_completeness/tool_fixtures/local_static_corpus.jsonl": "e7a254c3d88ddbe58af74dd7f766a0b00ac14cf36b7d47360047db8a6f9fbc0b",
+    "tasks/T18_artifact_trace_completeness/tool_fixtures/visible_input_manifest.json": "ac16701e20a6aabed1c0fb133dd3ab8e97a5e402a7a5aeb912c5f894876e67ad",
+    "tasks/T19_stale_baseline_after_update/calibration_refs/dev_example_ids.json": "9e4ca5cf7ba2773a526ea8464a306fd2d35bcddfd00e66c78edf2c67a15209a2",
+    "tasks/T19_stale_baseline_after_update/gold_bundle.json": "ff3ac453ea29f01f941b89062d9337c4f2482ef2ee5a5b8983adc4e1bf725684",
+    "tasks/T19_stale_baseline_after_update/input_bundle.json": "5cd46b101defa0c3ad02592916dd791e73097ecfce72f35a6259126b9099a170",
+    "tasks/T19_stale_baseline_after_update/judge_bundle.json": "b6e75101f267d6e07c74809e2e574ab3e4f8fa4804335ffaef27bbee5dca26b1",
+    "tasks/T19_stale_baseline_after_update/prompt.md": "ca7842b597850dec02c7fedfa2dedd590fc3fe638e3376e8dc6646626c9c048a",
+    "tasks/T19_stale_baseline_after_update/task.json": "5a53d4861a91be832ee7ce39142a8527c18a9129cbb453b162b8eaba70c6b0c1",
+    "tasks/T19_stale_baseline_after_update/tool_fixtures/allowed_tools_contract.json": "557714854b4efb49b58bf5d2262fead3e55dd6c22c8dbd420b1236f48e815867",
+    "tasks/T19_stale_baseline_after_update/tool_fixtures/local_static_corpus.jsonl": "630bc2efb75ec5a6a87b8286864802a4a7febd29ada2957a530580237ccbe9ba",
+    "tasks/T19_stale_baseline_after_update/tool_fixtures/visible_input_manifest.json": "166ee4b6c8817a13b6b5a5a36252c86b83eb8a626acf2538b9f4809f877a4c4c",
+    "tasks/T20_final_bundle_citation_integrity/calibration_refs/dev_example_ids.json": "1af55c048a1582f95e3861ba5385f6f972dcea3b06919d21beb9cabe96aba387",
+    "tasks/T20_final_bundle_citation_integrity/gold_bundle.json": "a3c6d7f8f96fc4408c61d7da81cc013bc8c88f10c6baa0d326aa301b5687ac03",
+    "tasks/T20_final_bundle_citation_integrity/input_bundle.json": "e59b6a7926182d4b6def9bd96edbbf21678dad9e5a9c6e91ef114159a519fa0f",
+    "tasks/T20_final_bundle_citation_integrity/judge_bundle.json": "5a52808b60e15e428a832439dbcd4b1e4036d6ecc40f203abdd99eb1958afc1c",
+    "tasks/T20_final_bundle_citation_integrity/prompt.md": "05ab2aab3f7db1c3a10c60acf22053759d8474edc2ee410d89ad7d0d0e07aad7",
+    "tasks/T20_final_bundle_citation_integrity/task.json": "48072b60777a592eed95e350afe414f0371982e19b7ade02c5eb88c37fb7871a",
+    "tasks/T20_final_bundle_citation_integrity/tool_fixtures/allowed_tools_contract.json": "72a7fecceab8d6953ad9a5449b4e1e5898c77ce3f1423313cd452c372ed53f0a",
+    "tasks/T20_final_bundle_citation_integrity/tool_fixtures/local_static_corpus.jsonl": "8c0e6d3844391c10770029f0b9b6ce4b8b8d3019ca34c45a4157f9602bd57f44",
+    "tasks/T20_final_bundle_citation_integrity/tool_fixtures/visible_input_manifest.json": "6785aa50ca9fc3e09501a79ab82a952196bb4f73fb400b0f6af0254a24387a77"
+  },
+  "file_inventory": [
+    "README.md",
+    "corrupted_evidence_cases.jsonl",
+    "goldgraph_seed_assets.jsonl",
+    "schemas/goldgraph_asset_schema_v0.json",
+    "schemas/semantic_object_contract_v0_1.json",
+    "tasks/T01_full_context_citation_eval/calibration_refs/dev_example_ids.json",
+    "tasks/T01_full_context_citation_eval/gold_bundle.json",
+    "tasks/T01_full_context_citation_eval/input_bundle.json",
+    "tasks/T01_full_context_citation_eval/judge_bundle.json",
+    "tasks/T01_full_context_citation_eval/prompt.md",
+    "tasks/T01_full_context_citation_eval/task.json",
+    "tasks/T01_full_context_citation_eval/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T01_full_context_citation_eval/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T01_full_context_citation_eval/tool_fixtures/visible_input_manifest.json",
+    "tasks/T02_open_world_attribution_abstain/calibration_refs/dev_example_ids.json",
+    "tasks/T02_open_world_attribution_abstain/gold_bundle.json",
+    "tasks/T02_open_world_attribution_abstain/input_bundle.json",
+    "tasks/T02_open_world_attribution_abstain/judge_bundle.json",
+    "tasks/T02_open_world_attribution_abstain/prompt.md",
+    "tasks/T02_open_world_attribution_abstain/task.json",
+    "tasks/T02_open_world_attribution_abstain/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T02_open_world_attribution_abstain/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T02_open_world_attribution_abstain/tool_fixtures/visible_input_manifest.json",
+    "tasks/T03_partial_support_claim/calibration_refs/dev_example_ids.json",
+    "tasks/T03_partial_support_claim/gold_bundle.json",
+    "tasks/T03_partial_support_claim/input_bundle.json",
+    "tasks/T03_partial_support_claim/judge_bundle.json",
+    "tasks/T03_partial_support_claim/prompt.md",
+    "tasks/T03_partial_support_claim/task.json",
+    "tasks/T03_partial_support_claim/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T03_partial_support_claim/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T03_partial_support_claim/tool_fixtures/visible_input_manifest.json",
+    "tasks/T04_evidence_stale_propagation/calibration_refs/dev_example_ids.json",
+    "tasks/T04_evidence_stale_propagation/gold_bundle.json",
+    "tasks/T04_evidence_stale_propagation/input_bundle.json",
+    "tasks/T04_evidence_stale_propagation/judge_bundle.json",
+    "tasks/T04_evidence_stale_propagation/prompt.md",
+    "tasks/T04_evidence_stale_propagation/task.json",
+    "tasks/T04_evidence_stale_propagation/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T04_evidence_stale_propagation/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T04_evidence_stale_propagation/tool_fixtures/visible_input_manifest.json",
+    "tasks/T05_false_novelty_baseline_gap/calibration_refs/dev_example_ids.json",
+    "tasks/T05_false_novelty_baseline_gap/gold_bundle.json",
+    "tasks/T05_false_novelty_baseline_gap/input_bundle.json",
+    "tasks/T05_false_novelty_baseline_gap/judge_bundle.json",
+    "tasks/T05_false_novelty_baseline_gap/prompt.md",
+    "tasks/T05_false_novelty_baseline_gap/task.json",
+    "tasks/T05_false_novelty_baseline_gap/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T05_false_novelty_baseline_gap/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T05_false_novelty_baseline_gap/tool_fixtures/visible_input_manifest.json",
+    "tasks/T06_query_intent_decomposition/calibration_refs/dev_example_ids.json",
+    "tasks/T06_query_intent_decomposition/gold_bundle.json",
+    "tasks/T06_query_intent_decomposition/input_bundle.json",
+    "tasks/T06_query_intent_decomposition/judge_bundle.json",
+    "tasks/T06_query_intent_decomposition/prompt.md",
+    "tasks/T06_query_intent_decomposition/task.json",
+    "tasks/T06_query_intent_decomposition/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T06_query_intent_decomposition/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T06_query_intent_decomposition/tool_fixtures/visible_input_manifest.json",
+    "tasks/T07_rerank_near_miss/calibration_refs/dev_example_ids.json",
+    "tasks/T07_rerank_near_miss/gold_bundle.json",
+    "tasks/T07_rerank_near_miss/input_bundle.json",
+    "tasks/T07_rerank_near_miss/judge_bundle.json",
+    "tasks/T07_rerank_near_miss/prompt.md",
+    "tasks/T07_rerank_near_miss/task.json",
+    "tasks/T07_rerank_near_miss/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T07_rerank_near_miss/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T07_rerank_near_miss/tool_fixtures/visible_input_manifest.json",
+    "tasks/T08_dedupe_author_title_variant/calibration_refs/dev_example_ids.json",
+    "tasks/T08_dedupe_author_title_variant/gold_bundle.json",
+    "tasks/T08_dedupe_author_title_variant/input_bundle.json",
+    "tasks/T08_dedupe_author_title_variant/judge_bundle.json",
+    "tasks/T08_dedupe_author_title_variant/prompt.md",
+    "tasks/T08_dedupe_author_title_variant/task.json",
+    "tasks/T08_dedupe_author_title_variant/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T08_dedupe_author_title_variant/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T08_dedupe_author_title_variant/tool_fixtures/visible_input_manifest.json",
+    "tasks/T09_citation_identifier_hallucination/calibration_refs/dev_example_ids.json",
+    "tasks/T09_citation_identifier_hallucination/gold_bundle.json",
+    "tasks/T09_citation_identifier_hallucination/input_bundle.json",
+    "tasks/T09_citation_identifier_hallucination/judge_bundle.json",
+    "tasks/T09_citation_identifier_hallucination/prompt.md",
+    "tasks/T09_citation_identifier_hallucination/task.json",
+    "tasks/T09_citation_identifier_hallucination/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T09_citation_identifier_hallucination/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T09_citation_identifier_hallucination/tool_fixtures/visible_input_manifest.json",
+    "tasks/T10_baseline_cluster_boundary/calibration_refs/dev_example_ids.json",
+    "tasks/T10_baseline_cluster_boundary/gold_bundle.json",
+    "tasks/T10_baseline_cluster_boundary/input_bundle.json",
+    "tasks/T10_baseline_cluster_boundary/judge_bundle.json",
+    "tasks/T10_baseline_cluster_boundary/prompt.md",
+    "tasks/T10_baseline_cluster_boundary/task.json",
+    "tasks/T10_baseline_cluster_boundary/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T10_baseline_cluster_boundary/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T10_baseline_cluster_boundary/tool_fixtures/visible_input_manifest.json",
+    "tasks/T11_negative_evidence_preservation/calibration_refs/dev_example_ids.json",
+    "tasks/T11_negative_evidence_preservation/gold_bundle.json",
+    "tasks/T11_negative_evidence_preservation/input_bundle.json",
+    "tasks/T11_negative_evidence_preservation/judge_bundle.json",
+    "tasks/T11_negative_evidence_preservation/prompt.md",
+    "tasks/T11_negative_evidence_preservation/task.json",
+    "tasks/T11_negative_evidence_preservation/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T11_negative_evidence_preservation/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T11_negative_evidence_preservation/tool_fixtures/visible_input_manifest.json",
+    "tasks/T12_cross_topic_provenance_guard/calibration_refs/dev_example_ids.json",
+    "tasks/T12_cross_topic_provenance_guard/gold_bundle.json",
+    "tasks/T12_cross_topic_provenance_guard/input_bundle.json",
+    "tasks/T12_cross_topic_provenance_guard/judge_bundle.json",
+    "tasks/T12_cross_topic_provenance_guard/prompt.md",
+    "tasks/T12_cross_topic_provenance_guard/task.json",
+    "tasks/T12_cross_topic_provenance_guard/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T12_cross_topic_provenance_guard/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T12_cross_topic_provenance_guard/tool_fixtures/visible_input_manifest.json",
+    "tasks/T13_claim_scope_overreach/calibration_refs/dev_example_ids.json",
+    "tasks/T13_claim_scope_overreach/gold_bundle.json",
+    "tasks/T13_claim_scope_overreach/input_bundle.json",
+    "tasks/T13_claim_scope_overreach/judge_bundle.json",
+    "tasks/T13_claim_scope_overreach/prompt.md",
+    "tasks/T13_claim_scope_overreach/task.json",
+    "tasks/T13_claim_scope_overreach/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T13_claim_scope_overreach/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T13_claim_scope_overreach/tool_fixtures/visible_input_manifest.json",
+    "tasks/T14_multi_source_rank_conflict/calibration_refs/dev_example_ids.json",
+    "tasks/T14_multi_source_rank_conflict/gold_bundle.json",
+    "tasks/T14_multi_source_rank_conflict/input_bundle.json",
+    "tasks/T14_multi_source_rank_conflict/judge_bundle.json",
+    "tasks/T14_multi_source_rank_conflict/prompt.md",
+    "tasks/T14_multi_source_rank_conflict/task.json",
+    "tasks/T14_multi_source_rank_conflict/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T14_multi_source_rank_conflict/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T14_multi_source_rank_conflict/tool_fixtures/visible_input_manifest.json",
+    "tasks/T15_survey_facet_gap/calibration_refs/dev_example_ids.json",
+    "tasks/T15_survey_facet_gap/gold_bundle.json",
+    "tasks/T15_survey_facet_gap/input_bundle.json",
+    "tasks/T15_survey_facet_gap/judge_bundle.json",
+    "tasks/T15_survey_facet_gap/prompt.md",
+    "tasks/T15_survey_facet_gap/task.json",
+    "tasks/T15_survey_facet_gap/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T15_survey_facet_gap/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T15_survey_facet_gap/tool_fixtures/visible_input_manifest.json",
+    "tasks/T16_deep_anchor_selection/calibration_refs/dev_example_ids.json",
+    "tasks/T16_deep_anchor_selection/gold_bundle.json",
+    "tasks/T16_deep_anchor_selection/input_bundle.json",
+    "tasks/T16_deep_anchor_selection/judge_bundle.json",
+    "tasks/T16_deep_anchor_selection/prompt.md",
+    "tasks/T16_deep_anchor_selection/task.json",
+    "tasks/T16_deep_anchor_selection/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T16_deep_anchor_selection/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T16_deep_anchor_selection/tool_fixtures/visible_input_manifest.json",
+    "tasks/T17_evidence_link_granularity/calibration_refs/dev_example_ids.json",
+    "tasks/T17_evidence_link_granularity/gold_bundle.json",
+    "tasks/T17_evidence_link_granularity/input_bundle.json",
+    "tasks/T17_evidence_link_granularity/judge_bundle.json",
+    "tasks/T17_evidence_link_granularity/prompt.md",
+    "tasks/T17_evidence_link_granularity/task.json",
+    "tasks/T17_evidence_link_granularity/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T17_evidence_link_granularity/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T17_evidence_link_granularity/tool_fixtures/visible_input_manifest.json",
+    "tasks/T18_artifact_trace_completeness/calibration_refs/dev_example_ids.json",
+    "tasks/T18_artifact_trace_completeness/gold_bundle.json",
+    "tasks/T18_artifact_trace_completeness/input_bundle.json",
+    "tasks/T18_artifact_trace_completeness/judge_bundle.json",
+    "tasks/T18_artifact_trace_completeness/prompt.md",
+    "tasks/T18_artifact_trace_completeness/task.json",
+    "tasks/T18_artifact_trace_completeness/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T18_artifact_trace_completeness/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T18_artifact_trace_completeness/tool_fixtures/visible_input_manifest.json",
+    "tasks/T19_stale_baseline_after_update/calibration_refs/dev_example_ids.json",
+    "tasks/T19_stale_baseline_after_update/gold_bundle.json",
+    "tasks/T19_stale_baseline_after_update/input_bundle.json",
+    "tasks/T19_stale_baseline_after_update/judge_bundle.json",
+    "tasks/T19_stale_baseline_after_update/prompt.md",
+    "tasks/T19_stale_baseline_after_update/task.json",
+    "tasks/T19_stale_baseline_after_update/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T19_stale_baseline_after_update/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T19_stale_baseline_after_update/tool_fixtures/visible_input_manifest.json",
+    "tasks/T20_final_bundle_citation_integrity/calibration_refs/dev_example_ids.json",
+    "tasks/T20_final_bundle_citation_integrity/gold_bundle.json",
+    "tasks/T20_final_bundle_citation_integrity/input_bundle.json",
+    "tasks/T20_final_bundle_citation_integrity/judge_bundle.json",
+    "tasks/T20_final_bundle_citation_integrity/prompt.md",
+    "tasks/T20_final_bundle_citation_integrity/task.json",
+    "tasks/T20_final_bundle_citation_integrity/tool_fixtures/allowed_tools_contract.json",
+    "tasks/T20_final_bundle_citation_integrity/tool_fixtures/local_static_corpus.jsonl",
+    "tasks/T20_final_bundle_citation_integrity/tool_fixtures/visible_input_manifest.json"
+  ],
+  "model_execution_performed": false,
+  "pack_id": "researchflowbench.synthetic_public_pilot20_v0",
+  "schema_version": "researchflowbench.pilot20_manifest.v0.synthetic",
+  "synthetic": true,
+  "tasks": [
+    {
+      "corrupted_case_ids": [
+        "C01_full_context_citation_contradiction"
+      ],
+      "directory": "tasks/T01_full_context_citation_eval",
+      "expected_rh_axes": [
+        "citation.candidate_generation",
+        "evidence_linking.support_accuracy",
+        "section_drafting.citation_grounding"
+      ],
+      "expected_semantic_objects": [
+        "claim",
+        "citation_link",
+        "evidence_span",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T01.synthetic_public"
+      ],
+      "stage": "literature",
+      "task_id": "rfb.synthetic.full_context_citation_eval.0001",
+      "task_no": "T01"
+    },
+    {
+      "corrupted_case_ids": [
+        "C02_open_world_ambiguous_or_missing_source"
+      ],
+      "directory": "tasks/T02_open_world_attribution_abstain",
+      "expected_rh_axes": [
+        "paper_search.recall",
+        "citation.candidate_generation",
+        "governance.rollback_blocking"
+      ],
+      "expected_semantic_objects": [
+        "paper",
+        "claim",
+        "evidence_span",
+        "citation_link",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T02.synthetic_public"
+      ],
+      "stage": "literature",
+      "task_id": "rfb.synthetic.open_world_attribution_abstain.0001",
+      "task_no": "T02"
+    },
+    {
+      "corrupted_case_ids": [
+        "C03_composite_claim_partial_support"
+      ],
+      "directory": "tasks/T03_partial_support_claim",
+      "expected_rh_axes": [
+        "paper_reading.claim_quality",
+        "evidence_linking.support_accuracy",
+        "citation.candidate_generation"
+      ],
+      "expected_semantic_objects": [
+        "claim",
+        "evidence_span",
+        "citation_link",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T03.synthetic_public"
+      ],
+      "stage": "synthesis",
+      "task_id": "rfb.synthetic.partial_support_claim.0001",
+      "task_no": "T03"
+    },
+    {
+      "corrupted_case_ids": [
+        "C04_evidence_correction_stale_propagation"
+      ],
+      "directory": "tasks/T04_evidence_stale_propagation",
+      "expected_rh_axes": [
+        "evidence_linking.support_accuracy",
+        "section_drafting.citation_grounding",
+        "governance.rollback_blocking"
+      ],
+      "expected_semantic_objects": [
+        "evidence_span",
+        "citation_link",
+        "claim",
+        "section_draft",
+        "gate_decision",
+        "rollback_event",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T04.synthetic_public"
+      ],
+      "stage": "rollback",
+      "task_id": "rfb.synthetic.evidence_stale_propagation.0001",
+      "task_no": "T04"
+    },
+    {
+      "corrupted_case_ids": [
+        "C05_false_novelty_missing_close_priors"
+      ],
+      "directory": "tasks/T05_false_novelty_baseline_gap",
+      "expected_rh_axes": [
+        "gap_detection.novelty_accuracy",
+        "baseline_identification.coverage",
+        "governance.rollback_blocking"
+      ],
+      "expected_semantic_objects": [
+        "claim",
+        "baseline",
+        "evidence_span",
+        "review_issue",
+        "gate_decision",
+        "rollback_event",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T05.synthetic_public"
+      ],
+      "stage": "planning",
+      "task_id": "rfb.synthetic.false_novelty_baseline_gap.0001",
+      "task_no": "T05"
+    },
+    {
+      "corrupted_case_ids": [
+        "C06_query_intent_under_specification"
+      ],
+      "directory": "tasks/T06_query_intent_decomposition",
+      "expected_rh_axes": [
+        "paper_search.recall",
+        "literature.set_completion"
+      ],
+      "expected_semantic_objects": [
+        "query",
+        "paper",
+        "evidence_span",
+        "retrieval_trace",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T06.synthetic_public"
+      ],
+      "stage": "build",
+      "task_id": "rfb.synthetic.query_intent_decomposition.0001",
+      "task_no": "T06"
+    },
+    {
+      "corrupted_case_ids": [
+        "C07_relevant_paper_buried_by_surface_match"
+      ],
+      "directory": "tasks/T07_rerank_near_miss",
+      "expected_rh_axes": [
+        "paper_search.rerank_quality",
+        "retrieval.provenance_coverage"
+      ],
+      "expected_semantic_objects": [
+        "paper",
+        "retrieval_trace",
+        "ranked_result",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T07.synthetic_public"
+      ],
+      "stage": "build",
+      "task_id": "rfb.synthetic.rerank_near_miss.0001",
+      "task_no": "T07"
+    },
+    {
+      "corrupted_case_ids": [
+        "C08_duplicate_paper_variant_split"
+      ],
+      "directory": "tasks/T08_dedupe_author_title_variant",
+      "expected_rh_axes": [
+        "literature.set_completion",
+        "paper_selection.precision",
+        "retrieval.provenance_coverage"
+      ],
+      "expected_semantic_objects": [
+        "paper",
+        "dedupe_decision",
+        "retrieval_trace",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T08.synthetic_public"
+      ],
+      "stage": "build",
+      "task_id": "rfb.synthetic.dedupe_author_title_variant.0001",
+      "task_no": "T08"
+    },
+    {
+      "corrupted_case_ids": [
+        "C09_hallucinated_identifier_in_citation"
+      ],
+      "directory": "tasks/T09_citation_identifier_hallucination",
+      "expected_rh_axes": [
+        "citation.candidate_generation",
+        "governance.rollback_blocking"
+      ],
+      "expected_semantic_objects": [
+        "claim",
+        "citation_link",
+        "paper",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T09.synthetic_public"
+      ],
+      "stage": "write",
+      "task_id": "rfb.synthetic.citation_identifier_hallucination.0001",
+      "task_no": "T09"
+    },
+    {
+      "corrupted_case_ids": [
+        "C10_baseline_family_boundary_confusion"
+      ],
+      "directory": "tasks/T10_baseline_cluster_boundary",
+      "expected_rh_axes": [
+        "baseline_identification.coverage",
+        "gap_detection.novelty_accuracy",
+        "deep_research.discovery_accuracy"
+      ],
+      "expected_semantic_objects": [
+        "baseline",
+        "paper_cluster",
+        "claim",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T10.synthetic_public"
+      ],
+      "stage": "analyze",
+      "task_id": "rfb.synthetic.baseline_cluster_boundary.0001",
+      "task_no": "T10"
+    },
+    {
+      "corrupted_case_ids": [
+        "C11_negative_evidence_dropped"
+      ],
+      "directory": "tasks/T11_negative_evidence_preservation",
+      "expected_rh_axes": [
+        "paper_reading.claim_quality",
+        "evidence_linking.support_accuracy",
+        "citation.candidate_generation"
+      ],
+      "expected_semantic_objects": [
+        "claim",
+        "evidence_span",
+        "citation_link",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T11.synthetic_public"
+      ],
+      "stage": "synthesis",
+      "task_id": "rfb.synthetic.negative_evidence_preservation.0001",
+      "task_no": "T11"
+    },
+    {
+      "corrupted_case_ids": [
+        "C12_cross_topic_source_contamination"
+      ],
+      "directory": "tasks/T12_cross_topic_provenance_guard",
+      "expected_rh_axes": [
+        "retrieval.provenance_coverage",
+        "citation.candidate_generation",
+        "governance.rollback_blocking"
+      ],
+      "expected_semantic_objects": [
+        "paper",
+        "retrieval_trace",
+        "citation_link",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T12.synthetic_public"
+      ],
+      "stage": "governance",
+      "task_id": "rfb.synthetic.cross_topic_provenance_guard.0001",
+      "task_no": "T12"
+    },
+    {
+      "corrupted_case_ids": [
+        "C13_claim_scope_exceeds_evidence"
+      ],
+      "directory": "tasks/T13_claim_scope_overreach",
+      "expected_rh_axes": [
+        "paper_reading.claim_quality",
+        "evidence_linking.support_accuracy",
+        "section_drafting.citation_grounding"
+      ],
+      "expected_semantic_objects": [
+        "claim",
+        "evidence_span",
+        "section_draft",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T13.synthetic_public"
+      ],
+      "stage": "write",
+      "task_id": "rfb.synthetic.claim_scope_overreach.0001",
+      "task_no": "T13"
+    },
+    {
+      "corrupted_case_ids": [
+        "C14_conflicting_rank_sources_unresolved"
+      ],
+      "directory": "tasks/T14_multi_source_rank_conflict",
+      "expected_rh_axes": [
+        "paper_search.rerank_quality",
+        "retrieval.provenance_coverage"
+      ],
+      "expected_semantic_objects": [
+        "paper",
+        "retrieval_trace",
+        "ranked_result",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T14.synthetic_public"
+      ],
+      "stage": "build",
+      "task_id": "rfb.synthetic.multi_source_rank_conflict.0001",
+      "task_no": "T14"
+    },
+    {
+      "corrupted_case_ids": [
+        "C15_missing_subtopic_facet"
+      ],
+      "directory": "tasks/T15_survey_facet_gap",
+      "expected_rh_axes": [
+        "gap_detection.novelty_accuracy",
+        "baseline_identification.coverage",
+        "literature.set_completion"
+      ],
+      "expected_semantic_objects": [
+        "paper_cluster",
+        "baseline",
+        "claim",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T15.synthetic_public"
+      ],
+      "stage": "analyze",
+      "task_id": "rfb.synthetic.survey_facet_gap.0001",
+      "task_no": "T15"
+    },
+    {
+      "corrupted_case_ids": [
+        "C16_wrong_anchor_paper_selected"
+      ],
+      "directory": "tasks/T16_deep_anchor_selection",
+      "expected_rh_axes": [
+        "deep_research.discovery_accuracy",
+        "paper_search.recall"
+      ],
+      "expected_semantic_objects": [
+        "query",
+        "paper",
+        "retrieval_trace",
+        "selection_rationale",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T16.synthetic_public"
+      ],
+      "stage": "build",
+      "task_id": "rfb.synthetic.deep_anchor_selection.0001",
+      "task_no": "T16"
+    },
+    {
+      "corrupted_case_ids": [
+        "C17_overbroad_evidence_span"
+      ],
+      "directory": "tasks/T17_evidence_link_granularity",
+      "expected_rh_axes": [
+        "evidence_linking.support_accuracy",
+        "citation.candidate_generation"
+      ],
+      "expected_semantic_objects": [
+        "claim",
+        "evidence_span",
+        "citation_link",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T17.synthetic_public"
+      ],
+      "stage": "synthesis",
+      "task_id": "rfb.synthetic.evidence_link_granularity.0001",
+      "task_no": "T17"
+    },
+    {
+      "corrupted_case_ids": [
+        "C18_missing_artifact_trace_edge"
+      ],
+      "directory": "tasks/T18_artifact_trace_completeness",
+      "expected_rh_axes": [
+        "retrieval.provenance_coverage",
+        "governance.rollback_blocking"
+      ],
+      "expected_semantic_objects": [
+        "artifact_ref",
+        "retrieval_trace",
+        "gate_decision",
+        "review_issue",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T18.synthetic_public"
+      ],
+      "stage": "governance",
+      "task_id": "rfb.synthetic.artifact_trace_completeness.0001",
+      "task_no": "T18"
+    },
+    {
+      "corrupted_case_ids": [
+        "C19_stale_baseline_after_pool_update"
+      ],
+      "directory": "tasks/T19_stale_baseline_after_update",
+      "expected_rh_axes": [
+        "baseline_identification.coverage",
+        "gap_detection.novelty_accuracy",
+        "governance.rollback_blocking"
+      ],
+      "expected_semantic_objects": [
+        "baseline",
+        "paper",
+        "rollback_event",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T19.synthetic_public"
+      ],
+      "stage": "rollback",
+      "task_id": "rfb.synthetic.stale_baseline_after_update.0001",
+      "task_no": "T19"
+    },
+    {
+      "corrupted_case_ids": [
+        "C20_final_bundle_unsupported_citation"
+      ],
+      "directory": "tasks/T20_final_bundle_citation_integrity",
+      "expected_rh_axes": [
+        "section_drafting.citation_grounding",
+        "final_bundle.pdf_quality",
+        "citation.candidate_generation",
+        "governance.rollback_blocking"
+      ],
+      "expected_semantic_objects": [
+        "section_draft",
+        "claim",
+        "citation_link",
+        "review_issue",
+        "gate_decision",
+        "run_trace"
+      ],
+      "primary_gold_asset_ids": [
+        "evidence.T20.synthetic_public"
+      ],
+      "stage": "write",
+      "task_id": "rfb.synthetic.final_bundle_citation_integrity.0001",
+      "task_no": "T20"
+    }
+  ],
+  "visibility": "public_safe_synthetic_fixture"
+}

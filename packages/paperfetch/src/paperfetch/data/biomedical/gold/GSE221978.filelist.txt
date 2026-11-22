@@ -1,0 +1,6 @@
+#Archive/File	Name	Time	Size	Type
+Archive	GSE221978_RAW.tar	02/10/2023 13:17:41	57743360	TAR
+File	GSM6911083_sham_filtered_feature_bc_matrix.h5	12/27/2022 18:07:53	9755965	H5
+File	GSM6911083_sham_raw_feature_bc_matrix.h5	12/27/2022 18:07:58	30414426	H5
+File	GSM6911084_dvt_filtered_feature_bc_matrix.h5	12/27/2022 18:07:52	3678665	H5
+File	GSM6911084_dvt_raw_feature_bc_matrix.h5	12/27/2022 18:07:56	13889246	H5

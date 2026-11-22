@@ -1,0 +1,336 @@
+{
+  "schema_version": "rh.figure_knowledge.v0",
+  "role_layer": [
+    "method_architecture",
+    "study_or_experiment_design",
+    "quantitative_comparison",
+    "ablation_or_sensitivity",
+    "qualitative_cases"
+  ],
+  "form_layer": [
+    {
+      "form_id": "prisma_consort",
+      "parent_role": "study_or_experiment_design"
+    },
+    {
+      "form_id": "cohort_flow",
+      "parent_role": "study_or_experiment_design"
+    },
+    {
+      "form_id": "trial_design",
+      "parent_role": "study_or_experiment_design"
+    },
+    {
+      "form_id": "pipeline_overview",
+      "parent_role": "method_architecture"
+    },
+    {
+      "form_id": "model_architecture",
+      "parent_role": "method_architecture"
+    },
+    {
+      "form_id": "workflow",
+      "parent_role": "method_architecture"
+    },
+    {
+      "form_id": "causal_dag",
+      "parent_role": "method_architecture"
+    },
+    {
+      "form_id": "schema_er",
+      "parent_role": "method_architecture"
+    },
+    {
+      "form_id": "roc_pr_curve",
+      "parent_role": "quantitative_comparison"
+    },
+    {
+      "form_id": "kaplan_meier",
+      "parent_role": "quantitative_comparison"
+    },
+    {
+      "form_id": "forest_plot",
+      "parent_role": "quantitative_comparison"
+    },
+    {
+      "form_id": "decision_curve",
+      "parent_role": "quantitative_comparison"
+    },
+    {
+      "form_id": "volcano",
+      "parent_role": "quantitative_comparison"
+    },
+    {
+      "form_id": "heatmap",
+      "parent_role": "quantitative_comparison"
+    },
+    {
+      "form_id": "bar_compare",
+      "parent_role": "quantitative_comparison"
+    },
+    {
+      "form_id": "line_metric",
+      "parent_role": "quantitative_comparison"
+    },
+    {
+      "form_id": "ablation",
+      "parent_role": "ablation_or_sensitivity"
+    },
+    {
+      "form_id": "sensitivity",
+      "parent_role": "ablation_or_sensitivity"
+    },
+    {
+      "form_id": "calibration_plot",
+      "parent_role": "ablation_or_sensitivity"
+    },
+    {
+      "form_id": "example_case",
+      "parent_role": "qualitative_cases"
+    },
+    {
+      "form_id": "umap_tsne",
+      "parent_role": "qualitative_cases"
+    },
+    {
+      "form_id": "attention_map",
+      "parent_role": "qualitative_cases"
+    },
+    {
+      "form_id": "error_case",
+      "parent_role": "qualitative_cases"
+    },
+    {
+      "form_id": "ui_prototype",
+      "parent_role": "qualitative_cases"
+    },
+    {
+      "form_id": "prompt_artifact",
+      "parent_role": "qualitative_cases"
+    }
+  ],
+  "sources": [
+    {
+      "zip_name": "IPM_NPJ_2025_2026_Fulltext_Package.zip",
+      "zip_sha256": "9743a0fad43d7f6578b7d64aadb0d4541014f5b0df4aca8f1fe919720ab1f278",
+      "n_figures_meta": 181,
+      "n_figure_captions": 1970,
+      "n_stub": 443,
+      "n_table_skipped": 613
+    },
+    {
+      "zip_name": "IPM_2025_2026_Methodology_Papers_Package.zip",
+      "zip_sha256": "111c5274e9fb29bfc85ba328d184971b401954dacfd2e5e879a6258855ecb4ec",
+      "n_figures_meta": 86,
+      "n_figure_captions": 1444,
+      "n_stub": 551,
+      "n_table_skipped": 441
+    }
+  ],
+  "observations": {
+    "n_captions": 3414,
+    "n_stub": 994,
+    "n_real": 2420,
+    "n_unclassified": 1568,
+    "n_multi_form": 166,
+    "by_form": {
+      "ablation": {
+        "n": 34,
+        "by_venue_family": {
+          "ipm": 27,
+          "npj": 7
+        }
+      },
+      "attention_map": {
+        "n": 9,
+        "by_venue_family": {
+          "npj": 3,
+          "ipm": 6
+        }
+      },
+      "bar_compare": {
+        "n": 220,
+        "by_venue_family": {
+          "npj": 109,
+          "ipm": 111
+        }
+      },
+      "calibration_plot": {
+        "n": 8,
+        "by_venue_family": {
+          "ipm": 3,
+          "npj": 5
+        }
+      },
+      "causal_dag": {
+        "n": 6,
+        "by_venue_family": {
+          "ipm": 6
+        }
+      },
+      "cohort_flow": {
+        "n": 11,
+        "by_venue_family": {
+          "npj": 11
+        }
+      },
+      "decision_curve": {
+        "n": 2,
+        "by_venue_family": {
+          "npj": 2
+        }
+      },
+      "error_case": {
+        "n": 5,
+        "by_venue_family": {
+          "ipm": 5
+        }
+      },
+      "example_case": {
+        "n": 71,
+        "by_venue_family": {
+          "npj": 23,
+          "ipm": 48
+        }
+      },
+      "extractor_stub": {
+        "n": 994,
+        "by_venue_family": {
+          "npj": 183,
+          "ipm": 811
+        }
+      },
+      "forest_plot": {
+        "n": 10,
+        "by_venue_family": {
+          "npj": 10
+        }
+      },
+      "heatmap": {
+        "n": 65,
+        "by_venue_family": {
+          "npj": 40,
+          "ipm": 25
+        }
+      },
+      "kaplan_meier": {
+        "n": 3,
+        "by_venue_family": {
+          "npj": 3
+        }
+      },
+      "line_metric": {
+        "n": 91,
+        "by_venue_family": {
+          "npj": 28,
+          "ipm": 63
+        }
+      },
+      "model_architecture": {
+        "n": 51,
+        "by_venue_family": {
+          "ipm": 37,
+          "npj": 14
+        }
+      },
+      "pipeline_overview": {
+        "n": 49,
+        "by_venue_family": {
+          "ipm": 42,
+          "npj": 7
+        }
+      },
+      "prisma_consort": {
+        "n": 24,
+        "by_venue_family": {
+          "ipm": 8,
+          "npj": 16
+        }
+      },
+      "prompt_artifact": {
+        "n": 89,
+        "by_venue_family": {
+          "npj": 36,
+          "ipm": 53
+        }
+      },
+      "roc_pr_curve": {
+        "n": 57,
+        "by_venue_family": {
+          "npj": 52,
+          "ipm": 5
+        }
+      },
+      "schema_er": {
+        "n": 12,
+        "by_venue_family": {
+          "ipm": 12
+        }
+      },
+      "sensitivity": {
+        "n": 73,
+        "by_venue_family": {
+          "ipm": 46,
+          "npj": 27
+        }
+      },
+      "trial_design": {
+        "n": 14,
+        "by_venue_family": {
+          "npj": 14
+        }
+      },
+      "ui_prototype": {
+        "n": 24,
+        "by_venue_family": {
+          "npj": 9,
+          "ipm": 15
+        }
+      },
+      "umap_tsne": {
+        "n": 47,
+        "by_venue_family": {
+          "npj": 24,
+          "ipm": 23
+        }
+      },
+      "unclassified": {
+        "n": 1568,
+        "by_venue_family": {
+          "npj": 827,
+          "ipm": 741
+        }
+      },
+      "volcano": {
+        "n": 7,
+        "by_venue_family": {
+          "npj": 7
+        }
+      },
+      "workflow": {
+        "n": 75,
+        "by_venue_family": {
+          "npj": 42,
+          "ipm": 33
+        }
+      }
+    },
+    "by_role": {
+      "method_architecture": 193,
+      "study_or_experiment_design": 49,
+      "quantitative_comparison": 455,
+      "ablation_or_sensitivity": 115,
+      "qualitative_cases": 245
+    },
+    "by_venue_family": {
+      "npj": 1409,
+      "ipm": 2005
+    }
+  },
+  "induction": {
+    "method": "caption_regex_v0",
+    "pixels": false,
+    "unclassified_is_first_class": true,
+    "role_layer_frozen": true
+  }
+}

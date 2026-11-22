@@ -1,0 +1,25 @@
+{
+  "expected_rh_axes": [
+    "retrieval.provenance_coverage",
+    "governance.rollback_blocking"
+  ],
+  "judge_only": true,
+  "leakage_canaries": [
+    "SYNTHETIC_JUDGE_CANARY_T18"
+  ],
+  "schema_version": "researchflowbench.judge_bundle.v0.synthetic",
+  "scoring": {
+    "combined": {
+      "axis_separation_required": true,
+      "rubric": "synthetic combined axis"
+    },
+    "outcome": {
+      "rubric": "synthetic outcome axis"
+    },
+    "process": {
+      "rubric": "synthetic process axis"
+    }
+  },
+  "synthetic": true,
+  "task_id": "rfb.synthetic.artifact_trace_completeness.0001"
+}

@@ -1,0 +1,194 @@
+{
+  "$defs": {
+    "LifecycleStatus": {
+      "enum": [
+        "provisional",
+        "frozen",
+        "retired"
+      ],
+      "title": "LifecycleStatus",
+      "type": "string"
+    },
+    "ProbeDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "executable": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Executable"
+        },
+        "level": {
+          "$ref": "#/$defs/ValidationLevel",
+          "default": "IMPORT_PASS"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "type": {
+          "enum": [
+            "executable_version",
+            "python_import",
+            "python_package_version",
+            "r_package",
+            "file_exists",
+            "file_sha256",
+            "conda_lock",
+            "validation_ledger"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "version_spec": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version Spec"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "ProbeDefinition",
+      "type": "object"
+    },
+    "RuntimeKind": {
+      "enum": [
+        "conda",
+        "external_managed"
+      ],
+      "title": "RuntimeKind",
+      "type": "string"
+    },
+    "ValidationLevel": {
+      "enum": [
+        "IMPORT_PASS",
+        "SMOKE_PASS",
+        "REAL_PASS"
+      ],
+      "title": "ValidationLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Content Digest",
+      "type": "string"
+    },
+    "environment_ref": {
+      "pattern": "^environment:[a-z0-9][a-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Environment Ref",
+      "type": "string"
+    },
+    "external_identity": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "External Identity"
+    },
+    "lifecycle_status": {
+      "$ref": "#/$defs/LifecycleStatus"
+    },
+    "lock_digest": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lock Digest"
+    },
+    "platforms": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Platforms",
+      "type": "array"
+    },
+    "probes": {
+      "items": {
+        "$ref": "#/$defs/ProbeDefinition"
+      },
+      "title": "Probes",
+      "type": "array"
+    },
+    "runtime": {
+      "$ref": "#/$defs/RuntimeKind"
+    },
+    "schema_version": {
+      "const": "spc.environment-definition.v1",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "environment_ref",
+    "lifecycle_status",
+    "runtime",
+    "platforms",
+    "probes",
+    "content_digest"
+  ],
+  "title": "EnvironmentDefinition",
+  "type": "object"
+}

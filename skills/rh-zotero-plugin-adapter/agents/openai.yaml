@@ -1,0 +1,4 @@
+interface:
+  display_name: "RH Zotero Plugin Adapter"
+  short_description: "Maintain Zotero side-panel routing, actions, and plugin guardrails"
+  default_prompt: "Debug or extend the Research Harness Zotero plugin using context modes, typed capabilities, and preview/confirm/apply guardrails."

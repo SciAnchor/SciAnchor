@@ -1,0 +1,216 @@
+{
+  "$defs": {
+    "ValidationLedgerCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Check Id",
+          "type": "string"
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "check_id",
+        "status"
+      ],
+      "title": "ValidationLedgerCheck",
+      "type": "object"
+    },
+    "ValidationLedgerEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "report",
+            "artifact",
+            "log",
+            "metrics",
+            "other"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "uri": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "uri",
+        "sha256"
+      ],
+      "title": "ValidationLedgerEvidence",
+      "type": "object"
+    },
+    "ValidationLevel": {
+      "enum": [
+        "IMPORT_PASS",
+        "SMOKE_PASS",
+        "REAL_PASS"
+      ],
+      "title": "ValidationLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Bound evidence that one environment passed a real Workflow run.\n\nA ledger is deliberately stricter than a marker file: it is bound to one\nenvironment lock, Workflow, execution host, covered module set, concrete\ndatasets, validator revision, checks, and immutable evidence digests.",
+  "properties": {
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/ValidationLedgerCheck"
+      },
+      "minItems": 1,
+      "title": "Checks",
+      "type": "array"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Content Digest",
+      "type": "string"
+    },
+    "covered_modules": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Covered Modules",
+      "type": "array"
+    },
+    "dataset_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Dataset Refs",
+      "type": "array"
+    },
+    "environment_lock_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Environment Lock Digest",
+      "type": "string"
+    },
+    "environment_ref": {
+      "pattern": "^environment:[a-z0-9][a-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Environment Ref",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/ValidationLedgerEvidence"
+      },
+      "minItems": 1,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "execution_host_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Execution Host Id",
+      "type": "string"
+    },
+    "producer_actor": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Producer Actor",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "spc.environment-validation-ledger.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "validation_level": {
+      "$ref": "#/$defs/ValidationLevel"
+    },
+    "validator_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Validator Id",
+      "type": "string"
+    },
+    "validator_revision": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Validator Revision",
+      "type": "string"
+    },
+    "workflow_ref": {
+      "pattern": "^workflow:[a-z0-9][a-z0-9._-]*@[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Workflow Ref",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "environment_ref",
+    "environment_lock_digest",
+    "workflow_ref",
+    "validation_level",
+    "status",
+    "execution_host_id",
+    "producer_actor",
+    "validator_id",
+    "validator_revision",
+    "started_at",
+    "completed_at",
+    "covered_modules",
+    "dataset_refs",
+    "checks",
+    "evidence",
+    "content_digest"
+  ],
+  "title": "EnvironmentValidationLedger",
+  "type": "object"
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "spc.environment-definition.v1",
+  "environment_ref": "environment:npj-gene-py@1",
+  "lifecycle_status": "provisional",
+  "runtime": "conda",
+  "platforms": [
+    "linux-x86_64"
+  ],
+  "lock_digest": "sha256:334ec498a12f8bcf5ff045756d468e2b5ab9a65fbb4f15f06925920a03a84e3e",
+  "external_identity": null,
+  "probes": [
+    {
+      "type": "conda_lock",
+      "level": "IMPORT_PASS"
+    },
+    {
+      "type": "file_exists",
+      "level": "IMPORT_PASS",
+      "path": "conda-meta/history"
+    },
+    {
+      "type": "validation_ledger",
+      "level": "REAL_PASS",
+      "path": "spc-validation-ledger.json"
+    }
+  ],
+  "content_digest": "sha256:733cebb60d01b62185896c2f8a3db493f10aba4d87f0a8cdfcf9ec754924c45d"
+}

@@ -1,0 +1,13 @@
+# .rh-agent.toml — Gemini CLI consumer profile
+#
+# Gemini CLI has a native user-scope skill directory. We install there by
+# default so RH support does not depend on the shared `.agents/skills` alias.
+
+[agent]
+name    = "gemini"
+version = ">=0.43"
+
+[skills]
+install_path = "~/.gemini/skills"
+format       = "claude-skill-md"
+strategy     = "symlink"

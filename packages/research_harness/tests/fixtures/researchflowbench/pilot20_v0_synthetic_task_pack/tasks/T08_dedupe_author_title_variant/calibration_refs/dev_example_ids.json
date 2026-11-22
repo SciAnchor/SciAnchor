@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C08_duplicate_paper_variant_split"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.dedupe_author_title_variant.0001"
+}

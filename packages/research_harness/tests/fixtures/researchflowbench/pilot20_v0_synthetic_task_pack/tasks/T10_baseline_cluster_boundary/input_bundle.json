@@ -1,0 +1,18 @@
+{
+  "allowed_tools": [
+    "local_static_corpus"
+  ],
+  "expected_rh_axes": [
+    "baseline_identification.coverage",
+    "gap_detection.novelty_accuracy",
+    "deep_research.discovery_accuracy"
+  ],
+  "external_search_policy": "forbidden_in_v0",
+  "prompt_context": "Synthetic public-safe context for T10.",
+  "schema_version": "researchflowbench.input_bundle.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.baseline_cluster_boundary.0001",
+  "visible_local_corpus_record_ids": [
+    "evidence.T10.synthetic_public"
+  ]
+}

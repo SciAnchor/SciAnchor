@@ -1,0 +1,83 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "allowed_data_roots": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Allowed Data Roots",
+      "type": "array"
+    },
+    "allowed_environment_roots": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Environment Roots",
+      "type": "array"
+    },
+    "catalog_root": {
+      "title": "Catalog Root",
+      "type": "string"
+    },
+    "conda_executable": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Conda Executable"
+    },
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Content Digest",
+      "type": "string"
+    },
+    "dataset_mappings": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Dataset Mappings",
+      "type": "object"
+    },
+    "environment_mappings": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Environment Mappings",
+      "type": "object"
+    },
+    "host_id": {
+      "pattern": "^host:[a-z0-9][a-z0-9._-]*$",
+      "title": "Host Id",
+      "type": "string"
+    },
+    "platform": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Platform",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "spc.host-profile.v1",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "host_id",
+    "platform",
+    "allowed_environment_roots",
+    "allowed_data_roots",
+    "catalog_root",
+    "environment_mappings",
+    "content_digest"
+  ],
+  "title": "HostProfile",
+  "type": "object"
+}

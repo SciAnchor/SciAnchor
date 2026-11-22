@@ -1,0 +1,30 @@
+{
+  "schema_version": "spc.dataset-manifest.v1",
+  "dataset_ref": "dataset:external:PRJNA1005229@provisional-1",
+  "lifecycle_status": "provisional",
+  "source_identity": {
+    "namespace": "external",
+    "accession": "PRJNA1005229",
+    "official_url": "https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1005229"
+  },
+  "source_snapshot": {
+    "observed_at": null,
+    "remote_snapshot_digest": null
+  },
+  "artifacts": [],
+  "acquisition_sources": [
+    {
+      "source_id": "bioproject-external",
+      "mode": "external_managed",
+      "priority": 10
+    }
+  ],
+  "content_identity": {
+    "identity_status": "unfrozen_resource_definition",
+    "raw_archive_member_count": null,
+    "raw_archive_member_manifest_sha256": null,
+    "workflow_baseline_package_sha256": null,
+    "server_wsl_package_sha256": null
+  },
+  "content_digest": "sha256:10b13153f51ea8d22d011dcf9e42c641b2f402ac9667f22dde64a84d95caa8f1"
+}

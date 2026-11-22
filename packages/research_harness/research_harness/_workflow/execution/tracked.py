@@ -1,0 +1,99 @@
+"""TrackedBackend — wraps any ExecutionBackend with automatic provenance recording."""
+
+from __future__ import annotations
+
+import logging
+from typing import Any
+
+from research_harness._core.provenance import ProvenanceRecorder
+from research_harness.primitives.registry import get_primitive_spec
+from research_harness.primitives.types import PrimitiveResult
+from .backend import BackendInfo, ExecutionBackend
+
+
+class TrackedBackend:
+    """Decorator that adds provenance recording to any ExecutionBackend."""
+
+    def __init__(
+        self,
+        inner: ExecutionBackend,
+        recorder: ProvenanceRecorder,
+        default_topic_id: int | None = None,
+    ):
+        self._inner = inner
+        self._recorder = recorder
+        self._default_topic_id = default_topic_id
+
+    def execute(self, primitive: str, **kwargs: Any) -> PrimitiveResult:
+        # Accept both _topic_id (internal) and topic_id (from MCP arguments)
+        topic_id = (
+            kwargs.pop("_topic_id", None)
+            or kwargs.get("topic_id")
+            or self._default_topic_id
+        )
+        parent_id = kwargs.pop("_parent_id", None)
+        stage = kwargs.pop("_stage", "")
+        # Audit substrate (migration 055) — source of truth for drilldown UI.
+        actor = kwargs.pop("_actor", None)
+        origin = kwargs.pop("_origin", None)
+        retry_ordinal = int(kwargs.pop("_retry_ordinal", 0) or 0)
+        cache_hit = bool(kwargs.pop("_cache_hit", False))
+        parallel_group = kwargs.pop("_parallel_group", None)
+
+        result = self._inner.execute(primitive, **kwargs)
+        try:
+            self._recorder.record(
+                result=result,
+                input_kwargs=kwargs,
+                topic_id=topic_id,
+                stage=stage,
+                parent_id=parent_id,
+                actor=actor,
+                origin=origin,
+                retry_ordinal=retry_ordinal,
+                cache_hit=cache_hit,
+                parallel_group=parallel_group,
+                category=_primitive_category(result.primitive),
+            )
+        except Exception:
+            logging.getLogger(__name__).debug(
+                "Observation recording failed", exc_info=True
+            )
+        return result
+
+    def execute_accounted(self, primitive: str, **kwargs: Any) -> PrimitiveResult:
+        """Execute before the caller durably settles accounting and provenance."""
+        return self._inner.execute(primitive, **kwargs)
+
+    def record_accounted_provenance(
+        self,
+        *,
+        result: PrimitiveResult,
+        input_kwargs: dict[str, Any],
+        topic_id: int | None,
+        stage: str,
+        origin: str,
+    ) -> int:
+        """Record settled accounted work, propagating any persistence failure."""
+        return self._recorder.record_once(
+            result=result,
+            input_kwargs=input_kwargs,
+            topic_id=topic_id,
+            stage=stage,
+            origin=origin,
+            category=_primitive_category(result.primitive),
+        )
+
+    def get_info(self) -> BackendInfo:
+        return self._inner.get_info()
+
+    def estimate_cost(self, primitive: str, **kwargs: Any) -> float:
+        return self._inner.estimate_cost(primitive, **kwargs)
+
+    def supports(self, primitive: str) -> bool:
+        return self._inner.supports(primitive)
+
+
+def _primitive_category(primitive_name: str) -> str:
+    spec = get_primitive_spec(primitive_name)
+    return spec.category.value if spec is not None else ""

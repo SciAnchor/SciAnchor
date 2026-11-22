@@ -1,0 +1,76 @@
+{
+  "schema_version": "spc.dataset-manifest.v1",
+  "dataset_ref": "dataset:geo:GSE274546@provisional-2026-08-01",
+  "lifecycle_status": "provisional",
+  "source_identity": {
+    "namespace": "geo",
+    "accession": "GSE274546",
+    "official_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE274nnn/GSE274546"
+  },
+  "source_snapshot": {
+    "observed_at": "2026-07-29T02:09:32Z",
+    "remote_snapshot_digest": null
+  },
+  "artifacts": [
+    {
+      "artifact_id": "raw-archive",
+      "filename": "GSE274546_RAW.tar",
+      "kind": "supplementary",
+      "size_bytes": 4272261120,
+      "sha256": "6f0d5726a6a3338dd35f4dbd8b96f3427923f3d484073d7e5a5eb3c7cc4e1675",
+      "source_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE274nnn/GSE274546/suppl/GSE274546_RAW.tar",
+      "last_modified": "2025-01-01T05:46:10Z",
+      "etag": null
+    },
+    {
+      "artifact_id": "family-soft",
+      "filename": "GSE274546_family.soft.gz",
+      "kind": "soft",
+      "size_bytes": 9740,
+      "sha256": "1c12d3d4f56fa116dd1736ac14cb1b259277bd9b0f7bb8f55b78d43be36e09b0",
+      "source_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE274nnn/GSE274546/soft/GSE274546_family.soft.gz",
+      "last_modified": "2026-05-29T04:29:05Z",
+      "etag": null
+    },
+    {
+      "artifact_id": "series-matrix",
+      "filename": "GSE274546_series_matrix.txt.gz",
+      "kind": "series_matrix",
+      "size_bytes": 9023,
+      "sha256": "bb2f85f7372ca8bb958882873879410584c0b4758820540725994b15c95b332c",
+      "source_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE274nnn/GSE274546/matrix/GSE274546_series_matrix.txt.gz",
+      "last_modified": "2026-05-29T04:29:06Z",
+      "etag": null
+    },
+    {
+      "artifact_id": "filelist",
+      "filename": "filelist.txt",
+      "kind": "supplementary_index",
+      "size_bytes": 8901,
+      "sha256": "4809e726a80c7391d1b89e5c7b6fffab8eeed2d757d68b1aa550a4ea05107942",
+      "source_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE274nnn/GSE274546/suppl/filelist.txt",
+      "last_modified": "2025-01-01T05:46:10Z",
+      "etag": null
+    }
+  ],
+  "acquisition_sources": [
+    {
+      "source_id": "ncbi-geo",
+      "mode": "automatic",
+      "priority": 10
+    },
+    {
+      "source_id": "topic16-baseline-transfer",
+      "mode": "manual_transfer",
+      "priority": 20
+    }
+  ],
+  "content_identity": {
+    "identity_status": "blocked_pending_member_audit",
+    "raw_archive_member_count": 121,
+    "raw_archive_member_manifest_sha256": "46d5c6cd90634c236a0ce16db02dfe1e982fa67f59b03d6908a5af481394c985",
+    "workflow_baseline_package_sha256": "e40b3c7f3a5bde97b08cefbc986d4667bfaae461d8fb43c8df6abae00e8604d0",
+    "server_wsl_package_sha256": "6f0d5726a6a3338dd35f4dbd8b96f3427923f3d484073d7e5a5eb3c7cc4e1675"
+  },
+  "content_digest": "sha256:bd5ebb4c92ef87b7f1c7b5efc1f73d5cbb3cb3543e752b7293d356ea1e511c73"
+}

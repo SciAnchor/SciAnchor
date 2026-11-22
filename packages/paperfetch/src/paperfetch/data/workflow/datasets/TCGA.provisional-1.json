@@ -1,0 +1,30 @@
+{
+  "schema_version": "spc.dataset-manifest.v1",
+  "dataset_ref": "dataset:external:TCGA@provisional-1",
+  "lifecycle_status": "provisional",
+  "source_identity": {
+    "namespace": "external",
+    "accession": "TCGA",
+    "official_url": null
+  },
+  "source_snapshot": {
+    "observed_at": null,
+    "remote_snapshot_digest": null
+  },
+  "artifacts": [],
+  "acquisition_sources": [
+    {
+      "source_id": "tcga-external",
+      "mode": "controlled_access",
+      "priority": 10
+    }
+  ],
+  "content_identity": {
+    "identity_status": "unfrozen_resource_definition",
+    "raw_archive_member_count": null,
+    "raw_archive_member_manifest_sha256": null,
+    "workflow_baseline_package_sha256": null,
+    "server_wsl_package_sha256": null
+  },
+  "content_digest": "sha256:f90663e2540e86637c30f90d617ccb0daebdcdb54a81f15c7c804e822feccd1c"
+}

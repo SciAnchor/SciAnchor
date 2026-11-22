@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C13_claim_scope_exceeds_evidence"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.claim_scope_overreach.0001"
+}

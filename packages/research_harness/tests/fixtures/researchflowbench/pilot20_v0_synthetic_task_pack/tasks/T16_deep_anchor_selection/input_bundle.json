@@ -1,0 +1,17 @@
+{
+  "allowed_tools": [
+    "local_static_corpus"
+  ],
+  "expected_rh_axes": [
+    "deep_research.discovery_accuracy",
+    "paper_search.recall"
+  ],
+  "external_search_policy": "forbidden_in_v0",
+  "prompt_context": "Synthetic public-safe context for T16.",
+  "schema_version": "researchflowbench.input_bundle.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.deep_anchor_selection.0001",
+  "visible_local_corpus_record_ids": [
+    "evidence.T16.synthetic_public"
+  ]
+}

@@ -1,0 +1,42 @@
+schema_version: rh.schema.guardrails.final_bundle_quality.v0
+type: guardrail_set
+input:
+  - name: active_final_bundle_required
+    severity: blocking
+    rule: The selected final_bundle must be active and must belong to the source topic.
+  - name: path_safe_bundle_paths
+    severity: blocking
+    rule: Bundle paths must come from the artifact payload and must not be inferred from shared mutable history.
+  - name: target_profile_declared
+    severity: blocking
+    rule: The target profile must be explicit before replay evidence can be classified.
+  - name: promotion_context_required_for_promotion_gate
+    severity: blocking
+    rule: Promotion mode must include source trajectory, held-out replay, and controlled replay context.
+tool:
+  - name: no_mutable_path_rescan_for_history
+    severity: blocking
+    rule: Historical trajectory points must be loaded from recorded artifacts, not reconstructed by rescanning overwritten paths.
+  - name: no_external_publication
+    severity: blocking
+    rule: This skill may scan, gate, and record artifacts, but may not publish, push, submit, or change third-party resources.
+output:
+  - name: issue_classes_present
+    severity: blocking
+    rule: Reports must separate blocking, recompile-repairable, layout-only, and encoding issues.
+  - name: promotion_evidence_classified
+    severity: blocking
+    rule: Reports must classify evidence as source trajectory, exact held-out replay, compatible held-out replay, or controlled plumbing.
+  - name: reviewer_consensus_veto_preserved
+    severity: blocking
+    rule: A clean deterministic PDF scan must not override multi-route consensus reject.
+promotion:
+  - name: controlled_backfill_excluded
+    severity: blocking
+    rule: Controlled or synthetic replay may test plumbing but must not count as promotion evidence.
+  - name: exact_held_out_replay_required
+    severity: blocking
+    rule: Promotion to current strongest readiness requires exact-profile held-out replay.
+  - name: topic_strategy_not_mutated
+    severity: blocking
+    rule: Novelty, scope, and evidence objections may block submission readiness but must not mutate topic-level research strategy.

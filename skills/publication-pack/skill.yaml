@@ -1,0 +1,69 @@
+schema_version: rh.skill.v2
+name: publication-pack
+version: 0.1.0
+license: MIT
+capability_type: evaluator
+description: Generate an evidence-bound publication_pack artifact and readiness diagnostics from current topic artifacts.
+input_schema: rh.schema.input.publication_pack.v0
+output_schema: rh.schema.artifact.publication_pack.v0
+allowed_tools:
+  - artifact.read
+  - publication_pack_generate
+  - orchestrator.record_artifact
+forbidden_tools:
+  - external.publish
+  - git.push
+  - topic_strategy.mutate
+required_artifacts:
+  - draft_pack
+  - evidence_pack
+optional_artifacts:
+  - citation_sanitization_report
+  - figure_plan
+  - final_bundle
+  - process_summary
+  - venue_compliance_report
+  - multi_route_review_report
+produced_artifacts:
+  - publication_pack
+contracts:
+  input: contracts/input.yaml
+  output: contracts/output.yaml
+  guardrails: contracts/guardrails.yaml
+guardrails:
+  input:
+    - topic_artifacts_required
+    - draft_and_evidence_topic_match
+  tool:
+    - no_external_publication
+    - deterministic_inventory_only
+  output:
+    - required_components_classified
+    - qa_checks_present
+    - readiness_not_overstated
+replay_tests:
+  - id: minimal_topic_pack_generation
+    kind: runtime_smoke
+    profile_match: generic
+    promotion_eligible: false
+    purpose: Verify a topic with draft_pack and evidence_pack can generate publication_pack plus runtime trace artifacts.
+promotion_policy:
+  held_out_replay_required: true
+  required_strength: publication_readiness_replay
+  submission_ready_requires_all_qa_checks: true
+  reviewer_consensus_reject_blocks_submission: true
+  missing_required_blocks_review: true
+  controlled_replay_counts_for_promotion: false
+source_attribution:
+  external_sources: []
+memory_policy:
+  transferable:
+    - component_name
+    - artifact_type
+    - qa_check
+    - readiness_status
+    - blocker_category
+  topic_local:
+    - topic_id
+    - artifact_id
+    - target_profile

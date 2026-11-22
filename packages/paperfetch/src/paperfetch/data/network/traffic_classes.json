@@ -1,0 +1,59 @@
+{
+  "schema_version": "spc.traffic-classes.v1",
+  "lifecycle_status": "provisional",
+  "description": "SPC 自身出站流量的分类契约。声明每一类的出口要求、依据和域名清单，供 doctor 按类别探测与生成部署侧路由规则使用。SPC 不管理代理本身，只声明自己的流量属于哪一类。",
+  "classes": [
+    {
+      "id": "paper_download",
+      "label": "📄 论文下载",
+      "exit_requirement": "single_exit",
+      "rationale": "出版商落地页与 PDF/CDN 数据面若被路由到不同出口，出版商可能返回 403/not_pdf。该类内所有域名必须共用同一出口。",
+      "probe_url": "https://doi.org/",
+      "probe_expects": "http_response",
+      "extra_probe_urls": ["https://www.science.org/"],
+      "domains": [
+        "acm.org",
+        "acs.org",
+        "aiaa.org",
+        "aip.org",
+        "annualreviews.org",
+        "aps.org",
+        "atypon.com",
+        "bioone.org",
+        "elsevier.com",
+        "ieee.org",
+        "iop.org",
+        "iopscience.iop.org",
+        "jstor.org",
+        "nature.com",
+        "optica.org",
+        "oup.com",
+        "rsc.org",
+        "science.org",
+        "sciencedirect.com",
+        "sciencedirectassets.com",
+        "elsevier-ae.com",
+        "els-cdn.com",
+        "siam.org",
+        "spiedigitallibrary.org",
+        "springer.com",
+        "springernature.com",
+        "tandfonline.com",
+        "wiley.com"
+      ]
+    },
+    {
+      "id": "data_download",
+      "label": "🧬 数据下载",
+      "exit_requirement": "stable_exit",
+      "rationale": "Range 断点续传会开新连接。传输中途更换出口会触发 NCBI 短时 403，并使 acquisition_report 记录的出口与实际不符。该类出口必须固定，不得接入 url-test 轮换组。",
+      "probe_url": "https://ftp.ncbi.nlm.nih.gov/robots.txt",
+      "probe_expects": "http_body",
+      "domains": [
+        "datadryad.org",
+        "mirbase.org",
+        "ncbi.nlm.nih.gov"
+      ]
+    }
+  ]
+}

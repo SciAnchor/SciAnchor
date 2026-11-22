@@ -1,0 +1,172 @@
+{
+  "schema_version": "spc.workflow-resource-manifest.v1",
+  "workflow_ref": "workflow:npj-gene.glioma@provisional-1",
+  "workflow_source": {
+    "authority_type": "static_manifest",
+    "authority_id": "rh-static-bootstrap",
+    "source_revision": "topic16-evidence-bootstrap-2026-08-01",
+    "exported_at": "2026-08-01T08:00:00Z"
+  },
+  "manifest_revision": 1,
+  "lifecycle_status": "provisional",
+  "platforms": [
+    "linux-x86_64"
+  ],
+  "selected_modules": [
+    "gse274546-preprocessing",
+    "malignant-cell-definition",
+    "patient-balanced-cnmf",
+    "paired-longitudinal-program-analysis",
+    "gse131928-state-replication",
+    "geneformer-virtual-deletion",
+    "layered-validation",
+    "copykat-sensitivity-audit"
+  ],
+  "environment_requirements": [
+    {
+      "requirement_id": "r-core",
+      "environment_ref": "environment:npj-gene-r@1",
+      "required": true,
+      "required_by_modules": [
+        "malignant-cell-definition",
+        "copykat-sensitivity-audit"
+      ],
+      "minimum_validation_level": "REAL_PASS"
+    },
+    {
+      "requirement_id": "python-core",
+      "environment_ref": "environment:npj-gene-py@1",
+      "required": true,
+      "required_by_modules": [
+        "gse274546-preprocessing",
+        "patient-balanced-cnmf",
+        "paired-longitudinal-program-analysis",
+        "gse131928-state-replication"
+      ],
+      "minimum_validation_level": "REAL_PASS"
+    },
+    {
+      "requirement_id": "geneformer-gpu",
+      "environment_ref": "environment:npj-gene-geneformer@provisional-1",
+      "required": true,
+      "required_by_modules": [
+        "geneformer-virtual-deletion"
+      ],
+      "minimum_validation_level": "REAL_PASS"
+    }
+  ],
+  "dataset_requirements": [
+    {
+      "requirement_id": "primary-counts",
+      "dataset_ref": "dataset:geo:GSE274546@provisional-2026-08-01",
+      "required": true,
+      "purpose_hint": "primary discovery and paired longitudinal analysis",
+      "artifact_requirements": [
+        {
+          "artifact_id": "raw-archive",
+          "required": true,
+          "use": "execution_input"
+        },
+        {
+          "artifact_id": "family-soft",
+          "required": false,
+          "use": "audit_evidence"
+        },
+        {
+          "artifact_id": "filelist",
+          "required": false,
+          "use": "audit_evidence"
+        },
+        {
+          "artifact_id": "series-matrix",
+          "required": false,
+          "use": "optional_metadata"
+        }
+      ],
+      "readiness_enforcement": "resource_only"
+    },
+    {
+      "requirement_id": "adult-state-replication",
+      "dataset_ref": "dataset:geo:GSE131928@2026-08-01",
+      "required": true,
+      "purpose_hint": "adult GBM independent state replication; pediatric samples excluded",
+      "artifact_requirements": [
+        {
+          "artifact_id": "raw-archive",
+          "required": true,
+          "use": "execution_input"
+        },
+        {
+          "artifact_id": "adult-pediatric-annotation",
+          "required": true,
+          "use": "execution_input"
+        },
+        {
+          "artifact_id": "family-soft",
+          "required": false,
+          "use": "audit_evidence"
+        },
+        {
+          "artifact_id": "filelist",
+          "required": false,
+          "use": "audit_evidence"
+        },
+        {
+          "artifact_id": "series-matrix",
+          "required": false,
+          "use": "optional_metadata"
+        }
+      ],
+      "readiness_enforcement": "resource_only"
+    },
+    {
+      "requirement_id": "care-smartseq2-supplement",
+      "dataset_ref": "dataset:geo:GSE274548@provisional-1",
+      "required": false,
+      "purpose_hint": "same CARE cohort Smart-seq2 technical supplement",
+      "artifact_requirements": [],
+      "readiness_enforcement": "resource_only"
+    },
+    {
+      "requirement_id": "core-edge-support",
+      "dataset_ref": "dataset:geo:GSE84465@provisional-1",
+      "required": false,
+      "purpose_hint": "optional small core/edge supporting dataset",
+      "artifact_requirements": [],
+      "readiness_enforcement": "resource_only"
+    },
+    {
+      "requirement_id": "depmap-layered-validation",
+      "dataset_ref": "dataset:external:DepMap@provisional-1",
+      "required": false,
+      "purpose_hint": "formal layered validation; enforcement pending Artifact extraction",
+      "artifact_requirements": [],
+      "readiness_enforcement": "resource_only"
+    },
+    {
+      "requirement_id": "prjna1005229-layered-validation",
+      "dataset_ref": "dataset:external:PRJNA1005229@provisional-1",
+      "required": false,
+      "purpose_hint": "formal layered validation; enforcement pending Artifact extraction",
+      "artifact_requirements": [],
+      "readiness_enforcement": "resource_only"
+    },
+    {
+      "requirement_id": "tcga-layered-validation",
+      "dataset_ref": "dataset:external:TCGA@provisional-1",
+      "required": false,
+      "purpose_hint": "formal layered validation; enforcement pending Artifact extraction",
+      "artifact_requirements": [],
+      "readiness_enforcement": "resource_only"
+    },
+    {
+      "requirement_id": "glass-layered-validation",
+      "dataset_ref": "dataset:external:GLASS@provisional-1",
+      "required": false,
+      "purpose_hint": "formal layered validation; enforcement pending Artifact extraction",
+      "artifact_requirements": [],
+      "readiness_enforcement": "resource_only"
+    }
+  ],
+  "content_digest": "sha256:9969691ca4e751160554123ae7c23608ddfca9434e9dc254a06b5c06f3fcda58"
+}

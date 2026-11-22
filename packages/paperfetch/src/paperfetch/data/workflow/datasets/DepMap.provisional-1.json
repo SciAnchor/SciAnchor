@@ -1,0 +1,30 @@
+{
+  "schema_version": "spc.dataset-manifest.v1",
+  "dataset_ref": "dataset:external:DepMap@provisional-1",
+  "lifecycle_status": "provisional",
+  "source_identity": {
+    "namespace": "external",
+    "accession": "DepMap",
+    "official_url": null
+  },
+  "source_snapshot": {
+    "observed_at": null,
+    "remote_snapshot_digest": null
+  },
+  "artifacts": [],
+  "acquisition_sources": [
+    {
+      "source_id": "depmap-external",
+      "mode": "external_managed",
+      "priority": 10
+    }
+  ],
+  "content_identity": {
+    "identity_status": "unfrozen_resource_definition",
+    "raw_archive_member_count": null,
+    "raw_archive_member_manifest_sha256": null,
+    "workflow_baseline_package_sha256": null,
+    "server_wsl_package_sha256": null
+  },
+  "content_digest": "sha256:5c2d2a24caae47fb9f60c119b54803747b50c42c7252787879937bae820f9793"
+}

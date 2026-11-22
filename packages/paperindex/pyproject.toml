@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paperindex"
+version = "0.5.0"
+description = "PDF parsing, paper-card extraction, indexing, and retrieval engine for Research Harness"
+requires-python = ">=3.11"
+license = "CC-BY-NC-4.0"
+dependencies = [
+  "click>=8.1",
+  "pymupdf>=1.24.0",
+  # Workspace sibling package under packages/llm_router.
+  "llm-router[all]",
+]
+
+[project.optional-dependencies]
+docling = [
+  "docling>=2.0.0",
+]
+dev = [
+  "pytest>=8.0",
+]
+
+[project.scripts]
+paperindex = "paperindex.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["paperindex"]
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+pythonpath = [
+  ".",
+  "../llm_router",
+]

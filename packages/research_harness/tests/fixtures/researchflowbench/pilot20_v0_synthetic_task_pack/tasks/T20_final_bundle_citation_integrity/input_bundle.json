@@ -1,0 +1,19 @@
+{
+  "allowed_tools": [
+    "local_static_corpus"
+  ],
+  "expected_rh_axes": [
+    "section_drafting.citation_grounding",
+    "final_bundle.pdf_quality",
+    "citation.candidate_generation",
+    "governance.rollback_blocking"
+  ],
+  "external_search_policy": "forbidden_in_v0",
+  "prompt_context": "Synthetic public-safe context for T20.",
+  "schema_version": "researchflowbench.input_bundle.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.final_bundle_citation_integrity.0001",
+  "visible_local_corpus_record_ids": [
+    "evidence.T20.synthetic_public"
+  ]
+}

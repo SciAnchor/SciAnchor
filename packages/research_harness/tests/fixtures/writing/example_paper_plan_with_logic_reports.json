@@ -1,0 +1,309 @@
+{
+  "_comment": "Sanitized example PAPER_PLAN that passes the manuscript logic gate and the fine logic audit. It carries the RAW bundle inputs (so the runtime guard recomputes both reports deterministically) plus the two recorded reports for report-only consumers. Generated from the real evaluators; guarded by tests/test_example_paper_plan_logic_reports.py.",
+  "artifact_type": "PAPER_PLAN",
+  "topic": "event-conditioned-forecasting",
+  "core_claim_contract": {
+    "schema_version": "rh.manuscript.core_claim_contract.v1",
+    "paper_id": "eventtempo",
+    "title": "EventTempo: Forecast-Origin-Safe Event State for Forecasting",
+    "one_sentence_claim": "EventTempo improves event-conditioned forecasting by compiling visible event evidence into forecast-origin-safe event states before it can revise a numerical forecast.",
+    "central_problem": "Forecasting systems need to use external events without future leakage or harmful event-driven revisions.",
+    "paper_type": "original-research",
+    "target_venue": "CCF-A",
+    "allowed_focus": [
+      "forecast-origin-safe event state",
+      "target-window alignment",
+      "rollback of harmful event revisions"
+    ],
+    "forbidden_focus": [
+      "general multimodal forecasting survey",
+      "open-ended agent workflow platform"
+    ]
+  },
+  "argument_tree": {
+    "root_claim": "forecast-origin-safe event states improve event-conditioned forecasting",
+    "problems": [
+      {
+        "problem_id": "p1",
+        "statement": "event evidence may be invisible at the forecast origin",
+        "contribution_id": "c1",
+        "evidence_ids": [
+          "paper:1",
+          "audit:forecast-origin"
+        ],
+        "section_ids": [
+          "introduction",
+          "method",
+          "experiments"
+        ]
+      },
+      {
+        "problem_id": "p2",
+        "statement": "event impact windows may not align with target horizons",
+        "contribution_id": "c2",
+        "evidence_ids": [
+          "paper:2",
+          "table:event-window"
+        ],
+        "section_ids": [
+          "method",
+          "experiments"
+        ]
+      },
+      {
+        "problem_id": "p3",
+        "statement": "irrelevant or stale events can cause harmful revisions",
+        "contribution_id": "c3",
+        "evidence_ids": [
+          "paper:3",
+          "table:rollback"
+        ],
+        "section_ids": [
+          "method",
+          "experiments"
+        ]
+      }
+    ]
+  },
+  "term_registry": [
+    {
+      "term": "forecast-origin-safe event state",
+      "definition": "An event representation containing only evidence visible at the forecast origin.",
+      "first_use": "abstract",
+      "allowed_aliases": [
+        "event state"
+      ],
+      "forbidden_aliases": [
+        "safe event",
+        "secure event"
+      ]
+    },
+    {
+      "term": "target-window alignment",
+      "definition": "The check that an event's plausible impact interval overlaps the forecast horizon being revised.",
+      "first_use": "introduction",
+      "allowed_aliases": [
+        "window alignment"
+      ],
+      "forbidden_aliases": []
+    },
+    {
+      "term": "rollback",
+      "definition": "A control action that cancels harmful event-driven revisions.",
+      "first_use": "method",
+      "allowed_aliases": [],
+      "forbidden_aliases": []
+    }
+  ],
+  "promise_realization_matrix": [
+    {
+      "promise": "avoid future event leakage",
+      "made_in": "abstract",
+      "realized_by": [
+        "method:state-construction",
+        "experiment:forecast-origin-audit"
+      ],
+      "evidence_ids": [
+        "audit:forecast-origin"
+      ]
+    },
+    {
+      "promise": "reduce harmful event revisions",
+      "made_in": "introduction",
+      "realized_by": [
+        "method:rollback",
+        "experiment:rollback-quality"
+      ],
+      "evidence_ids": [
+        "table:rollback"
+      ]
+    }
+  ],
+  "paragraph_intent_tree": [
+    {
+      "section": "abstract",
+      "paragraph_id": "abs-1",
+      "intent": "state problem, method, and evidence without introducing side claims",
+      "serves_claim": true,
+      "allowed_terms": [
+        "forecast-origin-safe event state",
+        "target-window alignment",
+        "rollback"
+      ]
+    },
+    {
+      "section": "introduction",
+      "paragraph_id": "intro-1",
+      "intent": "motivate event-conditioned forecasting as a deployment risk",
+      "serves_claim": true,
+      "allowed_terms": [
+        "forecast-origin-safe event state"
+      ]
+    },
+    {
+      "section": "method",
+      "paragraph_id": "method-1",
+      "intent": "define event state construction and control actions",
+      "serves_claim": true,
+      "allowed_terms": [
+        "forecast-origin-safe event state",
+        "target-window alignment",
+        "rollback"
+      ]
+    }
+  ],
+  "argument_link_map": [
+    {
+      "claim_id": "c1",
+      "claim": "Forecast-origin-safe event states reduce leakage risk.",
+      "grounds": "Event evidence is filtered by forecast-origin visibility.",
+      "evidence_ids": [
+        "audit:forecast-origin"
+      ],
+      "warrant": "A state cannot leak future events when every event token is selected only from evidence visible at the forecast origin.",
+      "backing": "Forecast-origin audit enumerates visible event timestamps.",
+      "qualifier": "for event-conditioned forecasting tasks with timestamped evidence",
+      "rebuttal_or_alternative": "Static text fusion is weaker because it does not expose a forecast-origin visibility check.",
+      "paragraph_ids": [
+        "intro-2",
+        "method-1"
+      ]
+    },
+    {
+      "claim_id": "c2",
+      "claim": "Rollback reduces harmful event-driven revisions.",
+      "grounds": "Stale or irrelevant event states are canceled before update.",
+      "evidence_ids": [
+        "table:rollback"
+      ],
+      "warrant": "Canceling revisions whose validation score drops prevents those events from changing the final forecast.",
+      "backing": "Rollback ablation reports fewer harmful revisions.",
+      "qualifier": "on evaluated event windows",
+      "rebuttal_or_alternative": "Always-on event fusion remains as the negative control.",
+      "paragraph_ids": [
+        "method-1",
+        "experiments-2"
+      ]
+    }
+  ],
+  "assumption_warrant_table": [
+    {
+      "assumption_id": "a1",
+      "assumption": "Event timestamps indicate when evidence became visible.",
+      "why_needed": "The visibility warrant depends on a timestamp boundary.",
+      "where_to_state": "method:state-construction",
+      "backing_evidence_ids": [
+        "audit:forecast-origin"
+      ],
+      "risk_if_omitted": "Readers may not accept that future leakage is controlled."
+    }
+  ],
+  "claim_certainty_audit": [
+    {
+      "claim_id": "c1",
+      "claim": "Forecast-origin-safe event states reduce leakage risk.",
+      "evidence_strength": "strong",
+      "allowed_certainty": "bounded",
+      "actual_certainty": "bounded",
+      "status": "ok",
+      "required_scope": "event-conditioned forecasting tasks"
+    },
+    {
+      "claim_id": "c2",
+      "claim": "Rollback reduces harmful event-driven revisions.",
+      "evidence_strength": "medium",
+      "allowed_certainty": "bounded",
+      "actual_certainty": "bounded",
+      "status": "ok",
+      "required_scope": "evaluated event windows"
+    }
+  ],
+  "paragraph_flow_audit": [
+    {
+      "paragraph_id": "intro-1",
+      "topic_sentence": "External events can improve forecasts only when they are visible.",
+      "old_info_link": "event-conditioned forecasting",
+      "new_stress_info": "forecast-origin visibility",
+      "transition_relation": "problem-definition",
+      "signal_word_valid": true,
+      "chain": [
+        "event use",
+        "visibility risk",
+        "state construction"
+      ],
+      "status": "ok"
+    },
+    {
+      "paragraph_id": "intro-2",
+      "topic_sentence": "This visibility constraint motivates event states.",
+      "old_info_link": "forecast-origin visibility",
+      "new_stress_info": "event state construction",
+      "transition_relation": "solution-introduction",
+      "signal_word_valid": true,
+      "chain": [
+        "visibility risk",
+        "event state",
+        "evaluation"
+      ],
+      "status": "ok"
+    }
+  ],
+  "intro_logic_map": {
+    "problem_relevance": "Forecasting deployments act on changing external events.",
+    "problem_hardness": "Events can appear after the forecast origin or miss the target window.",
+    "prior_shortcomings": "Static fusion and post-hoc event text do not enforce origin visibility.",
+    "keen_insight": "Treat event evidence as a forecast-origin-safe state before forecast revision.",
+    "technical_challenges": "Visibility, window alignment, and harmful revision rollback.",
+    "validation_plan": "Leakage audit, alignment ablation, and rollback evaluation.",
+    "assessment": "The paper reports safer event-conditioned forecasts on evaluated horizons."
+  },
+  "figure_table_message_audit": [
+    {
+      "asset_id": "table:rollback",
+      "asset_type": "table",
+      "intended_message": "Rollback cancels harmful event-driven revisions.",
+      "major_finding": "Rollback lowers harmful revision count in the ablation.",
+      "supports_claim_ids": [
+        "c2"
+      ],
+      "evidence_ids": [
+        "table:rollback"
+      ],
+      "status": "ok"
+    }
+  ],
+  "writing_defect_log": [],
+  "manuscript_logic_gate_report": {
+    "schema_version": "rh.manuscript.logic_gate_report.v1",
+    "status": "pass",
+    "blockers": [],
+    "warnings": [],
+    "metrics": {
+      "problem_count": 3,
+      "term_count": 3,
+      "promise_count": 2,
+      "paragraph_count": 3,
+      "side_claim_count": 0,
+      "argument_link_count": 2,
+      "assumption_count": 1,
+      "claim_certainty_count": 2,
+      "paragraph_flow_count": 2,
+      "figure_table_message_count": 1,
+      "writing_defect_count": 0
+    }
+  },
+  "fine_logic_audit_report": {
+    "schema_version": "rh.manuscript.fine_logic_audit_report.v1",
+    "status": "pass",
+    "blockers": [],
+    "warnings": [],
+    "metrics": {
+      "argument_link_count": 2,
+      "assumption_count": 1,
+      "claim_certainty_count": 2,
+      "paragraph_flow_count": 2,
+      "figure_table_message_count": 1,
+      "writing_defect_count": 0
+    }
+  }
+}

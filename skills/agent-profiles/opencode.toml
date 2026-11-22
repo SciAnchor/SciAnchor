@@ -1,0 +1,14 @@
+# .rh-agent.toml — OpenCode consumer profile
+#
+# OpenCode has its own native global skill directory. We install there by
+# default so RH support is explicit, even though OpenCode can also discover
+# Claude-compatible and .agents-compatible skills.
+
+[agent]
+name    = "opencode"
+version = ">=1.15"
+
+[skills]
+install_path = "~/.config/opencode/skills"
+format       = "claude-skill-md"
+strategy     = "symlink"

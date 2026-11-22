@@ -1,0 +1,47 @@
+{
+  "allowed_tools": [
+    "local_static_corpus"
+  ],
+  "corrupted_case_ids": [
+    "C15_missing_subtopic_facet"
+  ],
+  "expected_rh_axes": [
+    "gap_detection.novelty_accuracy",
+    "baseline_identification.coverage",
+    "literature.set_completion"
+  ],
+  "expected_semantic_objects": [
+    "paper_cluster",
+    "baseline",
+    "claim",
+    "review_issue",
+    "gate_decision",
+    "run_trace"
+  ],
+  "external_search_policy": "forbidden_in_v0",
+  "gold_asset_ids": [
+    "evidence.T15.synthetic_public"
+  ],
+  "pilot_pack_id": "researchflowbench.synthetic_public_pilot20_v0",
+  "schema_version": "researchflowbench.task.v0.synthetic",
+  "scoring": {
+    "combined": {
+      "axis_separation_required": true,
+      "rubric": "synthetic combined axis"
+    },
+    "outcome": {
+      "rubric": "synthetic outcome axis"
+    },
+    "process": {
+      "rubric": "synthetic process axis"
+    }
+  },
+  "source_snapshot_id": "synthetic_public_static_corpus_v0",
+  "split": "draft_dev",
+  "stage": "analyze",
+  "status": "draft_not_release_grade",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.survey_facet_gap.0001",
+  "template_id": "researchflowbench.synthetic-T15",
+  "visibility": "public_safe_synthetic_fixture"
+}

@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C07_relevant_paper_buried_by_surface_match"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.rerank_near_miss.0001"
+}

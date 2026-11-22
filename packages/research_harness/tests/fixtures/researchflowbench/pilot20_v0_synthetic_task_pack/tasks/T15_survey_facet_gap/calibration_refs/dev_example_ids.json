@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C15_missing_subtopic_facet"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.survey_facet_gap.0001"
+}

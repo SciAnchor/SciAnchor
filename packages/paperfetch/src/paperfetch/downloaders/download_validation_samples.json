@@ -1,0 +1,16 @@
+{
+  "suite_version": "paperfetch.download-suite.v1",
+  "description": "SPC 开放获取论文下载固定验收样本",
+  "profiles": {
+    "smoke": ["arxiv_attention", "plos_medical"],
+    "oa": ["arxiv_attention", "plos_medical", "frontiers_medical", "mdpi_medical"],
+    "biomedical_oa": ["plos_medical", "frontiers_medical", "mdpi_medical"],
+    "full": ["arxiv_attention", "plos_medical", "frontiers_medical", "mdpi_medical"]
+  },
+  "samples": [
+    {"id": "arxiv_attention", "arxiv_id": "1706.03762", "doi": "10.48550/arXiv.1706.03762", "title": "Attention Is All You Need", "publisher": "NeurIPS", "domain": "computer_science", "access": "open", "expected_status": "downloaded", "required_discovery_sources": ["arxiv"]},
+    {"id": "plos_medical", "doi": "10.1371/journal.pone.0262839", "title": "Correction to Expression of Concern: Custom-made artificial eyes using 3D printing for dogs: A preliminary study", "publisher": "PLOS", "domain": "biomedical", "access": "open", "expected_status": "downloaded", "required_discovery_sources": ["plos_rule"]},
+    {"id": "frontiers_medical", "doi": "10.3389/fmed.2023.1208866", "title": "10.3389/fmed.2023.1208866", "publisher": "Frontiers", "domain": "biomedical", "access": "open", "expected_status": "downloaded", "required_discovery_sources": ["frontiers_rule"]},
+    {"id": "mdpi_medical", "doi": "10.3390/diagnostics13243611", "title": "Edge-Driven Multi-Agent Reinforcement Learning: A Novel Approach to Ultrasound Breast Tumor Segmentation", "publisher": "MDPI", "domain": "biomedical", "access": "open", "expected_status": "downloaded", "required_discovery_sources": ["crossref_mdpi_static"]}
+  ]
+}

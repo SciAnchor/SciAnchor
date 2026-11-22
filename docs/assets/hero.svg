@@ -1,0 +1,27 @@
+<svg width="1800" height="420" viewBox="0 0 1800 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1800" height="420" fill="white"/>
+
+  <g transform="translate(80,35)">
+    <circle cx="170" cy="175" r="48" stroke="#7E7E82" stroke-width="6" fill="white"/>
+    <circle cx="170" cy="175" r="14" fill="#F5A623"/>
+
+    <line x1="170" y1="91" x2="170" y2="127" stroke="#7E7E82" stroke-width="6" stroke-linecap="round"/>
+    <line x1="170" y1="223" x2="170" y2="259" stroke="#7E7E82" stroke-width="6" stroke-linecap="round"/>
+    <line x1="86" y1="175" x2="122" y2="175" stroke="#7E7E82" stroke-width="6" stroke-linecap="round"/>
+    <line x1="218" y1="175" x2="254" y2="175" stroke="#7E7E82" stroke-width="6" stroke-linecap="round"/>
+
+    <circle cx="170" cy="65" r="23" stroke="#7E7E82" stroke-width="6" fill="white"/>
+    <circle cx="170" cy="285" r="23" stroke="#7E7E82" stroke-width="6" fill="white"/>
+    <circle cx="60" cy="175" r="23" stroke="#7E7E82" stroke-width="6" fill="white"/>
+    <circle cx="280" cy="175" r="23" stroke="#7E7E82" stroke-width="6" fill="white"/>
+
+    <path d="M84 124C100 92 126 68 157 57" stroke="#7E7E82" stroke-width="6" stroke-linecap="round"/>
+    <path d="M256 124C240 92 214 68 183 57" stroke="#7E7E82" stroke-width="6" stroke-linecap="round"/>
+    <path d="M84 226C100 258 126 282 157 293" stroke="#7E7E82" stroke-width="6" stroke-linecap="round"/>
+    <path d="M256 226C240 258 214 282 183 293" stroke="#7E7E82" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <text x="470" y="240" fill="#202124" font-family="Inter, Arial, Helvetica, sans-serif" font-size="150" font-weight="400" letter-spacing="-2">
+    Research Harness
+  </text>
+</svg>

@@ -1,0 +1,17 @@
+{
+  "allowed_tools": [
+    "local_static_corpus"
+  ],
+  "expected_rh_axes": [
+    "evidence_linking.support_accuracy",
+    "citation.candidate_generation"
+  ],
+  "external_search_policy": "forbidden_in_v0",
+  "prompt_context": "Synthetic public-safe context for T17.",
+  "schema_version": "researchflowbench.input_bundle.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.evidence_link_granularity.0001",
+  "visible_local_corpus_record_ids": [
+    "evidence.T17.synthetic_public"
+  ]
+}

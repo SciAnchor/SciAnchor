@@ -1,0 +1,141 @@
+{
+  "schema_version": "rh.delivery_protocol.v1",
+  "status": "local_fixture_only",
+  "source_of_truth": "research_harness",
+  "public_surface": "none",
+  "runtime_dependency": "none",
+  "entry_modes": [
+    "protocol_call",
+    "human_in_loop_call"
+  ],
+  "required_artifacts": [
+    "RESEARCH_BRIEF",
+    "IDEA_REPORT",
+    "RESEARCH_PROPOSAL",
+    "EVALUATION",
+    "EXPERIMENT_GOAL",
+    "EXPERIMENT_PLAN",
+    "IMPACT_REPORT",
+    "CLAIMS_FROM_RESULTS",
+    "PAPER_PLAN",
+    "AUTO_REVIEW",
+    "PRESUBMISSION_AUDIT",
+    "PAPER_PACKAGE",
+    "REBUTTAL_PACKAGE"
+  ],
+  "boundaries": {
+    "adds_public_tool": false,
+    "adds_cli_command": false,
+    "adds_http_route": false,
+    "adds_python_facade_method": false,
+    "adds_storage_schema": false,
+    "uses_network": false,
+    "uses_real_llm": false
+  },
+  "artifact_records": [
+    {
+      "artifact": "RESEARCH_BRIEF",
+      "stage": "init",
+      "gate": "topic_readiness",
+      "owner_skill": "research-init",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "IDEA_REPORT",
+      "stage": "analyze",
+      "gate": "opportunity_evidence",
+      "owner_skill": "gap-analysis",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "RESEARCH_PROPOSAL",
+      "stage": "propose",
+      "gate": "proposal_readiness",
+      "owner_skill": "gap-analysis",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "EVALUATION",
+      "stage": "propose",
+      "gate": "go_no_go",
+      "owner_skill": "evidence-gating",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "EXPERIMENT_GOAL",
+      "stage": "experiment",
+      "gate": "experiment_scope",
+      "owner_skill": "evidence-gating",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "EXPERIMENT_PLAN",
+      "stage": "experiment",
+      "gate": "experiment_readiness",
+      "owner_skill": "evidence-gating",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "IMPACT_REPORT",
+      "stage": "experiment",
+      "gate": "result_claim_alignment",
+      "owner_skill": "evidence-gating",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "CLAIMS_FROM_RESULTS",
+      "stage": "analyze",
+      "gate": "evidence_strength",
+      "owner_skill": "claim-extraction",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "PAPER_PLAN",
+      "stage": "write",
+      "gate": "write_readiness",
+      "owner_skill": "section-drafting",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "AUTO_REVIEW",
+      "stage": "review",
+      "gate": "review_readiness",
+      "owner_skill": "provenance-review",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "PRESUBMISSION_AUDIT",
+      "stage": "write",
+      "gate": "submission_readiness",
+      "owner_skill": "paper-writing",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "PAPER_PACKAGE",
+      "stage": "write",
+      "gate": "package_readiness",
+      "owner_skill": "publication-pack",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    },
+    {
+      "artifact": "REBUTTAL_PACKAGE",
+      "stage": "write",
+      "gate": "response_readiness",
+      "owner_skill": "publication-pack",
+      "recording_surface": "orchestrator_record_artifact",
+      "source_of_truth": "research_harness"
+    }
+  ]
+}

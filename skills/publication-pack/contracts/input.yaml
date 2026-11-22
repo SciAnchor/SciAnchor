@@ -1,0 +1,33 @@
+schema_version: rh.schema.input.publication_pack.v0
+type: object
+description: Inputs required to generate a publication_pack through the runtime.
+required:
+  - topic_id
+  - draft_pack_artifact_id
+  - evidence_pack_artifact_id
+properties:
+  topic_id:
+    type: integer
+    minimum: 1
+  draft_pack_artifact_id:
+    type: integer
+    minimum: 1
+  evidence_pack_artifact_id:
+    type: integer
+    minimum: 1
+  target_profile:
+    type: string
+    default: high-impact-general
+  optional_artifact_refs:
+    type: array
+    items:
+      type: string
+  mode:
+    type: string
+    enum:
+      - inventory
+      - readiness_gate
+    default: inventory
+guardrails:
+  - topic_artifacts_required
+  - draft_and_evidence_topic_match

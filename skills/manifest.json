@@ -1,0 +1,665 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-02T01:46:22Z",
+  "skills_dir": "skills",
+  "skills": [
+    {
+      "name": "citation-trace",
+      "path": "skills/citation-trace",
+      "skill_md": "skills/citation-trace/SKILL.md",
+      "description": "Expand from seed papers by following references and citations inside Research Harness workflows. Trigger on phrases like \"citation-trace\", \"/citation-trace\", \"引用追踪\", \"沿引用链扩展\", or equivalent requests to grow a paper set from one or more seed papers.",
+      "extras": {
+        "public_suite": "research",
+        "task_type": "discovery",
+        "data_access_level": "local+external",
+        "inputs": "topic_id, seed paper IDs or identifiers, expansion focus",
+        "outputs": "expanded paper candidates, ingestion recommendations, citation-chain notes",
+        "gates": "ingest useful papers with topic_id; preserve seed and citation provenance",
+        "artifact_schemas": "paper_pool, literature_map",
+        "estimated_runtime": "15-45 min"
+      }
+    },
+    {
+      "name": "claim-extraction",
+      "path": "skills/claim-extraction",
+      "skill_md": "skills/claim-extraction/SKILL.md",
+      "description": "Extract core claims from papers for Research Harness evidence structuring. Trigger on phrases like \"claim-extraction\", \"/claim-extraction\", \"提取论文声明\", \"claim extract\", or equivalent requests to identify key claims, evidence, assumptions, and limitations from ingested papers.",
+      "extras": {
+        "public_suite": "research",
+        "task_type": "extraction",
+        "data_access_level": "local",
+        "inputs": "topic_id, paper_ids, optional claim focus, optional IMPACT_REPORT, EXPERIMENT_GROUNDING_PROFILE, RESULT_TO_CLAIM_ANALYSIS_PROFILE",
+        "outputs": "structured claims, evidence notes, assumptions, limitations, claim-bound result implications, claim-strength blockers",
+        "gates": "target papers must be ingested and topic-scoped before extraction; experiment result claims need a claim-bound IMPACT_REPORT, passing EXPERIMENT_GROUNDING_PROFILE, and RESULT_TO_CLAIM_ANALYSIS_PROFILE before CLAIMS_FROM_RESULTS",
+        "artifact_schemas": "claim_set, evidence_link, IMPACT_REPORT, EXPERIMENT_GROUNDING_PROFILE, RESULT_TO_CLAIM_ANALYSIS_PROFILE, CLAIMS_FROM_RESULTS, relative_delta_table, statistical_summary",
+        "estimated_runtime": "5-20 min"
+      }
+    },
+    {
+      "name": "domain-writing-biomedical",
+      "path": "skills/domain-writing-biomedical",
+      "skill_md": "skills/domain-writing-biomedical/SKILL.md",
+      "description": "Biomedical, clinical, medical, public-health, and life-science domain writing profile for Research Harness paper workflows. Use before paper-writing or section-drafting when claims involve patients, cohorts, interventions, exposures, mechanisms, diagnostics, therapeutics, or biological evidence.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "domain-writing-profile",
+        "data_access_level": "local",
+        "inputs": "topic_id, biomedical question, population or model system, study design, target venue, evidence artifacts, PAPER_PROFILE, PAPER_PLAN",
+        "outputs": "BIOMEDICAL_WRITING_PROFILE, DOMAIN_WRITING_PROFILE, PAPER_PROFILE route, clinical and biological claim boundaries, ethics and reporting gates",
+        "gates": "select this profile before biomedical manuscript-scale drafting; clinical, diagnostic, therapeutic, and biological mechanism claims must match PAPER_PROFILE study_design, reporting_map, evidence_rule, ethics, and evidence strength",
+        "artifact_schemas": "PAPER_PROFILE, DOMAIN_WRITING_PROFILE, BIOMEDICAL_WRITING_PROFILE, PAPER_PLAN",
+        "estimated_runtime": "5-15 min"
+      }
+    },
+    {
+      "name": "domain-writing-humanities",
+      "path": "skills/domain-writing-humanities",
+      "skill_md": "skills/domain-writing-humanities/SKILL.md",
+      "description": "Humanities domain writing profile for Research Harness paper workflows. Use before paper-writing or section-drafting when the manuscript is interpretive, historical, textual, philosophical, archival, cultural, literary, art-historical, or concept-genealogical.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "domain-writing-profile",
+        "data_access_level": "local",
+        "inputs": "topic_id, corpus or archive, interpretive question, historical context, target venue, evidence artifacts, PAPER_PROFILE, PAPER_PLAN",
+        "outputs": "HUMANITIES_WRITING_PROFILE, DOMAIN_WRITING_PROFILE, PAPER_PROFILE route, interpretive argument boundaries, archive and corpus evidence map",
+        "gates": "select this profile before humanities manuscript-scale drafting; do not force baseline, ablation, metric, or experiment rhetoric onto interpretive work; apply PAPER_PROFILE reporting_map and evidence_rule to source-grounding claims",
+        "artifact_schemas": "PAPER_PROFILE, DOMAIN_WRITING_PROFILE, HUMANITIES_WRITING_PROFILE, PAPER_PLAN",
+        "estimated_runtime": "5-15 min"
+      }
+    },
+    {
+      "name": "domain-writing-law-policy",
+      "path": "skills/domain-writing-law-policy",
+      "skill_md": "skills/domain-writing-law-policy/SKILL.md",
+      "description": "Law, governance, regulation, and policy domain writing profile for Research Harness paper workflows. Use before paper-writing or section-drafting when the manuscript depends on normative claims, statutes, precedent, doctrine, institutional design, stakeholder tradeoffs, implementation, or enforcement feasibility.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "domain-writing-profile",
+        "data_access_level": "local",
+        "inputs": "topic_id, jurisdiction or policy arena, normative question, legal or policy sources, target venue, evidence artifacts, PAPER_PROFILE, PAPER_PLAN",
+        "outputs": "LAW_POLICY_WRITING_PROFILE, DOMAIN_WRITING_PROFILE, PAPER_PROFILE route, normative and doctrinal claim boundaries, stakeholder and implementation map",
+        "gates": "select this profile before law or policy manuscript-scale drafting; normative, doctrinal, precedent, and policy-effect claims must name authority, jurisdiction, assumptions, tradeoffs, PAPER_PROFILE reporting_map, and evidence_rule",
+        "artifact_schemas": "PAPER_PROFILE, DOMAIN_WRITING_PROFILE, LAW_POLICY_WRITING_PROFILE, PAPER_PLAN",
+        "estimated_runtime": "5-15 min"
+      }
+    },
+    {
+      "name": "domain-writing-social-science",
+      "path": "skills/domain-writing-social-science",
+      "skill_md": "skills/domain-writing-social-science/SKILL.md",
+      "description": "Social science domain writing profile for Research Harness paper workflows. Use before paper-writing or section-drafting when the manuscript depends on theory, constructs, variables, identification strategy, survey, interview, observational, causal-inference, qualitative, or mixed-methods evidence.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "domain-writing-profile",
+        "data_access_level": "local",
+        "inputs": "topic_id, theory or construct focus, study design, variables, population, target venue, evidence artifacts, PAPER_PROFILE, PAPER_PLAN",
+        "outputs": "SOCIAL_SCIENCE_WRITING_PROFILE, DOMAIN_WRITING_PROFILE, PAPER_PROFILE route, construct and identification boundaries, theory-method-evidence mapping",
+        "gates": "select this profile before social-science manuscript-scale drafting; causal, theoretical, and construct claims must match PAPER_PROFILE study_design, reporting_map, evidence_rule, measurement, and identification strategy",
+        "artifact_schemas": "PAPER_PROFILE, DOMAIN_WRITING_PROFILE, SOCIAL_SCIENCE_WRITING_PROFILE, PAPER_PLAN",
+        "estimated_runtime": "5-15 min"
+      }
+    },
+    {
+      "name": "domain-writing-stem",
+      "path": "skills/domain-writing-stem",
+      "skill_md": "skills/domain-writing-stem/SKILL.md",
+      "description": "STEM and engineering domain writing profile for Research Harness paper workflows. Use before paper-writing or section-drafting when the manuscript is in AI/ML, computer science, engineering, physical science, systems, benchmark, or method-development work.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "domain-writing-profile",
+        "data_access_level": "local",
+        "inputs": "topic_id, discipline, research type, study design, target venue, evidence artifacts, PAPER_PROFILE, PAPER_PLAN",
+        "outputs": "STEM_ENGINEERING_WRITING_PROFILE, DOMAIN_WRITING_PROFILE, PAPER_PROFILE route, claim boundaries, section priorities, reproducibility and evidence gates",
+        "gates": "select this profile before manuscript-scale drafting for STEM or engineering work; performance, novelty, baseline, and ablation claims must be evidence-bound by PAPER_PROFILE reporting_map and evidence_rule",
+        "artifact_schemas": "PAPER_PROFILE, DOMAIN_WRITING_PROFILE, STEM_ENGINEERING_WRITING_PROFILE, PAPER_PLAN",
+        "estimated_runtime": "5-15 min"
+      }
+    },
+    {
+      "name": "evidence-gating",
+      "path": "skills/evidence-gating",
+      "skill_md": "skills/evidence-gating/SKILL.md",
+      "description": "Decide whether a research stage has enough evidence to advance in Research Harness. Trigger on phrases like \"evidence-gating\", \"/evidence-gating\", \"证据门控\", \"现在能推进吗\", or equivalent requests to check whether current literature, claims, and artifacts justify moving to the next stage.",
+      "extras": {
+        "public_suite": "review",
+        "task_type": "gating",
+        "data_access_level": "local",
+        "inputs": "topic_id, current stage, paper pool, claims, artifacts, PAPER_PROFILE, DOMAIN_METHOD_SEARCH_PROFILE, EVALUATION_GATE_PROFILE, PROBLEM_ANCHOR, EXPERIMENT_GROUNDING_PROFILE, RESULT_TO_CLAIM_ANALYSIS_PROFILE",
+        "outputs": "gate decision, blockers, missing evidence, method/search readiness, evaluation gate readiness, experiment grounding readiness, result-to-claim readiness, protocol artifact readiness, next actions",
+        "gates": "do not advance when required evidence, method/search coverage, evaluation gate fields, experiment grounding fields, result-to-claim analysis fields, or protocol artifacts are missing; do not silently default to STEM",
+        "artifact_schemas": "gate_check, advisory_report, DOMAIN_METHOD_SEARCH_PROFILE, EVALUATION_GATE_PROFILE, PROBLEM_ANCHOR, EXPERIMENT_GROUNDING_PROFILE, RESULT_TO_CLAIM_ANALYSIS_PROFILE, EVALUATION, EXPERIMENT_PLAN, PAPER_PLAN, IMPACT_REPORT, CLAIMS_FROM_RESULTS, relative_delta_table, statistical_summary",
+        "estimated_runtime": "3-10 min"
+      }
+    },
+    {
+      "name": "figure-quality",
+      "path": "skills/figure-quality",
+      "skill_md": "skills/figure-quality/SKILL.md",
+      "description": "Improve Research Harness manuscript figures and visual evidence. Use when a paper/PDF has low-quality figures, placeholder fbox/minipage diagrams, blurry PNGs, weak visual evidence, missing publication-ready graphics, figure/table quality review blockers, or requests to use Codex/ImageGen/GPT Image to generate academic paper figures.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "visual-evaluation",
+        "data_access_level": "local-files",
+        "inputs": "figure_plan, manuscript, final_bundle, recorded result artifacts",
+        "outputs": "publication-ready figure assets, figure provenance, visual-risk report",
+        "gates": "result figures must use recorded evidence; generated assets need provenance",
+        "artifact_schemas": "figure_plan, final_bundle_quality_report",
+        "estimated_runtime": "20-90 min"
+      }
+    },
+    {
+      "name": "final-bundle-quality",
+      "path": "skills/final-bundle-quality",
+      "skill_md": "skills/final-bundle-quality/SKILL.md",
+      "description": "Evaluate and replay final_bundle PDF/LaTeX quality for Research Harness project-level self-evolution. Trigger on phrases like \"final bundle quality\", \"PDF quality replay\", \"LaTeX quality gate\", \"AAAI PDF QA\", \"final_bundle_quality\", or equivalent requests to scan publication bundles, classify layout/encoding/recompile defects, and decide whether a skill can be promoted.",
+      "category": "research",
+      "version": "0.1.2",
+      "extras": {
+        "public_suite": "benchmark",
+        "task_type": "evaluation",
+        "data_access_level": "local-files",
+        "inputs": "topic_id, final_bundle artifact, TeX/PDF/log paths, target profile",
+        "outputs": "final_bundle_quality_report, replay trajectory, promotion decision",
+        "gates": "zero blocking and zero recompile-repairable issues before promotion claims",
+        "artifact_schemas": "final_bundle_quality_report, runtime_trace_grade",
+        "estimated_runtime": "5-30 min"
+      }
+    },
+    {
+      "name": "gap-analysis",
+      "path": "skills/gap-analysis",
+      "skill_md": "skills/gap-analysis/SKILL.md",
+      "description": "Analyze research gaps using Research Harness paper pools and extracted evidence. Trigger on phrases like \"gap-analysis\", \"/gap-analysis\", \"研究空白分析\", \"找研究 gap\", or equivalent requests to identify underexplored questions, missing baselines, or contradictory findings.",
+      "extras": {
+        "public_suite": "research",
+        "task_type": "analysis",
+        "data_access_level": "local",
+        "inputs": "topic_id, paper pool, extracted claims, baseline context, PAPER_PROFILE, DOMAIN_METHOD_SEARCH_PROFILE, EVALUATION_GATE_PROFILE, PROBLEM_ANCHOR",
+        "outputs": "candidate gaps, novelty risks, baseline gaps, method/search gaps, IDEA_REPORT, RESEARCH_PROPOSAL, EVALUATION, PROBLEM_ANCHOR, next experiments",
+        "gates": "every gap claim must cite paper-pool evidence or be labeled speculative; method/search gap claims must follow DOMAIN_METHOD_SEARCH_PROFILE and do not silently default to STEM; candidate directions need PROBLEM_ANCHOR, baseline_mode, paper_access_status, fatal_flaws, and pilot decision before promotion",
+        "artifact_schemas": "gap_report, literature_map, DOMAIN_METHOD_SEARCH_PROFILE, EVALUATION_GATE_PROFILE, PROBLEM_ANCHOR, IDEA_REPORT, RESEARCH_PROPOSAL, EVALUATION",
+        "estimated_runtime": "10-30 min"
+      }
+    },
+    {
+      "name": "literature-mapping",
+      "path": "skills/literature-mapping",
+      "skill_md": "skills/literature-mapping/SKILL.md",
+      "description": "Build a structured literature map in Research Harness. Trigger on phrases like \"literature-mapping\", \"/literature-mapping\", \"文献地图\", \"建立文献库\", \"systematic literature map\", or equivalent requests to cluster papers, identify baselines, and organize a topic-level paper pool.",
+      "extras": {
+        "public_suite": "research",
+        "task_type": "mapping",
+        "data_access_level": "local+external",
+        "inputs": "topic scope, topic_id, candidate papers, venue or time constraints, PAPER_PROFILE, DOMAIN_METHOD_SEARCH_PROFILE",
+        "outputs": "clustered literature map, baseline coverage, domain method/search coverage, ingestion plan",
+        "gates": "useful papers must be ingested; map must separate evidence from inference; method and baseline clusters must follow DOMAIN_METHOD_SEARCH_PROFILE and do not silently default to STEM",
+        "artifact_schemas": "literature_map, paper_pool, DOMAIN_METHOD_SEARCH_PROFILE",
+        "estimated_runtime": "20-60 min"
+      }
+    },
+    {
+      "name": "literature-search",
+      "path": "skills/literature-search",
+      "skill_md": "skills/literature-search/SKILL.md",
+      "description": "Run comprehensive literature search for Research Harness. Trigger on phrases like \"literature-search\", \"/literature-search\", \"文献检索\", \"系统检索论文\", \"帮我搜相关论文\", or equivalent requests to search, shortlist, and ingest relevant papers.",
+      "extras": {
+        "public_suite": "research",
+        "task_type": "discovery",
+        "data_access_level": "local+external",
+        "inputs": "topic scope, time range, venue/domain constraints, topic_id, PAPER_PROFILE, DOMAIN_METHOD_SEARCH_PROFILE",
+        "outputs": "ranked paper candidates, ingestion decisions, frontier evidence, domain method/search evidence table",
+        "gates": "ingestion requires topic_id; frontier claims need academic and industry signals; domain searches must follow DOMAIN_METHOD_SEARCH_PROFILE and do not silently default to STEM",
+        "artifact_schemas": "paper_pool, frontier_attention_evidence, DOMAIN_METHOD_SEARCH_PROFILE",
+        "estimated_runtime": "10-45 min"
+      }
+    },
+    {
+      "name": "manuscript-logic-gate",
+      "path": "skills/manuscript-logic-gate",
+      "skill_md": "skills/manuscript-logic-gate/SKILL.md",
+      "description": "Manuscript-level writing gate for Research Harness. Use before paper-writing or section-drafting when a draft, topic, abstract, introduction, or advisor feedback indicates unclear core claim, concept sprawl, weak paragraph intent, undefined terminology, or promises that are not realized later in the manuscript.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "writing-gate",
+        "data_access_level": "local",
+        "inputs": "topic_id, target venue, paper type, advisor feedback, draft text, evidence artifacts, experiment/result artifacts",
+        "outputs": "CORE_CLAIM_CONTRACT, ARGUMENT_TREE, TERM_REGISTRY, PROMISE_REALIZATION_MATRIX, PARAGRAPH_INTENT_TREE, READER_CONFUSION_TRACE, CENTRAL_THREAD_AUDIT, ENUMERATION_DISCIPLINE_GATE, TITLE_ABSTRACT_RESULT_ALIGNMENT, TERM_SURFACE_SEMANTICS_AUDIT, PARAGRAPH_MICRO_PLAN, REVIEWER_PERSUASION_PREFLIGHT, MATERIAL_TO_ARGUMENT_GATE, manuscript_logic_gate_report",
+        "gates": "block abstract/introduction/section drafting until the core claim, argument tree, terminology, promises, paragraph intents, reader path, central thread, title-abstract-result alignment, and material-to-argument mapping pass",
+        "artifact_schemas": "CORE_CLAIM_CONTRACT, ARGUMENT_TREE, TERM_REGISTRY, PROMISE_REALIZATION_MATRIX, PARAGRAPH_INTENT_TREE, READER_CONFUSION_TRACE, CENTRAL_THREAD_AUDIT, ENUMERATION_DISCIPLINE_GATE, TITLE_ABSTRACT_RESULT_ALIGNMENT, TERM_SURFACE_SEMANTICS_AUDIT, PARAGRAPH_MICRO_PLAN, REVIEWER_PERSUASION_PREFLIGHT, MATERIAL_TO_ARGUMENT_GATE, manuscript_logic_gate_report, PAPER_PLAN",
+        "estimated_runtime": "10-30 min"
+      }
+    },
+    {
+      "name": "manuscript-math-formalization",
+      "path": "skills/manuscript-math-formalization",
+      "skill_md": "skills/manuscript-math-formalization/SKILL.md",
+      "description": "Formalize mathematical notation in Research Harness manuscripts. Use when reviewer/advisor feedback says prose symbols look unprofessional, when a Chinese or English manuscript/DOCX/LaTeX draft contains inline variables, equations, dimensions, matrix products, fractions, square roots, Greek symbols, indexed sets, rule expressions, or algorithm notation written as plain text, or when paper-writing/section-drafting/publication-pack needs a strict math-notation QA pass.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "writing",
+        "data_access_level": "local-files",
+        "inputs": "manuscript DOCX/LaTeX artifact, reviewer/advisor feedback, formula-expression-rules reference, docx_math_audit findings",
+        "outputs": "manuscript with formalized math objects (m:oMath / LaTeX math), math-notation audit findings, structure-preserving paragraph patches",
+        "gates": "never patch inside existing math objects; preserve DOCX structure (sectPr, w:cols, styles, headers/footers, relationships); convert only function-mathematical expressions; keep method/dataset/acronym names and audit-field keys as text unless inside a formal equation",
+        "artifact_schemas": "math_notation_audit, draft_section",
+        "estimated_runtime": "15-45 min"
+      }
+    },
+    {
+      "name": "paper-reading-annotation",
+      "path": "skills/paper-reading-annotation",
+      "skill_md": "skills/paper-reading-annotation/SKILL.md",
+      "description": "Create PhD-level PDF highlights/comments for newly added Zotero papers or RH PDFs. Trigger when importing/syncing a paper into Zotero, adding a PDF attachment, 精读标注, 论文批注, 博士生读论文, or equivalent requests to make a paper quickly graspable through PDF annotations.",
+      "category": "research",
+      "version": "0.1.0",
+      "extras": {
+        "public_suite": "zotero",
+        "task_type": "annotation",
+        "data_access_level": "zotero-local",
+        "inputs": "paper_id or PDF path, topic focus, Zotero attachment context",
+        "outputs": "PDF annotations, reading notes, paperindex card signals",
+        "gates": "skip low-relevance papers; preserve absolute attachment paths",
+        "artifact_schemas": "paper_annotations, paperindex_card",
+        "estimated_runtime": "10-45 min"
+      }
+    },
+    {
+      "name": "paper-sync",
+      "path": "skills/paper-sync",
+      "skill_md": "skills/paper-sync/SKILL.md",
+      "description": "Check paper pool health, enrich metadata, download PDFs, and annotate — with relevance filtering to skip noise",
+      "allowed_tools": [
+        "mcp__research-harness__paper_list",
+        "mcp__research-harness__paper_coverage_check",
+        "mcp__research-harness__paper_acquire",
+        "mcp__research-harness__paper_dismiss",
+        "mcp__research-harness__topic_show",
+        "mcp__research-harness__topic_list",
+        "Read"
+      ],
+      "extras": {
+        "public_suite": "zotero",
+        "task_type": "synchronization",
+        "data_access_level": "local+external",
+        "inputs": "topic name or topic_id, paper queue, acquisition policy",
+        "outputs": "coverage report, acquired PDFs, dismissed noise, annotation queue",
+        "gates": "avoid ingesting noise; keep paper operations topic-scoped",
+        "artifact_schemas": "paper_pool, topic_paper_notes",
+        "estimated_runtime": "5-30 min"
+      }
+    },
+    {
+      "name": "paper-verify",
+      "path": "skills/paper-verify",
+      "skill_md": "skills/paper-verify/SKILL.md",
+      "description": "Verify whether papers actually exist and match the claimed metadata before or after ingestion. Trigger on phrases like \"paper-verify\", \"/paper-verify\", \"验证论文存在性\", \"核对 DOI arxiv\", or equivalent requests to validate titles, identifiers, and source consistency.",
+      "extras": {
+        "public_suite": "review",
+        "task_type": "verification",
+        "data_access_level": "local+external",
+        "inputs": "title, DOI, arXiv ID, authors, URL, or PDF metadata",
+        "outputs": "identity verdict, corrected metadata, ingestion or rejection decision",
+        "gates": "do not trust unverifiable identifiers; record mismatches explicitly",
+        "artifact_schemas": "paper_verification_report",
+        "estimated_runtime": "5-20 min"
+      }
+    },
+    {
+      "name": "paper-writing",
+      "path": "skills/paper-writing",
+      "skill_md": "skills/paper-writing/SKILL.md",
+      "description": "论文撰写全流程指导 skill，覆盖六种类型：专项研究、综述、系统/基准、短论文/Workshop、立场论文、科研汇报。融合导师核心原则 + 国际顶会写作方法论。Trigger: write paper, 写论文, 论文撰写, draft paper, paper writing, 写综述, survey writing, 科研汇报, research report, position paper, workshop paper, short paper, 写introduction, 写related work, 写实验, camera-ready, rebuttal, 投稿准备",
+      "tracks": [
+        "advisor-report",
+        "original-research",
+        "position-paper",
+        "short-workshop",
+        "survey-review",
+        "system-benchmark"
+      ],
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "writing",
+        "data_access_level": "local",
+        "inputs": "topic_id, domain, paper type, target venue, evidence artifacts, PAPER_PROFILE, DOMAIN_WRITING_PROFILE, PAPER_PLAN, EXPERIMENT_GROUNDING_PROFILE, RESULT_TO_CLAIM_ANALYSIS_PROFILE, SKELETON_SOURCE_INTEGRITY_PROFILE, PRESUBMISSION_SEVERITY_GATE_PROFILE, REBUTTAL_READINESS_GATE_PROFILE, selected track",
+        "outputs": "PAPER_PROFILE, DOMAIN_WRITING_PROFILE, evidence-backed sections, manuscript structure, result-bound claim wording, SKELETON_SOURCE_INTEGRITY_PROFILE, PRESUBMISSION_AUDIT, PRESUBMISSION_SEVERITY_GATE_PROFILE, REBUTTAL_PACKAGE, REBUTTAL_READINESS_GATE_PROFILE, reviewer-facing checks",
+        "gates": "choose PAPER_PROFILE, domain-writing profile, and track before drafting; run manuscript-logic-gate before manuscript-scale drafting; unsupported claims require evidence or labels; RESULT_TO_CLAIM_ANALYSIS_PROFILE must pass before result-backed contribution prose; source_trace, citation_integrity, and bib_doi_verification must pass before submission-facing claims; PRESUBMISSION_SEVERITY_GATE_PROFILE must classify CRITICAL/MAJOR/MINOR findings through integrity_gate before package readiness; REBUTTAL_READINESS_GATE_PROFILE must pass provenance gate, commitment gate, and coverage gate before response readiness",
+        "artifact_schemas": "PAPER_PROFILE, DOMAIN_WRITING_PROFILE, CORE_CLAIM_CONTRACT, ARGUMENT_TREE, TERM_REGISTRY, PROMISE_REALIZATION_MATRIX, PARAGRAPH_INTENT_TREE, READER_CONFUSION_TRACE, CENTRAL_THREAD_AUDIT, ENUMERATION_DISCIPLINE_GATE, TITLE_ABSTRACT_RESULT_ALIGNMENT, TERM_SURFACE_SEMANTICS_AUDIT, PARAGRAPH_MICRO_PLAN, REVIEWER_PERSUASION_PREFLIGHT, MATERIAL_TO_ARGUMENT_GATE, draft_pack, PAPER_PLAN, EXPERIMENT_GROUNDING_PROFILE, RESULT_TO_CLAIM_ANALYSIS_PROFILE, CLAIMS_FROM_RESULTS, relative_delta_table, statistical_summary, SKELETON_SOURCE_INTEGRITY_PROFILE, PRESUBMISSION_AUDIT, PRESUBMISSION_SEVERITY_GATE_PROFILE, REBUTTAL_PACKAGE, REBUTTAL_READINESS_GATE_PROFILE, ISSUE_BOARD, REVISION_PLAN, frontier_attention_evidence",
+        "estimated_runtime": "30-180 min"
+      }
+    },
+    {
+      "name": "project-novelty-certification",
+      "path": "skills/project-novelty-certification",
+      "skill_md": "skills/project-novelty-certification/SKILL.md",
+      "description": "Two-stage GO/NO-GO certification for committing a mined research direction to a real project, targeting ICLR main track. Runs AFTER gap_ground_verify. Trigger on phrases like \"project-novelty-certification\", \"立项认证\", \"能不能立项\", \"值不值得投 ICLR\", \"novelty certification\", \"reviewer panel\", or when deciding whether to commit effort to a gap/direction found by gap-analysis or the panorama.",
+      "extras": {
+        "public_suite": "review",
+        "task_type": "gating",
+        "data_access_level": "local",
+        "inputs": "candidate direction/claim, gap_ground_verify verdict, design notes, panorama direction slug",
+        "outputs": "per-axis reviewer scores, discovered pre-emptors, GO/NO-GO decision, recorded territory-map verdict, switch-direction recommendation",
+        "gates": "NEVER commit a direction on gap_ground_verify alone; the web-enabled 4-axis reviewer panel is MANDATORY; the ONLY acceptance target is ICLR main track; any NO-GO signal (occupied auto-verdict, any reviewer below bar, any direct pre-emptor, panel mean below main bar) means STOP and switch direction, not workshop salvage",
+        "artifact_schemas": "certification_decision, reviewer_panel, PROBLEM_ANCHOR",
+        "estimated_runtime": "15-40 min"
+      }
+    },
+    {
+      "name": "provenance-review",
+      "path": "skills/provenance-review",
+      "skill_md": "skills/provenance-review/SKILL.md",
+      "description": "Review Research Harness execution history, recorded artifacts, and process quality. Trigger on phrases like \"provenance-review\", \"/provenance-review\", \"溯源审查\", \"回顾执行历史\", or equivalent requests to inspect what was done, what was recorded, and what is missing.",
+      "extras": {
+        "public_suite": "review",
+        "task_type": "audit",
+        "data_access_level": "local",
+        "inputs": "topic_id, provenance window, artifacts, stage history, delivery protocol artifacts, SKELETON_SOURCE_INTEGRITY_PROFILE, PRESUBMISSION_SEVERITY_GATE_PROFILE, REBUTTAL_READINESS_GATE_PROFILE",
+        "outputs": "process audit, missing records, stale artifacts, protocol artifact risk list, source integrity risk list, review/rebuttal provenance blockers",
+        "gates": "separate recorded facts from inference; flag unrecorded outputs, unrecorded protocol deliverables, broken source_trace, stale source artifacts, citation_integrity gaps, bib_doi_verification gaps, dangling citations, failed integrity_gate, CRITICAL presubmission findings, missing ISSUE_BOARD, missing REVISION_PLAN, and failed provenance gate, commitment gate, or coverage gate",
+        "artifact_schemas": "provenance_review_report, RESEARCH_BRIEF, EXPERIMENT_PLAN, PAPER_PLAN, SKELETON_SOURCE_INTEGRITY_PROFILE, PRESUBMISSION_SEVERITY_GATE_PROFILE, PAPER_PACKAGE, REBUTTAL_PACKAGE, REBUTTAL_READINESS_GATE_PROFILE, ISSUE_BOARD, REVISION_PLAN",
+        "estimated_runtime": "5-20 min"
+      }
+    },
+    {
+      "name": "publication-pack",
+      "path": "skills/publication-pack",
+      "skill_md": "skills/publication-pack/SKILL.md",
+      "description": "Assemble an evidence-bound publication package from Research Harness artifacts. Trigger on phrases like \"publication-pack\", \"/publication-pack\", \"投稿材料包\", \"submission pack\", \"publication package\", \"把这个 topic 整理成投稿包\", or equivalent requests to turn a topic's evidence, draft sections, figures, citation checks, response letters, and provenance into one reviewable package.",
+      "version": "0.1.0",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "packaging",
+        "data_access_level": "local",
+        "inputs": "topic_id, draft_pack, evidence_pack, SKELETON_SOURCE_INTEGRITY_PROFILE, PRESUBMISSION_SEVERITY_GATE_PROFILE, REBUTTAL_READINESS_GATE_PROFILE, optional PAPER_PACKAGE, REBUTTAL_PACKAGE, final_bundle and QA artifacts",
+        "outputs": "publication_pack artifact, PAPER_PACKAGE, REBUTTAL_PACKAGE readiness diagnostics, missing component list, source integrity blockers, review/rebuttal gate blockers",
+        "gates": "required components must exist before ready_for_review is true; source_trace, citation_integrity, bib_doi_verification, required_section_groups, and source artifacts must pass before submission readiness; PRESUBMISSION_SEVERITY_GATE_PROFILE must have zero CRITICAL findings and a passing integrity_gate; REBUTTAL_READINESS_GATE_PROFILE must pass provenance gate, commitment gate, and coverage gate before response readiness",
+        "artifact_schemas": "publication_pack, PAPER_PACKAGE, REBUTTAL_PACKAGE, SKELETON_SOURCE_INTEGRITY_PROFILE, PRESUBMISSION_SEVERITY_GATE_PROFILE, REBUTTAL_READINESS_GATE_PROFILE, ISSUE_BOARD, REVISION_PLAN, run_trace",
+        "estimated_runtime": "5-15 min"
+      }
+    },
+    {
+      "name": "deposit-zenodo",
+      "path": "skills/deposit-zenodo",
+      "skill_md": "skills/deposit-zenodo/SKILL.md",
+      "description": "Mint Zenodo DOIs for a topic's code and data packages. Trigger on \"deposit zenodo\", \"申请DOI\", \"上传数据和代码拿DOI\", \"code data DOI\", or when a manuscript needs Data Availability repository identifiers.",
+      "version": "0.1.0",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "packaging",
+        "data_access_level": "local",
+        "inputs": "topic_id or topic_name, Zenodo token (preferred) or email+password, optional deposit_root/code_path/data_path",
+        "outputs": "code_doi, data_doi, record URLs",
+        "gates": "code/ and data/ (or 代码/数据) must exist; publish is permanent per version",
+        "artifact_schemas": "deposit_receipt",
+        "estimated_runtime": "1-5 min"
+      }
+    },
+    {
+      "name": "research-harness",
+      "path": "skills/research-harness",
+      "skill_md": "skills/research-harness/SKILL.md",
+      "description": "Main entry skill for Research Harness workflows in Codex. Trigger on phrases like \"research-harness\", \"/research-harness\", \"用 Research Harness\", \"进入科研工作流\", \"开始科研流程\", or equivalent requests to route the task to topic initialization, literature search, citation tracing, claim extraction, gap analysis, evidence gating, section drafting, publication pack assembly, paper verification, provenance review, or self-evolution backlog capture from workspace feedback.",
+      "extras": {
+        "public_suite": "research",
+        "task_type": "routing",
+        "data_access_level": "local",
+        "inputs": "user request, topic context, available RH state",
+        "outputs": "routed workflow, specific skill choice, next primitive calls",
+        "gates": "route to a specific skill when intent is clear; read agent guide if context is incomplete",
+        "artifact_schemas": "workflow_route",
+        "estimated_runtime": "1-5 min"
+      }
+    },
+    {
+      "name": "research-init",
+      "path": "skills/research-init",
+      "skill_md": "skills/research-init/SKILL.md",
+      "description": "Initialize a new research topic or new project integration for Research Harness. Trigger on phrases like \"research-init\", \"/research-init\", \"初始化研究主题\", \"初始化 Research Harness\", \"给项目接入 Research Harness\", or equivalent requests to create topic scaffolding, update AGENTS or CLAUDE guidance, and ingest seed papers.",
+      "extras": {
+        "public_suite": "research",
+        "task_type": "initialization",
+        "data_access_level": "local+external",
+        "inputs": "topic name, research scope, venue, seed papers, project workspace, optional PAPER_PROFILE",
+        "outputs": "topic record, bootstrap guidance, seed ingestion plan, RESEARCH_BRIEF, PROBLEM_ANCHOR, initial artifacts",
+        "gates": "every ingested paper needs topic_id; record durable bootstrap outputs; paper-bound topics need an explicit PROBLEM_ANCHOR and later EVALUATION_GATE_PROFILE with baseline_mode, paper_access_status, fatal_flaws, and pilot boundary",
+        "artifact_schemas": "topic, RESEARCH_BRIEF, PROBLEM_ANCHOR, frontier_attention_evidence, EVALUATION_GATE_PROFILE",
+        "estimated_runtime": "10-30 min"
+      }
+    },
+    {
+      "name": "research-primitives",
+      "path": "skills/research-primitives",
+      "skill_md": "skills/research-primitives/SKILL.md",
+      "description": "Reference guide for core Research Harness public MCP operations",
+      "allowed_tools": [
+        "Read"
+      ],
+      "extras": {
+        "public_suite": "research",
+        "task_type": "reference",
+        "data_access_level": "local",
+        "inputs": "primitive name, workflow question, tool-surface question",
+        "outputs": "public MCP guidance, safe primitive usage pattern",
+        "gates": "prefer public MCP tools over CLI for research primitives",
+        "artifact_schemas": "none",
+        "estimated_runtime": "1-5 min"
+      }
+    },
+    {
+      "name": "rh-continue",
+      "path": "skills/rh-continue",
+      "skill_md": "skills/rh-continue/SKILL.md",
+      "description": "Smart workflow continuation - checks for pending decisions, presents them if needed, then resumes. One-command flow from paused to running.",
+      "extras": {
+        "trigger": "Use when user types /rh-continue or asks \"continue\", \"keep going\", \"resume workflow\"",
+        "public_suite": "paper",
+        "task_type": "workflow",
+        "data_access_level": "local-files",
+        "inputs": "topic_id (optional, auto-detected)",
+        "outputs": "workflow resumed or decision made",
+        "gates": "same as underlying commands",
+        "artifact_schemas": "workflow_status, human_decision_request, gate_decision",
+        "estimated_runtime": "30s-5min (depends on pending decisions)"
+      }
+    },
+    {
+      "name": "rh-decide",
+      "path": "skills/rh-decide",
+      "skill_md": "skills/rh-decide/SKILL.md",
+      "description": "Interactive decision making for Research Harness workflows. Detects pending decisions, presents options with AI recommendations using native UI, and records human choices.",
+      "extras": {
+        "trigger": "Use when user types /rh-decide or when a paper-production workflow is paused at a decision point",
+        "public_suite": "paper",
+        "task_type": "human-in-loop",
+        "data_access_level": "local-files",
+        "inputs": "topic_id (optional, auto-detected from context)",
+        "outputs": "decision recorded, workflow can resume",
+        "gates": "decision must match available options",
+        "artifact_schemas": "human_decision_request.v2",
+        "estimated_runtime": "30s-2min (user input time)"
+      }
+    },
+    {
+      "name": "rh-exemplar-writing",
+      "path": "skills/rh-exemplar-writing",
+      "skill_md": "skills/rh-exemplar-writing/SKILL.md",
+      "description": "Reference-grounded (\"stand on the shoulders of giants\") generation of research artifacts via the Research Harness Exemplar-Anchored Generation (EAG) engine. Use when designing or auditing a paper's SECTION ARCHITECTURE / skeleton, INTRODUCTION arc, ABSTRACT element order, PROSE STYLE, or WHOLE-PAPER FIGURE CONTRACT (all figure roles — framing, method, data, results, analysis, spatial maps, listings — chart choices, multi-panel composition, discipline style, two-phase design/reconcile) by analogy to high-quality published exemplars from the target venue. Transfers FORM (structure/style) — never CONTENT (wording, claims, data). Complements rh-ccf-a-introduction-writer, rh-paper-figure-generator, and rh-paper-production.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "exemplar-anchored-writing",
+        "data_access_level": "local-files",
+        "inputs": "topic id, unit type (skeleton|intro_arc|related_work_arc|method_arc|experiment_arc|discussion_arc|paragraph_moves|abstract|style|figure_suite), this paper's content/contributions, target venue, paper_type (empirical|survey), experiment records or planned matrix (for figure suites)",
+        "outputs": "exemplar_pack (quality-gated library slice), exemplar_plan (form-only skeleton/arc/suite spec), figure_suite_plan (two-phase contract + coverage + logging requirements + generative export), drafted section or rendered figure suite, anti-plagiarism critique / figure critique",
+        "gates": "exemplar quality gate (only high-quality target-venue exemplars admitted), form-not-content overlap gate (deterministic n-gram anti-plagiarism), rendered-figure critique (deterministic + optional VLM), figure_contract advisory (missing plan / coverage gaps)",
+        "artifact_schemas": "exemplar_pack, exemplar_plan, figure_suite_plan, figure_suite",
+        "estimated_runtime": "1-10 min"
+      }
+    },
+    {
+      "name": "rh-paper-figure-generator",
+      "path": "skills/rh-paper-figure-generator",
+      "skill_md": "skills/rh-paper-figure-generator/SKILL.md",
+      "description": "Generate Research Harness paper figures and architecture diagrams with the RH illustration route (Grok Imagine / GPT Image / Gemini) as the primary architecture-figure provider. Use when creating, revising, or planning academic architecture figures, method overview figures, pipeline diagrams, mechanism diagrams, graphical abstracts, advisor/boss paper figures, CCF-A style method visuals, figure prompts, figure plans, or figure style variants. Enforces RH evidence boundaries, topic-specific mechanism profiles, figure_plan provenance, publication-quality gates, and cross-paper visual diversity.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "figure-generation",
+        "data_access_level": "local-files",
+        "inputs": "research topic, paper mode, target venue, figure role, mechanism profile, claim boundaries, output path",
+        "outputs": "figure_plan, provider route, generated figure, caption, provenance, quality-gate notes",
+        "gates": "figure_contract before provider call, illustration backend readiness, figure-quality review before publication-ready acceptance",
+        "artifact_schemas": "figure_plan, figure_contract, provenance_record, figure_quality_report",
+        "estimated_runtime": "5-30 min"
+      }
+    },
+    {
+      "name": "rh-paper-perfection",
+      "path": "skills/rh-paper-perfection",
+      "skill_md": "skills/rh-paper-perfection/SKILL.md",
+      "description": "End-to-end \"perfect paper\" pipeline for a Research Harness research direction — drive experiments to ceiling (EAG-anchored to how top venues validate & present), then EAG-mode chapter-by-chapter writing with adversarial review after EVERY chapter and a final whole-paper adversarial review. Trigger on phrases like \"rh-paper-perfection\", \"完美论文流程\", \"把这个方向做完整并写成论文\", \"experiment-to-ceiling then write\", \"把工作做完整\", or when a direction has a solid experimental core and the user wants it taken to a publication-ready manuscript with maximal rigor. Orchestrates rh-exemplar-writing (EAG), rh-manuscript-polish (adversarial review), rh-paper-figure-generator, and the panorama library.",
+      "extras": {
+        "public_suite": "research",
+        "task_type": "workflow",
+        "data_access_level": "local",
+        "inputs": "direction/topic id, experimental results ledger, target venue (default ICLR main), panorama library, exemplar papers",
+        "outputs": "ceiling-completed experiments, EAG-anchored chapter drafts, per-chapter adversarial-review verdicts, whole-paper review verdict, publication-ready manuscript",
+        "gates": "no chapter advances until its adversarial review passes; no writing starts until experiments hit ceiling; every claim bound to a real experiment; exemplars transfer FORM never CONTENT",
+        "artifact_schemas": "experiment_ledger, exemplar_map, chapter_draft, adversarial_review, submission_readiness",
+        "estimated_runtime": "multi-session"
+      }
+    },
+    {
+      "name": "rh-paper-production",
+      "path": "skills/rh-paper-production",
+      "skill_md": "skills/rh-paper-production/SKILL.md",
+      "description": "End-to-end Research Harness paper-production workflow for academic manuscript tasks. Use when the user provides a 科研题目, research topic, target journal, 目标期刊, asks to 写论文, draft related work, design experiments, create architecture figures, plan baselines/benchmarks, build a paper pool, or produce CRediT authorship statements for p1-p8.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "paper-production",
+        "data_access_level": "local-files",
+        "inputs": "research topic, target venue, paper mode, workspace artifacts, evidence records, figure requirements",
+        "outputs": "manuscript sections, paper plan, figure tasks, evidence gates, provenance records, publication bundle readiness",
+        "gates": "RH skill doctor health check, evidence/provenance gate, figure-quality gate for architecture figures, final bundle quality gate",
+        "artifact_schemas": "paper_plan, evidence_record, provenance_record, figure_plan, publication_pack, gate_report",
+        "estimated_runtime": "30-180 min"
+      }
+    },
+    {
+      "name": "rh-self-evolution",
+      "path": "skills/rh-self-evolution",
+      "skill_md": "skills/rh-self-evolution/SKILL.md",
+      "description": "Record RH workspace human feedback, accepted agent proposals, repeated agent-observed failures, and confirmed workflow bugs into a durable self-evolution backlog, then repair Research Harness mechanisms in explicit batch self-evolution sessions rather than interrupting active research work.",
+      "extras": {
+        "public_suite": "review",
+        "task_type": "workflow-optimization",
+        "data_access_level": "local-files",
+        "inputs": "human feedback, accepted agent proposal, repeated failure evidence, logic bug, affected RH module",
+        "outputs": "optimization target, mechanism patch, feedback note, regression check, Codex sync result",
+        "gates": "human feedback is an absolute trigger; agent-discovered issues require repetition, clear logic bug, evidence/provenance risk, or verified workflow blocker",
+        "artifact_schemas": "process_feedback, review_issue, gate_check, ADVISOR_FEEDBACK_INGEST",
+        "estimated_runtime": "5-30 min"
+      }
+    },
+    {
+      "name": "rh-status",
+      "path": "skills/rh-status",
+      "skill_md": "skills/rh-status/SKILL.md",
+      "description": "Show Research Harness workflow status including current stage, gate status, pending decisions, and next actions. Quick diagnostic for \"where are we now?\"",
+      "extras": {
+        "trigger": "Use when user types /rh-status or asks \"what's the status\", \"where are we\", \"what's next\"",
+        "public_suite": "paper",
+        "task_type": "diagnostic",
+        "data_access_level": "local-files",
+        "inputs": "topic_id (optional, auto-detected)",
+        "outputs": "formatted status display",
+        "gates": "none",
+        "artifact_schemas": "workflow_status, gate_report, human_decision_request",
+        "estimated_runtime": "5-15s"
+      }
+    },
+    {
+      "name": "rh-write",
+      "path": "skills/rh-write",
+      "skill_md": "skills/rh-write/SKILL.md",
+      "description": "One-command paper generation - creates topic, runs workflow, handles decisions, exports paper. Simplest way to use Research Harness.",
+      "extras": {
+        "trigger": "Use when user types /rh-write or wants to \"write a paper about X\"",
+        "public_suite": "paper",
+        "task_type": "end-to-end",
+        "data_access_level": "local-files",
+        "inputs": "research topic, target venue, optional language and mode",
+        "outputs": "complete research paper (LaTeX + PDF)",
+        "gates": "none (handles internally)",
+        "artifact_schemas": "topic_brief, paper_plan, draft_pack, final_bundle, publication_pack",
+        "estimated_runtime": "1-2 hours"
+      }
+    },
+    {
+      "name": "rh-zotero-plugin-adapter",
+      "path": "skills/rh-zotero-plugin-adapter",
+      "skill_md": "skills/rh-zotero-plugin-adapter/SKILL.md",
+      "description": "Maintain and debug the Research Harness Zotero plugin adapter. Trigger on Zotero side panel, Zotero reader, Zotero copy/clipboard, local RH API bridge, PDF attachment, RH-to-Zotero sync, seed-paper previews, plugin restart/dev-refresh, or requests to align Zotero plugin behavior with RH CLI/MCP skills without duplicating existing research workflow skills.",
+      "extras": {
+        "public_suite": "zotero",
+        "task_type": "adapter-maintenance",
+        "data_access_level": "local-files",
+        "inputs": "Zotero plugin state, bridge logs, local API URL, user action",
+        "outputs": "adapter diagnosis, code patch, verification result, sync guidance",
+        "gates": "preserve user Zotero data; do not duplicate research workflow semantics",
+        "artifact_schemas": "zotero_sync_report",
+        "estimated_runtime": "10-60 min"
+      }
+    },
+    {
+      "name": "section-drafting",
+      "path": "skills/section-drafting",
+      "skill_md": "skills/section-drafting/SKILL.md",
+      "description": "Draft paper sections from Research Harness evidence. Trigger on phrases like \"section-drafting\", \"/section-drafting\", \"章节起草\", \"根据证据写 related work\", or equivalent requests to produce evidence-backed draft sections tied to ingested papers and extracted claims.",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "writing",
+        "data_access_level": "local",
+        "inputs": "topic_id, section name, evidence IDs, paper pool, PAPER_PROFILE, DOMAIN_WRITING_PROFILE, PAPER_PLAN, SKELETON_SOURCE_INTEGRITY_PROFILE, outline",
+        "outputs": "evidence-backed section draft, citation/evidence mapping, Claims-Evidence Matrix updates, source_trace updates, domain-specific claim boundary notes",
+        "gates": "no unsupported freeform claims; use section_draft when available; require PAPER_PROFILE and DOMAIN_WRITING_PROFILE and prefer PAPER_PLAN before manuscript-scale drafting; keep source_trace and citation_integrity repairable before submission-facing drafts",
+        "artifact_schemas": "draft_section, consistency_check, PAPER_PROFILE, DOMAIN_WRITING_PROFILE, PAPER_PLAN, SKELETON_SOURCE_INTEGRITY_PROFILE",
+        "estimated_runtime": "10-45 min"
+      }
+    },
+    {
+      "name": "task-taxonomy",
+      "path": "skills/task-taxonomy",
+      "skill_md": "skills/task-taxonomy/SKILL.md",
+      "description": "Research task classification and model routing guidance",
+      "allowed_tools": [
+        "Read"
+      ],
+      "extras": {
+        "public_suite": "benchmark",
+        "task_type": "reference",
+        "data_access_level": "local",
+        "inputs": "task description, risk level, expected artifact type",
+        "outputs": "task class, route tier, evaluation guidance",
+        "gates": "choose route by evidence risk, cost, and artifact consequences",
+        "artifact_schemas": "runtime_contract",
+        "estimated_runtime": "1-5 min"
+      }
+    },
+    {
+      "name": "manuscript-issue-audit",
+      "path": "skills/manuscript-issue-audit",
+      "skill_md": "skills/manuscript-issue-audit/SKILL.md",
+      "description": "Guided multi-pass audit of a delivered clean LaTeX/PDF manuscript to find remaining problems before submission or ticket feedback. Trigger on 检查稿件问题, manuscript issue audit, 审稿自查, 挑毛病.",
+      "version": "0.1.0",
+      "extras": {
+        "public_suite": "paper",
+        "task_type": "review",
+        "data_access_level": "local",
+        "inputs": "latex zip/dir/PDF; optional ticket_id, venue, DOIs",
+        "outputs": "prioritized issue board; optional ticket feedback payloads",
+        "gates": "no fabricated science; every issue anchored",
+        "estimated_runtime": "15-45 min",
+        "artifact_schemas": "manuscript_issue_board"
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C16_wrong_anchor_paper_selected"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.deep_anchor_selection.0001"
+}

@@ -1,0 +1,9 @@
+{
+  "corrupted_case_ids": [
+    "C20_final_bundle_unsupported_citation"
+  ],
+  "example_ids": [],
+  "schema_version": "researchflowbench.dev_example_ids.v0.synthetic",
+  "synthetic": true,
+  "task_id": "rfb.synthetic.final_bundle_citation_integrity.0001"
+}
