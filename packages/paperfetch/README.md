@@ -174,4 +174,4 @@ stdout, stderr, or logs.
 
 ## License
 
-Part of Research Harness and released under [CC BY-NC 4.0](../../LICENSE) (non-commercial use, with attribution).
+Part of Research Harness and released under the [GNU AGPL-3.0](../../LICENSE); a commercial license is available, see [NOTICE](../../NOTICE).

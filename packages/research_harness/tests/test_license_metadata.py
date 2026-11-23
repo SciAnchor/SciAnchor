@@ -7,16 +7,21 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 
 
-def test_root_license_is_cc_by_nc() -> None:
+def test_root_license_is_agpl_verbatim() -> None:
+    """LICENSE holds only the AGPL-3.0 text so GitHub can detect the license."""
     license_text = (ROOT / "LICENSE").read_text()
 
-    assert "Copyright (c) 2026 Research Harness Contributors" in license_text
-    assert "SPDX-License-Identifier: CC-BY-NC-4.0" in license_text
-    assert "Attribution-NonCommercial 4.0 International" in license_text
-    assert (
-        "NonCommercial means not primarily intended for or directed towards"
-        in license_text
-    )
+    assert license_text.lstrip().startswith("GNU AFFERO GENERAL PUBLIC LICENSE")
+    assert "Version 3, 19 November 2007" in license_text
+    assert "Research Harness" not in license_text
+
+
+def test_notice_carries_copyright_and_commercial_option() -> None:
+    notice = (ROOT / "NOTICE").read_text()
+
+    assert "Copyright (c) 2026 Research Harness Contributors" in notice
+    assert "AGPL-3.0-only" in notice
+    assert "commercial license" in notice
 
 
 def test_third_party_notices_keep_adapted_mit_code_attributed() -> None:
@@ -36,7 +41,7 @@ def test_third_party_notices_keep_adapted_mit_code_attributed() -> None:
 
 
 def test_python_package_license_metadata_matches_root_license() -> None:
-    expected = "CC-BY-NC-4.0"
+    expected = "AGPL-3.0-only"
     pyprojects = sorted((ROOT / "packages").glob("*/pyproject.toml"))
 
     assert pyprojects, "expected at least one package pyproject"

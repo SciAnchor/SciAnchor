@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey.svg" alt="License: CC BY-NC 4.0"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" alt="License: AGPL-3.0"/></a>
   <img src="https://img.shields.io/badge/python-3.11%2B-blue.svg" alt="Python"/>
   <img src="https://img.shields.io/badge/MCP-compatible-orange.svg" alt="MCP"/>
 </p>
@@ -233,4 +233,4 @@ For open-source maintainers, RH provides a transferable agent workflow: Codex pe
 
 ## License
 
-[CC BY-NC 4.0](LICENSE) (Attribution-NonCommercial): free to use, adapt and share for non-commercial purposes with attribution; commercial use needs a separate license. Third-party code keeps its own license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+[GNU AGPL-3.0](LICENSE). Personal, academic and in-house use is unrestricted; if you distribute a modified version or offer RH as a network service, you must release the complete source under AGPL-3.0. For closed-source or commercial use, a commercial license is available; see [NOTICE](NOTICE). Third-party code keeps its own license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

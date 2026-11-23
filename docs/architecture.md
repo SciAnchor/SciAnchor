@@ -75,4 +75,4 @@ See [STATUS.md](STATUS.md) for the current source of truth. In short:
 
 ## License
 
-CC BY-NC 4.0 (non-commercial use with attribution); see `LICENSE` and `THIRD_PARTY_NOTICES.md`.
+GNU AGPL-3.0, with a commercial license available; see `LICENSE`, `NOTICE` and `THIRD_PARTY_NOTICES.md`.

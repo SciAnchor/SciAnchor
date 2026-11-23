@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey.svg" alt="License: CC BY-NC 4.0"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" alt="License: AGPL-3.0"/></a>
   <img src="https://img.shields.io/badge/python-3.11%2B-blue.svg" alt="Python"/>
   <img src="https://img.shields.io/badge/MCP-compatible-orange.svg" alt="MCP"/>
 </p>
@@ -231,4 +231,4 @@ Research Harness 本身也使用 Codex 维护开源工作流：生成和审查�
 
 ## License
 
-[CC BY-NC 4.0](LICENSE)（署名-非商业性使用）：可以在非商业用途下使用、修改和再分发，需署名；商业使用需另行获得授权。第三方代码的许可证见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+[GNU AGPL-3.0](LICENSE)。个人、学术和机构内部使用不受限制；修改后分发，或基于 RH 对外提供网络服务时，必须以 AGPL-3.0 公开完整源代码。需要闭源或商业使用的，可以获取商业授权，见 [NOTICE](NOTICE)。第三方代码的许可证见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

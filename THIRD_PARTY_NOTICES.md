@@ -1,6 +1,6 @@
 # Third-party notices
 
-Research Harness is licensed under CC BY-NC 4.0 (see `LICENSE`). The portions
+Research Harness is licensed under the GNU AGPL-3.0 (see `LICENSE`). The portions
 below are adapted from third-party projects and remain available under their
 original licenses, reproduced here as those licenses require.
 

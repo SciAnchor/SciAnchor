@@ -71,7 +71,7 @@ for plugin in plugins:
 
 ## Free vs Premium Boundary
 
-| Core (CC BY-NC 4.0) | RH Pro / Enterprise (separate license) |
+| Core (AGPL-3.0) | RH Pro / Enterprise (separate license) |
 |---|---|
 | All core primitives | Hosted team workspace |
 | Local orchestrator | Multi-user collaboration |

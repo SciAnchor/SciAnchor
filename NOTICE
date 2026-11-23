@@ -1,0 +1,21 @@
+Research Harness
+Copyright (c) 2026 Research Harness Contributors
+
+Research Harness, including every package under packages/ (paperfetch among
+them), is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License, version 3, as published by the
+Free Software Foundation (SPDX: AGPL-3.0-only). See LICENSE.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
+
+Commercial license
+------------------
+If you want to use Research Harness in a closed-source product or service, or
+otherwise cannot meet the AGPL-3.0 obligations, a commercial license is
+available from the Research Harness maintainers. Contact them through the
+research-harness GitHub organization: https://github.com/research-harness
+
+Third-party components keep their own licenses; see THIRD_PARTY_NOTICES.md.

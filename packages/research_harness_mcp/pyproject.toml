@@ -8,7 +8,7 @@ version = "1.5.0"
 description = "MCP server exposing Research Harness primitives to agent hosts"
 readme = "README.md"
 requires-python = ">=3.11"
-license = "CC-BY-NC-4.0"
+license = "AGPL-3.0-only"
 dependencies = [
     "research-harness",
     "paperindex",
