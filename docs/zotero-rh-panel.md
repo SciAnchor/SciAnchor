@@ -148,8 +148,8 @@ Default Zotero preferences:
 ```text
 extensions.researchharness.zotero.apiURL    = http://127.0.0.1:8000
 extensions.researchharness.zotero.autoStart = true
-extensions.researchharness.zotero.repoRoot  = /path/to/research-harness
-extensions.researchharness.zotero.pythonBin = /path/to/research-harness/.venv/bin/python
+extensions.researchharness.zotero.repoRoot  = /path/to/scianchor
+extensions.researchharness.zotero.pythonBin = /path/to/scianchor/.venv/bin/python
 extensions.researchharness.zotero.model     = gpt-5.3-codex-spark
 ```
 

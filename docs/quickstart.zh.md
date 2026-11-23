@@ -1,6 +1,6 @@
 # 快速开始
 
-本页是 Research Harness 中文快速上手指南。整体介绍可先看仓库根目录的 [`README.md`](../README.md)；英文首页见 [`README.en.md`](../README.en.md)，英文快速开始见 [`docs/quickstart.md`](quickstart.md)。
+本页是 SciAnchor（Research Harness 引擎）中文快速上手指南。整体介绍可先看仓库根目录的 [`README.md`](../README.md)；英文首页见 [`README.en.md`](../README.en.md)，英文快速开始见 [`docs/quickstart.md`](quickstart.md)。
 
 ## 最短可用路径
 
@@ -275,9 +275,9 @@ MCP 配置的关键是使用**绝对路径**，避免不同 shell / venv 下找�
 {
   "mcpServers": {
     "research-harness": {
-      "command": "/absolute/path/to/research-harness/.venv/bin/rh-mcp",
+      "command": "/absolute/path/to/scianchor/.venv/bin/rh-mcp",
       "env": {
-        "RESEARCH_HARNESS_DB_PATH": "/absolute/path/to/research-harness/.research-harness/pool.db"
+        "RESEARCH_HARNESS_DB_PATH": "/absolute/path/to/scianchor/.research-harness/pool.db"
       }
     }
   }

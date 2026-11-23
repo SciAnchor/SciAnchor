@@ -1,4 +1,4 @@
-# Contributing to Research Harness
+# Contributing to SciAnchor
 
 Thanks for helping. Bugs and proposals go to GitHub Issues; code goes through
 pull requests against `main`. Run `scripts/codex-check.sh --python` (and the

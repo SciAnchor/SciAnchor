@@ -1,6 +1,6 @@
-# Research Harness 文档首页
+# SciAnchor 文档首页
 
-Research Harness 是面向长周期 AI 科研 agent 的执行与状态层。它把文献检索、
+SciAnchor 的开源核心引擎 Research Harness 是面向长周期 AI 科研 agent 的执行与状态层。它把文献检索、
 论文精读、claim 提取、gap 分析、实验设计和基于证据的写作连接成一条可持续、
 可审查、可恢复的研究工作流。
 

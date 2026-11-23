@@ -289,9 +289,9 @@ MCP server works regardless of which shell has your venv activated:
 {
   "mcpServers": {
     "research-harness": {
-      "command": "/absolute/path/to/research-harness/.venv/bin/rh-mcp",
+      "command": "/absolute/path/to/scianchor/.venv/bin/rh-mcp",
       "env": {
-        "RESEARCH_HARNESS_DB_PATH": "/absolute/path/to/research-harness/.research-harness/pool.db"
+        "RESEARCH_HARNESS_DB_PATH": "/absolute/path/to/scianchor/.research-harness/pool.db"
       }
     }
   }

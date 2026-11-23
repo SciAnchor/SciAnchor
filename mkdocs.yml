@@ -1,15 +1,15 @@
-site_name: Research Harness 中文文档
-site_description: 面向长周期 AI 科研 Agent 的 Research Harness 文档站
-site_url: https://research-harness.github.io/research-harness/
+site_name: SciAnchor 中文文档
+site_description: SciAnchor 文档站：面向长周期 AI 科研 Agent 的开源核心引擎 Research Harness
+site_url: https://scianchor.github.io/scianchor/
 repo_url: https://github.com/scianchor/scianchor
-repo_name: research-harness/research-harness
+repo_name: scianchor/scianchor
 edit_uri: edit/main/docs/
 
 docs_dir: docs
 site_dir: site
 use_directory_urls: true
 
-copyright: Copyright &copy; 2026 Research Harness contributors
+copyright: Copyright &copy; 2026 SciAnchor contributors
 
 nav:
   - 首页: index.md

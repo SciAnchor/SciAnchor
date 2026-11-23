@@ -1,6 +1,6 @@
 # Security Policy
 
-Research Harness is an open-source research workflow platform that runs local tools, stores research state, integrates with MCP clients, and may call external LLM or paper-source APIs. Please report security issues privately so maintainers can investigate before details are disclosed publicly.
+SciAnchor (including its open-source engine, Research Harness) is a research workflow platform that runs local tools, stores research state, integrates with MCP clients, and may call external LLM or paper-source APIs. Please report security issues privately so maintainers can investigate before details are disclosed publicly.
 
 ## Supported Versions
 

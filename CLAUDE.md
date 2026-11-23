@@ -1,6 +1,6 @@
-# Research Harness — Agent Guide
+# SciAnchor — Agent Guide
 
-Research Harness is an agent-first research workflow platform for literature review, evidence management, experiment planning, and paper writing.
+This is the SciAnchor repository. Its open-source engine, Research Harness (RH), is an agent-first research workflow platform for literature review, evidence management, experiment planning, and paper writing.
 
 **Doing research work with RH?** Read `docs/AGENT_OPERATIONS.md` first — it is the
 single L0 entry point (invariants, the three operating scenarios, the seven tools

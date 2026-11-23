@@ -86,7 +86,7 @@ jobs:
             exit 0
           fi
 
-          title="Research Harness $tag"
+          title="SciAnchor $tag"
 
           echo "Creating release $tag"
           gh release create "$tag" \

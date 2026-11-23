@@ -1,5 +1,5 @@
 #:schema https://developers.openai.com/codex/config-schema.json
-# Project-scoped Codex baseline for Research Harness.
+# Project-scoped Codex baseline for SciAnchor (Research Harness engine).
 # Keep credentials in the user environment/keychain; this file is safe to commit.
 
 [features]

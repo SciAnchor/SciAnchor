@@ -72,7 +72,7 @@ Claude/Codex:
 ### Step 1: 安装和配置
 
 ```bash
-cd /path/to/research-harness
+cd /path/to/scianchor
 
 # 安装
 ./setup.sh
