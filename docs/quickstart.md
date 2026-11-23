@@ -5,8 +5,8 @@
 Use this path when you want to verify that RH can run locally and be discovered by an agent:
 
 ```bash
-git clone https://github.com/scianchor/scianchor.git
-cd scianchor
+git clone https://github.com/SciAnchor/SciAnchor.git
+cd SciAnchor
 ./setup.sh
 rh --json doctor
 rh skill install --agent codex
@@ -61,8 +61,8 @@ the current pre-release boundary.
 ## Installation
 
 ```bash
-git clone https://github.com/scianchor/scianchor.git
-cd scianchor
+git clone https://github.com/SciAnchor/SciAnchor.git
+cd SciAnchor
 ./setup.sh
 ```
 
