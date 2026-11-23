@@ -107,7 +107,7 @@ Full deployment and a human-in-the-loop walkthrough: [docs/deploy-and-hitl.zh.md
 
 ## Team
 
-SciAnchor is developed and maintained by Zhice Technology (Beijing) Co., Ltd. Contest team "Yanshu Tech": Jiabin Zheng (lead), Wen Zhang, Xinyuan Zhang, Zihang Niu, from Peking University School of Computer Science, Peking University Health Science Center, and Communication University of China, spanning AI, clinical medicine and data engineering.
+SciAnchor is developed and maintained by Zhice Technology (Beijing) Co., Ltd. Contest team "Yanshu Tech" members come from Peking University School of Computer Science, Peking University Health Science Center, and Communication University of China, spanning AI, clinical medicine and data engineering.
 
 ## License
 
