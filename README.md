@@ -38,8 +38,8 @@ regression governance，不构成 public benchmark/performance claims。
 **① 安装 RH 本体**
 
 ```bash
-git clone https://github.com/scianchor/scianchor.git
-cd scianchor
+git clone https://github.com/SciAnchor/SciAnchor.git
+cd SciAnchor
 ./setup.sh
 rh --json doctor            # 确认本机能跑起来（看 state_trees 指向同一个 pool.db）
 ```
@@ -131,7 +131,7 @@ npm install -g @openai/codex
 ```text
 请为当前环境安装 SciAnchor（Research Harness 引擎）：
 
-1. 克隆仓库：https://github.com/scianchor/scianchor.git
+1. 克隆仓库：https://github.com/SciAnchor/SciAnchor.git
 2. 进入项目目录并运行 ./setup.sh
 3. 运行 rh --json doctor 验证安装
 4. 为 Codex 安装 RH skills：rh skill install --agent codex

@@ -1,8 +1,8 @@
 site_name: SciAnchor 中文文档
 site_description: SciAnchor 文档站：面向长周期 AI 科研 Agent 的开源核心引擎 Research Harness
-site_url: https://scianchor.github.io/scianchor/
-repo_url: https://github.com/scianchor/scianchor
-repo_name: scianchor/scianchor
+site_url: https://scianchor.github.io/SciAnchor/
+repo_url: https://github.com/SciAnchor/SciAnchor
+repo_name: SciAnchor/SciAnchor
 edit_uri: edit/main/docs/
 
 docs_dir: docs

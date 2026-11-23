@@ -56,8 +56,8 @@ rh-gateway = "research_harness_mcp.gateway:run"
 rh-mcp-search = "research_harness_mcp.search_stdio:run"
 
 [project.urls]
-Homepage = "https://github.com/scianchor/scianchor"
-Source = "https://github.com/scianchor/scianchor"
+Homepage = "https://github.com/SciAnchor/SciAnchor"
+Source = "https://github.com/SciAnchor/SciAnchor"
 
 [tool.hatch.build.targets.wheel]
 bypass-selection = true

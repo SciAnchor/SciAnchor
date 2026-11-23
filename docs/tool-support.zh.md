@@ -16,7 +16,7 @@
   <div class="tool-card-grid">
     <div class="tool-card">
       <h3 class="tool-card__title" style="margin:0 0 0.75rem;font-size:1.25rem;line-height:2rem;font-weight:600;">
-        <img class="tool-card__logo" src="https://raw.githubusercontent.com/scianchor/scianchor/main/docs/assets/tool-logos/codex.png" alt="Codex logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
+        <img class="tool-card__logo" src="https://raw.githubusercontent.com/SciAnchor/SciAnchor/main/docs/assets/tool-logos/codex.png" alt="Codex logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
         Codex
       </h3>
       <div class="tool-card__body">
@@ -27,7 +27,7 @@
     </div>
     <div class="tool-card">
       <h3 class="tool-card__title" style="margin:0 0 0.75rem;font-size:1.25rem;line-height:2rem;font-weight:600;">
-        <img class="tool-card__logo" src="https://raw.githubusercontent.com/scianchor/scianchor/main/docs/assets/tool-logos/claude-code.png" alt="Claude Code logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
+        <img class="tool-card__logo" src="https://raw.githubusercontent.com/SciAnchor/SciAnchor/main/docs/assets/tool-logos/claude-code.png" alt="Claude Code logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
         Claude Code
       </h3>
       <div class="tool-card__body">
@@ -38,7 +38,7 @@
     </div>
     <div class="tool-card">
       <h3 class="tool-card__title" style="margin:0 0 0.75rem;font-size:1.25rem;line-height:2rem;font-weight:600;">
-        <img class="tool-card__logo" src="https://raw.githubusercontent.com/scianchor/scianchor/main/docs/assets/tool-logos/cline.png" alt="Cline logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
+        <img class="tool-card__logo" src="https://raw.githubusercontent.com/SciAnchor/SciAnchor/main/docs/assets/tool-logos/cline.png" alt="Cline logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
         Cline
       </h3>
       <div class="tool-card__body">
@@ -49,7 +49,7 @@
     </div>
     <div class="tool-card">
       <h3 class="tool-card__title" style="margin:0 0 0.75rem;font-size:1.25rem;line-height:2rem;font-weight:600;">
-        <img class="tool-card__logo" src="https://raw.githubusercontent.com/scianchor/scianchor/main/docs/assets/tool-logos/cursor-agent.svg" alt="Cursor logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
+        <img class="tool-card__logo" src="https://raw.githubusercontent.com/SciAnchor/SciAnchor/main/docs/assets/tool-logos/cursor-agent.svg" alt="Cursor logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
         Cursor Agent
       </h3>
       <div class="tool-card__body">
@@ -60,7 +60,7 @@
     </div>
     <div class="tool-card">
       <h3 class="tool-card__title" style="margin:0 0 0.75rem;font-size:1.25rem;line-height:2rem;font-weight:600;">
-        <img class="tool-card__logo" src="https://raw.githubusercontent.com/scianchor/scianchor/main/docs/assets/tool-logos/opencode.png" alt="OpenCode logo" height="24" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
+        <img class="tool-card__logo" src="https://raw.githubusercontent.com/SciAnchor/SciAnchor/main/docs/assets/tool-logos/opencode.png" alt="OpenCode logo" height="24" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
         OpenCode
       </h3>
       <div class="tool-card__body">
@@ -71,7 +71,7 @@
     </div>
     <div class="tool-card">
       <h3 class="tool-card__title" style="margin:0 0 0.75rem;font-size:1.25rem;line-height:2rem;font-weight:600;">
-        <img class="tool-card__logo" src="https://raw.githubusercontent.com/scianchor/scianchor/main/docs/assets/tool-logos/gemini-cli.png" alt="Gemini CLI logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
+        <img class="tool-card__logo" src="https://raw.githubusercontent.com/SciAnchor/SciAnchor/main/docs/assets/tool-logos/gemini-cli.png" alt="Gemini CLI logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
         Gemini CLI
       </h3>
       <div class="tool-card__body">
@@ -82,7 +82,7 @@
     </div>
     <div class="tool-card">
       <h3 class="tool-card__title" style="margin:0 0 0.75rem;font-size:1.25rem;line-height:2rem;font-weight:600;">
-        <img class="tool-card__logo" src="https://raw.githubusercontent.com/scianchor/scianchor/main/docs/assets/tool-logos/kilo-code.svg" alt="Kilo Code logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
+        <img class="tool-card__logo" src="https://raw.githubusercontent.com/SciAnchor/SciAnchor/main/docs/assets/tool-logos/kilo-code.svg" alt="Kilo Code logo" height="28" style="vertical-align:middle;margin-right:0.65rem;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:0.6rem;padding:0.2rem 0.35rem;">
         Kilo Code
       </h3>
       <div class="tool-card__body">

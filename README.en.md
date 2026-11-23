@@ -39,8 +39,8 @@ claims remain deferred.
 **1. Install RH itself**
 
 ```bash
-git clone https://github.com/scianchor/scianchor.git
-cd scianchor
+git clone https://github.com/SciAnchor/SciAnchor.git
+cd SciAnchor
 ./setup.sh
 rh --json doctor            # verify it runs (check state_trees points at one pool.db)
 ```
@@ -134,7 +134,7 @@ Then give Codex this prompt:
 ```text
 Please install SciAnchor (the Research Harness engine) for the current environment:
 
-1. Clone the repository: https://github.com/scianchor/scianchor.git
+1. Clone the repository: https://github.com/SciAnchor/SciAnchor.git
 2. Enter the project directory and run ./setup.sh
 3. Run rh --json doctor to verify the installation
 4. Install RH skills for Codex: rh skill install --agent codex

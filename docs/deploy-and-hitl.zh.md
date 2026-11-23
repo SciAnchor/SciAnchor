@@ -24,8 +24,8 @@ RH 在每个 agent 里由两部分组成，都要装：
 ### 1.1 先装 RH 本体
 
 ```bash
-git clone https://github.com/scianchor/scianchor.git
-cd scianchor
+git clone https://github.com/SciAnchor/SciAnchor.git
+cd SciAnchor
 ./setup.sh
 rh --json doctor            # 确认本机能跑起来
 ```

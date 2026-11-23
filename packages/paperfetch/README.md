@@ -56,8 +56,8 @@ There is no MCP server; the live CLI parser plus `spc schema` is the machine-rea
 Requires Linux and Python 3.12.
 
 ```bash
-git clone https://github.com/scianchor/scianchor.git
-cd scianchor/packages/paperfetch
+git clone https://github.com/SciAnchor/SciAnchor.git
+cd SciAnchor/packages/paperfetch
 python3.12 -m venv .venv
 . .venv/bin/activate
 pip install -e .              # core CLI
