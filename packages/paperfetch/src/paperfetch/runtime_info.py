@@ -22,8 +22,7 @@ except ImportError:
 
 
 PACKAGE_NAME = "paperfetch"
-# The PyPI distribution name differs from the import package name.
-DISTRIBUTION_NAME = "scianchor-paperfetch"
+DISTRIBUTION_NAME = PACKAGE_NAME
 
 
 def _clean_build_value(name: str, *, maximum_length: int = 128) -> Optional[str]:

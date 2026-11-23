@@ -3,13 +3,13 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "sci-anchor"
+name = "research-harness-engine"
 version = "1.5.0"
-description = "Alias for scianchor: installs SciAnchor's Research Harness engine"
+description = "Research Harness, the open-source research engine behind SciAnchor. Installs the scianchor package."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
-dependencies = ["scianchor"]
+dependencies = ["scianchor==1.5.0"]
 
 [project.urls]
 Homepage = "https://github.com/scianchor/scianchor"

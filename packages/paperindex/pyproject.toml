@@ -3,16 +3,18 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "scianchor-paperindex"
+name = "paperindex"
 version = "0.5.0"
 description = "PDF parsing, paper-card extraction, indexing, and retrieval engine for Research Harness"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
+# Workspace siblings are installed from their own directories (setup.sh, CI) and
+# are bundled into the single `scianchor` wheel for PyPI (packaging/scianchor),
+# so they are deliberately not declared as PyPI dependencies here.
 dependencies = [
   "click>=8.1",
   "pymupdf>=1.24.0",
   # Workspace sibling package under packages/llm_router.
-  "scianchor-llm-router[all]",
 ]
 
 [project.optional-dependencies]

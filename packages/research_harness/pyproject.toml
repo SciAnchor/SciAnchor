@@ -3,11 +3,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "scianchor"
+name = "research-harness"
 version = "1.5.0"
 description = "Agent-first research workflow platform"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
+# Workspace siblings are installed from their own directories (setup.sh, CI) and
+# are bundled into the single `scianchor` wheel for PyPI (packaging/scianchor),
+# so they are deliberately not declared as PyPI dependencies here.
 dependencies = [
   "click>=8.1",
   "rich>=13.0",
@@ -24,8 +27,6 @@ dependencies = [
   "seaborn>=0.13",
   # Workspace sibling packages under packages/{llm_router,paperindex}.
   # setup.sh and CI install them from this monorepo before research_harness.
-  "scianchor-llm-router[all]",
-  "scianchor-paperindex",
 ]
 
 [project.optional-dependencies]

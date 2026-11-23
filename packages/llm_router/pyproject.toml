@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "scianchor-llm-router"
+name = "llm-router"
 version = "0.4.0"
 description = "Pluggable multi-provider LLM router with tier-based task routing"
 requires-python = ">=3.11"

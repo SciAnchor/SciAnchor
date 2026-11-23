@@ -3,15 +3,16 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "scianchor-mcp"
+name = "research-harness-mcp"
 version = "1.5.0"
 description = "MCP server exposing Research Harness primitives to agent hosts"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
+# Workspace siblings are installed from their own directories (setup.sh, CI) and
+# are bundled into the single `scianchor` wheel for PyPI (packaging/scianchor),
+# so they are deliberately not declared as PyPI dependencies here.
 dependencies = [
-    "scianchor",
-    "scianchor-paperindex",
     # Cap below mcp 2.0.0: that major release renamed Tool.inputSchema ->
     # Tool.input_schema, which breaks the tool_surface / tools_* modules and
     # their tests (they build and read `.inputSchema`). Every 1.x release

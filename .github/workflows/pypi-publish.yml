@@ -21,10 +21,10 @@ jobs:
       - name: Build
         run: |
           python -m pip install --upgrade pip build
-          for dir in packages/llm_router packages/paperindex packages/research_harness \
-                     packages/research_harness_mcp packages/paperfetch packaging/sci-anchor; do
-            python -m build --sdist --wheel --outdir dist "$dir"
-          done
+          # scianchor bundles packages/ from outside its directory, so it ships
+          # as a wheel only; the full source is this public repository.
+          python -m build --wheel --outdir dist packaging/scianchor
+          python -m build --sdist --wheel --outdir dist packaging/research-harness-engine
           ls -l dist
       - uses: actions/upload-artifact@v4
         with:
@@ -44,21 +44,9 @@ jobs:
           - project: scianchor
             environment: pypi
             files: "scianchor-[0-9]*"
-          - project: scianchor-mcp
-            environment: pypi-scianchor-mcp
-            files: "scianchor_mcp-*"
-          - project: scianchor-llm-router
-            environment: pypi-scianchor-llm-router
-            files: "scianchor_llm_router-*"
-          - project: scianchor-paperindex
-            environment: pypi-scianchor-paperindex
-            files: "scianchor_paperindex-*"
-          - project: scianchor-paperfetch
-            environment: pypi-scianchor-paperfetch
-            files: "scianchor_paperfetch-*"
-          - project: sci-anchor
-            environment: pypi-sci-anchor
-            files: "sci_anchor-*"
+          - project: research-harness-engine
+            environment: pypi-research-harness-engine
+            files: "research_harness_engine-*"
     environment: ${{ matrix.environment }}
     permissions:
       id-token: write

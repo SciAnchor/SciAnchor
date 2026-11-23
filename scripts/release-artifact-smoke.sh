@@ -32,22 +32,14 @@ mkdir -p "$DIST_DIR"
 
 "$PYTHON_BIN" -m pip install --upgrade build >/dev/null
 
-for package in llm_router paperindex research_harness research_harness_mcp; do
-  "$PYTHON_BIN" -m build --sdist --wheel --outdir "$DIST_DIR" "$ROOT/packages/$package"
-done
+# The engine ships to PyPI as one wheel, `scianchor` (packaging/scianchor).
+"$PYTHON_BIN" -m build --wheel --outdir "$DIST_DIR" "$ROOT/packaging/scianchor"
 
 "$PYTHON_BIN" -m venv "$VENV_DIR"
 "$VENV_DIR/bin/python" -m pip install --upgrade pip >/dev/null
-llm_router_wheels=("$DIST_DIR"/scianchor_llm_router-*.whl)
-paperindex_wheels=("$DIST_DIR"/scianchor_paperindex-*.whl)
-research_harness_wheels=("$DIST_DIR"/scianchor-[0-9]*.whl)
-research_harness_mcp_wheels=("$DIST_DIR"/scianchor_mcp-*.whl)
+scianchor_wheels=("$DIST_DIR"/scianchor-[0-9]*.whl)
 
-"$VENV_DIR/bin/python" -m pip install \
-  "${llm_router_wheels[0]}[all]" \
-  "${paperindex_wheels[0]}" \
-  "${research_harness_wheels[0]}" \
-  "${research_harness_mcp_wheels[0]}[api]"
+"$VENV_DIR/bin/python" -m pip install "${scianchor_wheels[0]}[api]"
 
 # CLI smoke
 "$VENV_DIR/bin/rh" --help >/dev/null

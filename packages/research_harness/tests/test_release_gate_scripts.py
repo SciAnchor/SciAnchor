@@ -140,13 +140,12 @@ def test_release_gate_guard_requires_dependency_security_floors():
         .replace('"PyJWT>=2.13.0"', "")
         .replace('"starlette>=1.0.1"', "")
     )
-    inputs["research_harness_pyproject_text"] = (
-        inputs["research_harness_pyproject_text"]
-        .replace(
-            '"scianchor-llm-router[all]"',
-            '"scianchor-llm-router @ git+ssh://example.com/r.git"',
-        )
-        .replace('"scianchor-paperindex"', "")
+    inputs["research_harness_pyproject_text"] = inputs[
+        "research_harness_pyproject_text"
+    ].replace(
+        "dependencies = [",
+        'dependencies = [\n  "llm-router[all]",\n  "x @ git+ssh://example.com/r.git",',
+        1,
     )
 
     errors = module.validate_release_gates(**inputs)
@@ -163,11 +162,7 @@ def test_release_gate_guard_requires_dependency_security_floors():
         for error in errors
     )
     assert any(
-        "research-harness must require scianchor-llm-router[all]" in error
-        for error in errors
-    )
-    assert any(
-        "research-harness must require scianchor-paperindex" in error
+        "research-harness must not depend on workspace siblings by PyPI name" in error
         for error in errors
     )
     assert any(

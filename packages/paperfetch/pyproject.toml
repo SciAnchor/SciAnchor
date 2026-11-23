@@ -3,7 +3,7 @@ requires = ["setuptools>=77.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "scianchor-paperfetch"
+name = "paperfetch"
 version = "2.0.0"
 description = "一个面向 AI Agent 设计的学术文献信息获取与无损多模态种子论文包生成工具"
 readme = "README.md"

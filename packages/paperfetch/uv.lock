@@ -305,6 +305,62 @@ wheels = [
 ]
 
 [[package]]
+name = "paperfetch"
+version = "2.0.0"
+source = { editable = "." }
+dependencies = [
+    { name = "anyio" },
+    { name = "beautifulsoup4" },
+    { name = "cryptography" },
+    { name = "httpx" },
+    { name = "lxml" },
+    { name = "pydantic" },
+    { name = "pypdf" },
+    { name = "python-dotenv" },
+    { name = "requests" },
+    { name = "rich" },
+    { name = "tenacity" },
+]
+
+[package.optional-dependencies]
+all = [
+    { name = "playwright" },
+]
+browser = [
+    { name = "playwright" },
+]
+release = [
+    { name = "build" },
+]
+test = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anyio", specifier = ">=4.4.0" },
+    { name = "beautifulsoup4", specifier = ">=4.12.0" },
+    { name = "build", marker = "extra == 'release'", specifier = ">=1.2.2" },
+    { name = "cryptography", specifier = ">=41.0.0" },
+    { name = "httpx", specifier = ">=0.27.0" },
+    { name = "lxml", specifier = ">=5.2.0" },
+    { name = "playwright", marker = "extra == 'all'", specifier = ">=1.46.0" },
+    { name = "playwright", marker = "extra == 'browser'", specifier = ">=1.46.0" },
+    { name = "pydantic", specifier = ">=2.8.0" },
+    { name = "pypdf", specifier = ">=5.0.0" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0" },
+    { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=0.25" },
+    { name = "python-dotenv", specifier = ">=1.0.0" },
+    { name = "requests", specifier = ">=2.32.0" },
+    { name = "rich", specifier = ">=13.7.0" },
+    { name = "ruff", marker = "extra == 'test'", specifier = "==0.15.12" },
+    { name = "tenacity", specifier = ">=8.2.0" },
+]
+provides-extras = ["browser", "test", "release", "all"]
+
+[[package]]
 name = "playwright"
 version = "1.62.0"
 source = { registry = "https://pypi.org/simple" }
@@ -515,62 +571,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/33/f1/9614e03e1cdcbf9437570b5400ced8a720b5db22b28d8e0f1bda429f660d/ruff-0.15.12-py3-none-win_amd64.whl", hash = "sha256:c87a162d61ab3adca47c03f7f717c68672edec7d1b5499e652331780fe74950d", size = 11837758, upload-time = "2026-04-24T18:17:00.113Z" },
     { url = "https://files.pythonhosted.org/packages/c0/98/6beb4b351e472e5f4c4613f7c35a5290b8be2497e183825310c4c3a3984b/ruff-0.15.12-py3-none-win_arm64.whl", hash = "sha256:a538f7a82d061cee7be55542aca1d86d1393d55d81d4fcc314370f4340930d4f", size = 11120821, upload-time = "2026-04-24T18:16:57.979Z" },
 ]
-
-[[package]]
-name = "scianchor-paperfetch"
-version = "2.0.0"
-source = { editable = "." }
-dependencies = [
-    { name = "anyio" },
-    { name = "beautifulsoup4" },
-    { name = "cryptography" },
-    { name = "httpx" },
-    { name = "lxml" },
-    { name = "pydantic" },
-    { name = "pypdf" },
-    { name = "python-dotenv" },
-    { name = "requests" },
-    { name = "rich" },
-    { name = "tenacity" },
-]
-
-[package.optional-dependencies]
-all = [
-    { name = "playwright" },
-]
-browser = [
-    { name = "playwright" },
-]
-release = [
-    { name = "build" },
-]
-test = [
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "anyio", specifier = ">=4.4.0" },
-    { name = "beautifulsoup4", specifier = ">=4.12.0" },
-    { name = "build", marker = "extra == 'release'", specifier = ">=1.2.2" },
-    { name = "cryptography", specifier = ">=41.0.0" },
-    { name = "httpx", specifier = ">=0.27.0" },
-    { name = "lxml", specifier = ">=5.2.0" },
-    { name = "playwright", marker = "extra == 'all'", specifier = ">=1.46.0" },
-    { name = "playwright", marker = "extra == 'browser'", specifier = ">=1.46.0" },
-    { name = "pydantic", specifier = ">=2.8.0" },
-    { name = "pypdf", specifier = ">=5.0.0" },
-    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0" },
-    { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=0.25" },
-    { name = "python-dotenv", specifier = ">=1.0.0" },
-    { name = "requests", specifier = ">=2.32.0" },
-    { name = "rich", specifier = ">=13.7.0" },
-    { name = "ruff", marker = "extra == 'test'", specifier = "==0.15.12" },
-    { name = "tenacity", specifier = ">=8.2.0" },
-]
-provides-extras = ["browser", "test", "release", "all"]
 
 [[package]]
 name = "soupsieve"

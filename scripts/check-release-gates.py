@@ -286,20 +286,15 @@ def validate_release_gates(
         needle='"starlette>=1.0.1"',
         message="research-harness-mcp must require starlette>=1.0.1",
     )
-    # Workspace sibling packages (packages/llm_router, packages/paperindex) are
-    # declared as standard package requirements without private git+ssh pins.
-    _require_contains(
-        errors,
-        text=research_harness_pyproject_text,
-        needle='"scianchor-llm-router[all]"',
-        message="research-harness must require scianchor-llm-router[all]",
-    )
-    _require_contains(
-        errors,
-        text=research_harness_pyproject_text,
-        needle='"scianchor-paperindex"',
-        message="research-harness must require scianchor-paperindex",
-    )
+    # Workspace siblings are installed from their own directories and bundled
+    # into the single `scianchor` PyPI wheel. Declaring them by name would make
+    # pip fetch unrelated PyPI projects (`llm-router` belongs to someone else).
+    for sibling in ('"llm-router', '"paperindex"', '"scianchor-'):
+        if sibling in research_harness_pyproject_text:
+            errors.append(
+                "research-harness must not depend on workspace siblings by PyPI name"
+            )
+            break
     if "git+ssh://" in research_harness_pyproject_text:
         errors.append("research-harness must not use private git+ssh dependencies")
     _require_contains(
