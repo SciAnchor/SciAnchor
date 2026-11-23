@@ -7,8 +7,8 @@
 这条路径用于第一次确认 RH 能在本机被 agent 使用：
 
 ```bash
-git clone https://github.com/scianchor/research-harness.git
-cd research-harness
+git clone https://github.com/scianchor/scianchor.git
+cd scianchor
 ./setup.sh
 rh --json doctor
 rh skill install --agent codex
@@ -58,8 +58,8 @@ sync/apply 仍然 deferred。Public benchmark/performance claims 仍然 deferred
 ## 安装
 
 ```bash
-git clone https://github.com/scianchor/research-harness.git
-cd research-harness
+git clone https://github.com/scianchor/scianchor.git
+cd scianchor
 ./setup.sh
 ```
 

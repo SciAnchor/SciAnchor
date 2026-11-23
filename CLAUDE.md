@@ -17,6 +17,7 @@ packages/                  Python workspace packages
   research_harness/        Core workflow, primitives, provenance, CLI
   research_harness_mcp/    MCP and HTTP API surfaces
   paperfetch/              Optional paper fetch/verify/parse CLI (`paperfetch`, alias `spc`; Python 3.12)
+apps/                      SciAnchor desktop and web clients (planned; not yet in the tree)
 skills/                    Research Harness workflow skills
 docs/                      Public setup, usage, architecture, and troubleshooting docs
 ```

@@ -14,7 +14,7 @@
 
 <p align="center"><strong style="font-size:1.75rem;">Evidence-grounded, traceable, self-improving long-horizon AI research automation</strong></p>
 
-<p align="center">The open-source research engine behind <b>SciAnchor</b></p>
+<p align="center">The <b>SciAnchor</b> repository · home of <b>Research Harness</b>, its open-source research engine (desktop and web clients coming soon)</p>
 
 Research Harness is the harness layer for research agents: it gives agents evidence state, process records, tool interfaces, and feedback loops so search, reading, judgment, and writing become a long-running, continuously accumulating automated research workflow.
 
@@ -39,8 +39,8 @@ claims remain deferred.
 **1. Install RH itself**
 
 ```bash
-git clone https://github.com/scianchor/research-harness.git
-cd research-harness
+git clone https://github.com/scianchor/scianchor.git
+cd scianchor
 ./setup.sh
 rh --json doctor            # verify it runs (check state_trees points at one pool.db)
 ```
@@ -134,7 +134,7 @@ Then give Codex this prompt:
 ```text
 Please install Research Harness for the current environment:
 
-1. Clone the repository: https://github.com/scianchor/research-harness.git
+1. Clone the repository: https://github.com/scianchor/scianchor.git
 2. Enter the project directory and run ./setup.sh
 3. Run rh --json doctor to verify the installation
 4. Install RH skills for Codex: rh skill install --agent codex

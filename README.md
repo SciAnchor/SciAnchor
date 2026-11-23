@@ -14,7 +14,7 @@
 
 <p align="center"><strong style="font-size:1.75rem;">做证据可信、过程可追、自主优化的长程自动化 AI 科研工具</strong></p>
 
-<p align="center"><b>SciAnchor</b> 的开源核心引擎 · The open-source research engine behind <b>SciAnchor</b></p>
+<p align="center"><b>SciAnchor</b> 主仓库 · 内含开源核心引擎 <b>Research Harness</b>（客户端与网页即将推出）</p>
 
 Research Harness 是科研 agent 的 harness 层：为 agent 提供证据状态、过程记录、工具接口和反馈回路，让检索、阅读、判断与写作成为可长期运行、可持续积累的自动化科研流程。
 
@@ -38,8 +38,8 @@ regression governance，不构成 public benchmark/performance claims。
 **① 安装 RH 本体**
 
 ```bash
-git clone https://github.com/scianchor/research-harness.git
-cd research-harness
+git clone https://github.com/scianchor/scianchor.git
+cd scianchor
 ./setup.sh
 rh --json doctor            # 确认本机能跑起来（看 state_trees 指向同一个 pool.db）
 ```
@@ -131,7 +131,7 @@ npm install -g @openai/codex
 ```text
 请为当前环境安装 Research Harness：
 
-1. 克隆仓库：https://github.com/scianchor/research-harness.git
+1. 克隆仓库：https://github.com/scianchor/scianchor.git
 2. 进入项目目录并运行 ./setup.sh
 3. 运行 rh --json doctor 验证安装
 4. 为 Codex 安装 RH skills：rh skill install --agent codex
