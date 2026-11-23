@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/rh-github-header.png" alt="SciAnchor" width="760"/>
+  <img src="docs/assets/scianchor-header.jpg" alt="SciAnchor — Every claim, anchored." width="100%"/>
 </p>
 
 <p align="center">
