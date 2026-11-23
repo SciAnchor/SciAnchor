@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Research Harness — first-time setup
+# SciAnchor — first-time setup (installs the Research Harness engine)
 # Usage: ./setup.sh
 #
 # Installs the core RH packages in editable mode, creates .env if missing.
@@ -9,7 +9,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "=== Research Harness Setup ==="
+echo "=== SciAnchor Setup ==="
 echo ""
 
 # ---------------------------------------------------------------------------

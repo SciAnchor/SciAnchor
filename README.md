@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/rh-github-header.png" alt="research harness" width="760"/>
+  <img src="docs/assets/rh-github-header.png" alt="SciAnchor" width="760"/>
 </p>
 
 <p align="center">
@@ -129,7 +129,7 @@ npm install -g @openai/codex
 然后把下面这段交给 Codex：
 
 ```text
-请为当前环境安装 Research Harness：
+请为当前环境安装 SciAnchor（Research Harness 引擎）：
 
 1. 克隆仓库：https://github.com/scianchor/scianchor.git
 2. 进入项目目录并运行 ./setup.sh
@@ -212,7 +212,7 @@ npm install -g @openai/codex
 
 ## 开源维护与 Codex
 
-Research Harness 本身也使用 Codex 维护开源工作流：生成和审查测试、回放回归用例、检查 release hygiene、更新文档、复核 MCP / CLI / Zotero bridge 变更，并在合并前辅助进行安全检查。RH 的目标不是只让 agent 生成一次性答案，而是把维护过程中的判断、失败、修正和证据记录下来，沉淀为后续可复用的项目状态。
+SciAnchor 本身也使用 Codex 维护开源工作流：生成和审查测试、回放回归用例、检查 release hygiene、更新文档、复核 MCP / CLI / Zotero bridge 变更，并在合并前辅助进行安全检查。RH 的目标不是只让 agent 生成一次性答案，而是把维护过程中的判断、失败、修正和证据记录下来，沉淀为后续可复用的项目状态。
 
 面向开源维护者，RH 提供一套可迁移的 agent 工作模式：Codex 负责执行与验证，RH 负责 paper、claim、artifact、gate、provenance 和长期任务状态，让复杂研究型项目在多轮、多工具、多会话中仍然可追踪、可恢复、可审查。
 

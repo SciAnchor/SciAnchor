@@ -111,7 +111,7 @@ rh paper-production start --topic 1 --target-venue "NeurIPS"
 ### 首次安装
 
 ```bash
-cd /path/to/research-harness
+cd /path/to/scianchor
 ./setup.sh
 rh doctor
 ```
@@ -129,7 +129,7 @@ rh doctor
 ### 快捷方式（推荐）
 
 ```bash
-cd /path/to/research-harness
+cd /path/to/scianchor
 ./scripts/reload-rh-mcp.sh
 ```
 
@@ -332,6 +332,6 @@ git pull
 
 ---
 
-**维护者**: Research Harness Team  
+**维护者**: SciAnchor Team  
 **最后更新**: 2026-07-05  
-**仓库**: `/path/to/research-harness`
+**仓库**: `/path/to/scianchor`

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/rh-github-header.png" alt="research harness" width="760"/>
+  <img src="docs/assets/rh-github-header.png" alt="SciAnchor" width="760"/>
 </p>
 
 <p align="center">
@@ -132,7 +132,7 @@ npm install -g @openai/codex
 Then give Codex this prompt:
 
 ```text
-Please install Research Harness for the current environment:
+Please install SciAnchor (the Research Harness engine) for the current environment:
 
 1. Clone the repository: https://github.com/scianchor/scianchor.git
 2. Enter the project directory and run ./setup.sh
@@ -215,7 +215,7 @@ Keep evidence sources attached to every key conclusion.
 
 ## Open Source Maintenance With Codex
 
-Research Harness uses Codex as part of its own open-source maintenance workflow: generating and reviewing tests, replaying regressions, checking release hygiene, updating documentation, reviewing MCP / CLI / Zotero bridge changes, and supporting pre-merge security review. RH is designed to record the judgments, failures, fixes, and evidence behind those maintenance steps instead of leaving them as one-off agent transcripts.
+SciAnchor uses Codex as part of its own open-source maintenance workflow: generating and reviewing tests, replaying regressions, checking release hygiene, updating documentation, reviewing MCP / CLI / Zotero bridge changes, and supporting pre-merge security review. RH is designed to record the judgments, failures, fixes, and evidence behind those maintenance steps instead of leaving them as one-off agent transcripts.
 
 For open-source maintainers, RH provides a transferable agent workflow: Codex performs implementation and verification, while RH manages papers, claims, artifacts, gates, provenance, and long-running task state so complex research projects remain traceable, resumable, and reviewable across tools and sessions.
 

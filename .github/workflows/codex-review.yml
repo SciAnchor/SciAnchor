@@ -42,7 +42,7 @@ jobs:
           prompt: |
             Review PR #${{ inputs.pr_number }} for ${{ github.repository }}.
 
-            Focus on Research Harness project invariants:
+            Focus on SciAnchor / Research Harness project invariants:
             - research primitives should use MCP/provenance-aware paths
             - papers must be ingested into the RH database, not scattered in files
             - durable outputs should be recorded as artifacts

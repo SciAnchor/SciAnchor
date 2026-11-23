@@ -109,7 +109,7 @@ rh doctor --verbose
 **操作**：
 ```bash
 # Step 1: 重新安装依赖
-cd /path/to/research-harness
+cd /path/to/scianchor
 pip install -e "packages/research_harness[dev]"
 pip install -e packages/research_harness_mcp
 
@@ -157,7 +157,7 @@ set -e
 echo "🔄 Reloading Research Harness..."
 
 # 1. 拉取最新代码
-cd /path/to/research-harness
+cd /path/to/scianchor
 git pull
 
 # 2. 重新安装（如果有依赖变化）
@@ -205,7 +205,7 @@ chmod +x rh-reload.sh
       "command": "python",
       "args": ["-m", "research_harness_mcp"],
       "env": {
-        "PYTHONPATH": "/path/to/research-harness/packages"
+        "PYTHONPATH": "/path/to/scianchor/packages"
       },
       "auto_restart": true,
       "restart_delay": 1000
@@ -227,7 +227,7 @@ chmod +x rh-reload.sh
   "research-harness": {
     "command": ["python", "-m", "research_harness_mcp"],
     "env": {
-      "PYTHONPATH": "/path/to/research-harness/packages"
+      "PYTHONPATH": "/path/to/scianchor/packages"
     },
     "restart_policy": "always"
   }
@@ -384,7 +384,7 @@ pip install supervisor
 # 配置文件: /etc/supervisor/conf.d/rh_mcp.conf
 [program:rh_mcp]
 command=python -m research_harness_mcp
-directory=/path/to/research-harness
+directory=/path/to/scianchor
 autostart=true
 autorestart=true
 stderr_logfile=/var/log/rh_mcp.err.log

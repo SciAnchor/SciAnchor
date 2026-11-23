@@ -1,8 +1,8 @@
-# Research Harness 宣传演示脚本
+# SciAnchor 宣传演示脚本
 
-本文档用于准备 GitHub 主页展示素材。目标不是完整教程，而是在 60-90 秒内让观众快速理解 Research Harness 的核心价值：
+本文档用于准备 GitHub 主页展示素材。目标不是完整教程，而是在 60-90 秒内让观众快速理解 SciAnchor 的核心价值：
 
-> Research Harness 把 AI agent 的科研动作变成有证据、有过程、有状态、可接续的研究资产。
+> SciAnchor 把 AI agent 的科研动作变成有证据、有过程、有状态、可接续的研究资产。
 
 建议产出两条短视频：
 
@@ -43,7 +43,7 @@ RH 是科研 agent 的 harness 层。它把 topic、paper pool、orchestrator �
 
 | 时间 | 画面 | 操作 / 屏幕内容 | 字幕 / 旁白 |
 |---|---|---|---|
-| 0-6s | GitHub 主页顶部或终端标题 | 展示 Research Harness 标识和一句定位 | 普通 agent 能回答科研问题；RH 让这些回答留下证据、过程和状态。 |
+| 0-6s | GitHub 主页顶部或终端标题 | 展示 SciAnchor 标识和一句定位 | 普通 agent 能回答科研问题；RH 让这些回答留下证据、过程和状态。 |
 | 6-14s | 终端 | `rh --json doctor` | 先确认本地环境、模型路由和 RH 数据库可用。 |
 | 14-24s | 终端 | `rh topic init "robust budget pacing for online advertising"` | 每个研究方向先进入一个可追踪的 topic，而不是散落在聊天记录里。 |
 | 24-38s | 终端 | `rh paper search "robust budget pacing online advertising" --topic-id 1 --auto-ingest` | 检索结果进入 paper pool，后续阅读、筛选和写作都能回到同一个研究空间。 |
@@ -51,7 +51,7 @@ RH 是科研 agent 的 harness 层。它把 topic、paper pool、orchestrator �
 | 48-60s | 终端 | `rh orchestrator init --topic "robust budget pacing for online advertising" --mode standard` 和 `rh orchestrator status --topic "robust budget pacing for online advertising"` | orchestrator 记录当前阶段、门控状态和下一步动作。 |
 | 60-75s | Agent 窗口 | 输入提示词：`基于这个 topic 的 paper pool，提取 claims，识别 research gaps，并记录 artifacts。` | agent 负责执行研究动作，RH 负责把证据、产出和 provenance 留下来。 |
 | 75-86s | 终端 | `rh topic overview --topic-id 1` 和 `rh orchestrator artifacts --topic-id 1` | claims、gaps、baselines、草稿和 review 都可以回放、审查、接续。 |
-| 86-90s | 收尾字幕 | `证据 + 来源链 + 可接续研究状态` | Research Harness 是给 AI agent 使用的持久科研工作区。 |
+| 86-90s | 收尾字幕 | `证据 + 来源链 + 可接续研究状态` | SciAnchor 是给 AI agent 使用的持久科研工作区。 |
 
 ### 可直接复制的演示命令
 
@@ -152,10 +152,10 @@ Zotero 工作流：从正在阅读的论文出发，带着本地上下文提问�
 
 | CLI / Agent 工作流 | Zotero 阅读工作流 |
 |---|---|
-| ![Research Harness CLI 演示](docs/assets/demo-cli.gif) | ![Research Harness Zotero 演示](docs/assets/demo-zotero.gif) |
+| ![SciAnchor CLI 演示](docs/assets/demo-cli.gif) | ![SciAnchor Zotero 演示](docs/assets/demo-zotero.gif) |
 | Topic → paper pool → orchestrator → artifacts | Zotero 条目 → RH 对话 → 确认后同步 → provenance |
 
-Research Harness 既接住 agent 的执行过程，也接住研究者的阅读现场。
+SciAnchor 既接住 agent 的执行过程，也接住研究者的阅读现场。
 ```
 
 ## 后期制作建议
@@ -178,7 +178,7 @@ Research Harness 既接住 agent 的执行过程，也接住研究者的阅读�
 片头：
 
 ```text
-Research Harness
+SciAnchor
 让 AI agent 的科研过程有证据、有来源链、可接续
 ```
 

@@ -18,7 +18,7 @@ Research Harness provides several slash command skills for Claude Code and Codex
 1. Create symlinks:
 
 ```bash
-cd /path/to/research-harness
+cd /path/to/scianchor
 ln -s $(pwd)/skills/rh-status ~/.claude/skills/rh-status
 ln -s $(pwd)/skills/rh-continue ~/.claude/skills/rh-continue
 ln -s $(pwd)/skills/rh-write ~/.claude/skills/rh-write
@@ -40,7 +40,7 @@ deprecated upstream and no longer appear in the `/` menu in recent versions
 1. Create symlinks:
 
 ```bash
-cd /path/to/research-harness
+cd /path/to/scianchor
 ln -s $(pwd)/skills/rh-status ~/.codex/skills/rh-status
 ln -s $(pwd)/skills/rh-continue ~/.codex/skills/rh-continue
 ln -s $(pwd)/skills/rh-write ~/.codex/skills/rh-write
@@ -98,7 +98,7 @@ cat ~/.codex/skills/rh-write/SKILL.md | head -10
 rm ~/.claude/skills/rh-write  # or ~/.codex/skills/rh-write
 
 # Recreate with absolute path
-ln -s /path/to/research-harness/skills/rh-write ~/.claude/skills/rh-write
+ln -s /path/to/scianchor/skills/rh-write ~/.claude/skills/rh-write
 ```
 
 ### Skill executes but fails
@@ -151,7 +151,7 @@ Add to your setup routine:
 # Auto-install RH skills for Claude Code and Codex
 
 RH_SKILLS="rh-status rh-continue rh-write rh-decide"
-RH_REPO="/path/to/research-harness"
+RH_REPO="/path/to/scianchor"
 
 echo "Installing Research Harness skills..."
 

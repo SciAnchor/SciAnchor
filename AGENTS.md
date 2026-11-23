@@ -1,7 +1,7 @@
 ## RH Self-Development Mode
 
 Trigger this mode when the task is to modify, refactor, test, evaluate, or
-document Research Harness itself.
+document SciAnchor / Research Harness itself.
 
 In RH self-development mode:
 
@@ -21,7 +21,7 @@ In RH self-development mode:
 
 ### 系统位置
 
-- Research Harness: project root
+- SciAnchor（Research Harness 引擎）: project root
 - Agent 入口手册（L0，先读这个）: `docs/AGENT_OPERATIONS.md`
 - 深度参考（L2，按需读）: `docs/agent-guide.md`、`docs/TOPIC_LIFECYCLE.md`
 - 数据库: `.research-harness/pool.db`（由 `.research-harness/config.json` 钉死）
