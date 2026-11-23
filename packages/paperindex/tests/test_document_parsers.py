@@ -179,5 +179,5 @@ def test_docling_parser_has_actionable_error_when_missing(monkeypatch, tmp_path:
 
     monkeypatch.setattr(builtins, "__import__", fake_import)
 
-    with pytest.raises(RuntimeError, match=r"research-harness\[docling\]"):
+    with pytest.raises(RuntimeError, match=r"scianchor\[docling\]"):
         DoclingDocumentParser().parse(pdf_path)
