@@ -1,7 +1,9 @@
 # SciAnchor
 
-`pip install scianchor` installs **Research Harness**, the open-source research
-engine behind SciAnchor: the `rh` CLI, the MCP server (`rh-mcp`), the
+Reliability first: a research co-pilot agent for the LLM era. First Prize,
+CCF BDCI 2026.
+
+`pip install scianchor` installs the `rh` CLI, the MCP server (`rh-mcp`), the
 `paperindex` parser and the LLM router, in one package.
 
 Source, documentation and issues: https://github.com/SciAnchor/SciAnchor
