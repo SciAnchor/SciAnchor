@@ -50,7 +50,6 @@ The contest paper, *SciRigorBench: Provable and Automated Evaluation of Long-Hor
 | **Auditors certify themselves first** | Planted defects caught 20/20, false-accusation upper bound 0.081; an auditor must pass statistical certification before delivery |
 | **Cross-disciplinary output** | 80+ papers produced across 26 first-level disciplines |
 | **Research corpus** | 735K exemplar papers from CCF-A/B venues and top-tier journals; 288K public peer reviews distilled into 1,803 defect sub-questions; 1,740 human feedback items, 183 gated into the experience bank |
-| **Upstream contributions** | 2 PRs and 1 issue to openJiuwen JiuwenSwarm, fixing 7 silent framework failures; 13,335 online unit tests, 0 failures |
 
 ## Three Principles
 
@@ -94,12 +93,21 @@ Full deployment and a human-in-the-loop walkthrough: [docs/deploy-and-hitl.zh.md
 
 ## What It Does
 
-| Entrypoint | Use it for |
+SciAnchor covers the whole research workflow. Use any step on its own, or join at any step and carry the project through to submission.
+
+| Stage | Capabilities |
 |---|---|
-| **research** | Create topics, search papers, build literature maps, extract claims, find gaps |
-| **paper** | Draft sections, exemplar-anchored writing, research figures, submission packs |
-| **review** | Verify paper identity, evidence gating, provenance, review and revision |
-| **zotero** | Connect your Zotero library and local PDF reading |
+| **Topic & proposal** | Topic framing and field briefs; generate and rank research directions; crowdedness ("red ocean") assessment by method, task and area; novelty-boundary checks and GO / NO-GO project certification |
+| **Literature search** | Multi-source search over arXiv, OpenAlex, Semantic Scholar, Crossref and PubMed with merging and de-duplication; iterative query refinement; forward and backward citation expansion; open-access PDF download and full-text parsing; existence and metadata verification so no cited paper is fabricated |
+| **Literature synthesis** | Literature maps and method taxonomies; reading-priority ranking; deep reading that extracts claims, assumptions, limitations, datasets and metrics; table extraction; cross-paper evidence matrices and contradiction detection; identification of landmark papers |
+| **Finding the contribution** | Evidence-based research-gap detection with cross-checks against the source text; key-baseline identification; candidate directions generated, adversarially argued and ranked; algorithm design and iteration |
+| **Experiment design & execution** | Experiment-design checklist (controls, ablations, statistical power and more); experiment code generation and validation; running experiments, collecting results and iterating; experiment logs and metric aggregation; result numbers registered as verified values for the manuscript to cite |
+| **Figures** | Method architecture diagrams and schematics; analysis figures rendered from raw experiment records in discipline-specific styles; figure quality checks (resolution, placeholders, font size, color); figure captions and interpretation |
+| **Writing** | Six manuscript types: research paper, survey, system/benchmark, short/workshop paper, position paper, research report; outline and writing-architecture planning; exemplar-anchored writing; evidence-grounded section drafting; writing norms for five discipline families; math-notation formalization; whole-manuscript terminology and notation unification; a logic gate before drafting |
+| **Polishing** | Section-by-section language polishing behind an invariant gate: numbers, citations, cross-references, figures and length must not change, otherwise the original section is kept |
+| **Review & revision** | Simulated peer review (multi-dimension reviewer panel checked against a defect tree distilled from public reviews); pre-submission issue audit; citation verification and cleanup; checking every number in the text against its source; venue format compliance; section-level revision that is adopted only if re-review does not score lower; rebuttal drafting |
+| **Submission & delivery** | LaTeX compilation; evidence-bound submission packages; Zenodo DOIs for code and data |
+| **Driving the project (throughout)** | One-command paper generation; project progress, gate status and next steps at any time; pauses at key decisions for the researcher; resume from checkpoints after interruption; full provenance and replay; researcher feedback and failure lessons stored as experience so later projects avoid them |
 
 ## Documentation
 
@@ -107,7 +115,7 @@ Full deployment and a human-in-the-loop walkthrough: [docs/deploy-and-hitl.zh.md
 
 ## Team
 
-SciAnchor is developed and maintained by Zhice Technology (Beijing) Co., Ltd. Contest team "Yanshu Tech" members come from Peking University School of Computer Science, Peking University Health Science Center, and Communication University of China, spanning AI, clinical medicine and data engineering.
+SciAnchor is developed and maintained by Zhice Technology (Beijing) Co., Ltd. Core team members come from Peking University School of Computer Science, Peking University Health Science Center, and Communication University of China, spanning AI, clinical medicine and data engineering.
 
 ## License
 
