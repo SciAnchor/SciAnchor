@@ -27,7 +27,7 @@ SciAnchor 是一个开源的科研协同智能体：学者聚焦科学问题与�
 SciAnchor 获 **第十四届 CCF 大数据与计算智能大赛（BDCI 2026）一等奖**，赛事排名 **1 / 1,447**。赛题为华为 openJiuwen「基于 JiuwenSwarm 的 Agent 科研论文自动生成」，证书由中国计算机学会颁发（编号 CCF-AWRD-TC-2026-00818）。
 
 <p align="center">
-  <img src="docs/assets/ccf-bdci-2026-certificate.jpg" alt="CCF BDCI 2026 一等奖证书" width="560"/>
+  <img src="docs/assets/ccf-bdci-2026-certificate-redacted.jpg" alt="CCF BDCI 2026 一等奖证书" width="560"/>
 </p>
 
 参赛论文 *SciRigorBench: Provable and Automated Evaluation of Long-Horizon Research Agents via Hierarchical Sequential Testing* 由 SciAnchor 一次启动、全程无人干预生成：
