@@ -5,7 +5,7 @@
 Use this path when you want to verify that RH can run locally and be discovered by an agent:
 
 ```bash
-git clone https://github.com/research-harness/research-harness.git
+git clone https://github.com/scianchor/research-harness.git
 cd research-harness
 ./setup.sh
 rh --json doctor
@@ -61,7 +61,7 @@ the current pre-release boundary.
 ## Installation
 
 ```bash
-git clone https://github.com/research-harness/research-harness.git
+git clone https://github.com/scianchor/research-harness.git
 cd research-harness
 ./setup.sh
 ```

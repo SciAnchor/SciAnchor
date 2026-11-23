@@ -24,7 +24,7 @@ RH 在每个 agent 里由两部分组成，都要装：
 ### 1.1 先装 RH 本体
 
 ```bash
-git clone https://github.com/research-harness/research-harness.git
+git clone https://github.com/scianchor/research-harness.git
 cd research-harness
 ./setup.sh
 rh --json doctor            # 确认本机能跑起来

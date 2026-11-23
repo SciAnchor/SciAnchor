@@ -35,7 +35,7 @@ from .store import PanoramaStore
 
 Fetcher = Callable[[str], bytes]
 
-USER_AGENT = "research-harness-panorama/0.1 (+https://github.com/research-harness/research-harness)"
+USER_AGENT = "research-harness-panorama/0.1 (+https://github.com/scianchor/research-harness)"
 
 # Env var names carrying provider credentials (read from the RH private.env).
 

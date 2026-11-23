@@ -11,11 +11,22 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
 details.
 
+Research Harness is the open-source research engine behind SciAnchor.
+
 Commercial license
 ------------------
 If you want to use Research Harness in a closed-source product or service, or
 otherwise cannot meet the AGPL-3.0 obligations, a commercial license is
-available from the Research Harness maintainers. Contact them through the
-research-harness GitHub organization: https://github.com/research-harness
+available from the SciAnchor team. Contact them through the SciAnchor GitHub
+organization: https://github.com/scianchor
+
+Trademarks
+----------
+"SciAnchor" and "Research Harness" are trademarks of their owners. The
+AGPL-3.0 grants rights to the code only, not to these names or logos: you may
+fork and redistribute the software, but a modified version must not be
+presented as SciAnchor or Research Harness, or imply endorsement, without
+written permission. Factual references (for example "based on Research
+Harness") are fine.
 
 Third-party components keep their own licenses; see THIRD_PARTY_NOTICES.md.

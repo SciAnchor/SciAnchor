@@ -56,7 +56,7 @@ There is no MCP server; the live CLI parser plus `spc schema` is the machine-rea
 Requires Linux and Python 3.12.
 
 ```bash
-git clone https://github.com/research-harness/research-harness.git
+git clone https://github.com/scianchor/research-harness.git
 cd research-harness/packages/paperfetch
 python3.12 -m venv .venv
 . .venv/bin/activate

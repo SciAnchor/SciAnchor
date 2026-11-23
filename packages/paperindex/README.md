@@ -1,7 +1,7 @@
 # paperindex
 
 PDF parsing, paper-card extraction, indexing, and retrieval engine for
-[Research Harness](https://github.com/research-harness/research-harness).
+[Research Harness](https://github.com/scianchor/research-harness).
 
 Maintained as an independent workspace package under `packages/paperindex/` so
 it can be developed, tested, and installed alongside `packages/llm_router/` and

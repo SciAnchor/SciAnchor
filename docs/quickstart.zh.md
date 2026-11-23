@@ -7,7 +7,7 @@
 这条路径用于第一次确认 RH 能在本机被 agent 使用：
 
 ```bash
-git clone https://github.com/research-harness/research-harness.git
+git clone https://github.com/scianchor/research-harness.git
 cd research-harness
 ./setup.sh
 rh --json doctor
@@ -58,7 +58,7 @@ sync/apply 仍然 deferred。Public benchmark/performance claims 仍然 deferred
 ## 安装
 
 ```bash
-git clone https://github.com/research-harness/research-harness.git
+git clone https://github.com/scianchor/research-harness.git
 cd research-harness
 ./setup.sh
 ```
