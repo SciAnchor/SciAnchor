@@ -22,6 +22,8 @@ except ImportError:
 
 
 PACKAGE_NAME = "paperfetch"
+# The PyPI distribution name differs from the import package name.
+DISTRIBUTION_NAME = "scianchor-paperfetch"
 
 
 def _clean_build_value(name: str, *, maximum_length: int = 128) -> Optional[str]:
@@ -33,7 +35,7 @@ def _clean_build_value(name: str, *, maximum_length: int = 128) -> Optional[str]
 
 def _distribution_details() -> tuple[str, bool]:
     try:
-        distribution = metadata.distribution(PACKAGE_NAME)
+        distribution = metadata.distribution(DISTRIBUTION_NAME)
     except metadata.PackageNotFoundError:
         return "unknown", False
 

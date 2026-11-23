@@ -142,8 +142,11 @@ def test_release_gate_guard_requires_dependency_security_floors():
     )
     inputs["research_harness_pyproject_text"] = (
         inputs["research_harness_pyproject_text"]
-        .replace('"llm-router[all]"', '"llm-router @ git+ssh://example.com/r.git"')
-        .replace('"paperindex"', "")
+        .replace(
+            '"scianchor-llm-router[all]"',
+            '"scianchor-llm-router @ git+ssh://example.com/r.git"',
+        )
+        .replace('"scianchor-paperindex"', "")
     )
 
     errors = module.validate_release_gates(**inputs)
@@ -160,9 +163,13 @@ def test_release_gate_guard_requires_dependency_security_floors():
         for error in errors
     )
     assert any(
-        "research-harness must require llm-router[all]" in error for error in errors
+        "research-harness must require scianchor-llm-router[all]" in error
+        for error in errors
     )
-    assert any("research-harness must require paperindex" in error for error in errors)
+    assert any(
+        "research-harness must require scianchor-paperindex" in error
+        for error in errors
+    )
     assert any(
         "research-harness must not use private git+ssh dependencies" in error
         for error in errors

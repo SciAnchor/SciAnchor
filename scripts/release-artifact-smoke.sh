@@ -38,10 +38,10 @@ done
 
 "$PYTHON_BIN" -m venv "$VENV_DIR"
 "$VENV_DIR/bin/python" -m pip install --upgrade pip >/dev/null
-llm_router_wheels=("$DIST_DIR"/llm_router-*.whl)
-paperindex_wheels=("$DIST_DIR"/paperindex-*.whl)
-research_harness_wheels=("$DIST_DIR"/research_harness-*.whl)
-research_harness_mcp_wheels=("$DIST_DIR"/research_harness_mcp-*.whl)
+llm_router_wheels=("$DIST_DIR"/scianchor_llm_router-*.whl)
+paperindex_wheels=("$DIST_DIR"/scianchor_paperindex-*.whl)
+research_harness_wheels=("$DIST_DIR"/scianchor-[0-9]*.whl)
+research_harness_mcp_wheels=("$DIST_DIR"/scianchor_mcp-*.whl)
 
 "$VENV_DIR/bin/python" -m pip install \
   "${llm_router_wheels[0]}[all]" \

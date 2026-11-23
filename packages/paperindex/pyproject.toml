@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "paperindex"
+name = "scianchor-paperindex"
 version = "0.5.0"
 description = "PDF parsing, paper-card extraction, indexing, and retrieval engine for Research Harness"
 requires-python = ">=3.11"
@@ -12,7 +12,7 @@ dependencies = [
   "click>=8.1",
   "pymupdf>=1.24.0",
   # Workspace sibling package under packages/llm_router.
-  "llm-router[all]",
+  "scianchor-llm-router[all]",
 ]
 
 [project.optional-dependencies]

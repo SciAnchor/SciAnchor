@@ -291,14 +291,14 @@ def validate_release_gates(
     _require_contains(
         errors,
         text=research_harness_pyproject_text,
-        needle='"llm-router[all]"',
-        message="research-harness must require llm-router[all]",
+        needle='"scianchor-llm-router[all]"',
+        message="research-harness must require scianchor-llm-router[all]",
     )
     _require_contains(
         errors,
         text=research_harness_pyproject_text,
-        needle='"paperindex"',
-        message="research-harness must require paperindex",
+        needle='"scianchor-paperindex"',
+        message="research-harness must require scianchor-paperindex",
     )
     if "git+ssh://" in research_harness_pyproject_text:
         errors.append("research-harness must not use private git+ssh dependencies")

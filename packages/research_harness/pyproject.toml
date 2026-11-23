@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "research-harness"
+name = "scianchor"
 version = "1.5.0"
 description = "Agent-first research workflow platform"
 requires-python = ">=3.11"
@@ -24,8 +24,8 @@ dependencies = [
   "seaborn>=0.13",
   # Workspace sibling packages under packages/{llm_router,paperindex}.
   # setup.sh and CI install them from this monorepo before research_harness.
-  "llm-router[all]",
-  "paperindex",
+  "scianchor-llm-router[all]",
+  "scianchor-paperindex",
 ]
 
 [project.optional-dependencies]

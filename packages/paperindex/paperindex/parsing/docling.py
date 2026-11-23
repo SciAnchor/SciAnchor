@@ -13,7 +13,7 @@ class DoclingDocumentParser:
     """Optional Docling backend for rich PDF-to-Markdown parsing.
 
     Docling remains an optional dependency so the default RH install stays
-    lightweight. Install it with: pip install 'research-harness[docling]'.
+    lightweight. Install it with: pip install 'scianchor[docling]'.
     """
 
     parser_name = "docling"
@@ -42,7 +42,7 @@ class DoclingDocumentParser:
         except ImportError as exc:
             raise RuntimeError(
                 "Docling parser requires optional dependency `docling`; install it with "
-                "`pip install 'research-harness[docling]'` or choose parser='pymupdf'."
+                "`pip install 'scianchor[docling]'` or choose parser='pymupdf'."
             ) from exc
 
         pipeline_options = PdfPipelineOptions()
