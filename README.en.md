@@ -11,7 +11,6 @@
   <img src="https://img.shields.io/badge/python-3.11%2B-blue.svg" alt="Python"/>
   <img src="https://img.shields.io/badge/MCP-compatible-orange.svg" alt="MCP"/>
   <img src="https://img.shields.io/badge/CCF%20BDCI%202026-First%20Prize-gold.svg" alt="CCF BDCI 2026 First Prize"/>
-  <img src="https://img.shields.io/badge/built%20with-openJiuwen-1f6feb.svg" alt="Built with openJiuwen"/>
 </p>
 
 <h3 align="center">Reliability first: a research co-pilot agent for the LLM era</h3>
@@ -20,11 +19,11 @@
 
 SciAnchor is an open-source research co-pilot agent. Researchers focus on the scientific question and the key judgments; SciAnchor handles literature review, experiment analysis, writing, and review-and-revision. It covers the whole workflow, **topic → literature → data analysis → writing → review → revision**: every number traces back to its source, every citation resolves to a real paper, every "pass" comes with evidence, and the researcher can take over at any point.
 
-SciAnchor works with Codex, Claude Code, Gemini CLI, OpenCode, Cursor Agent and other mainstream agents, and runs on Huawei openJiuwen / JiuwenSwarm.
+SciAnchor works with Codex, Claude Code, Gemini CLI, OpenCode, Cursor Agent and other mainstream agents.
 
 ## 🏆 First Prize, CCF BDCI 2026
 
-SciAnchor won **First Prize at the 14th CCF Big Data & Computing Intelligence Contest (BDCI 2026)**, ranking **1 of 1,447**, in the Huawei openJiuwen track "Automated research paper generation with JiuwenSwarm agents". The certificate was issued by the China Computer Federation (No. CCF-AWRD-TC-2026-00818).
+SciAnchor won **First Prize at the 14th CCF Big Data & Computing Intelligence Contest (BDCI 2026)**, **ranking first** in the automated research-paper generation track, which drew 1,447 participants and 325 submissions. The certificate was issued by the China Computer Federation (No. CCF-AWRD-TC-2026-00818).
 
 <p align="center">
   <img src="docs/assets/ccf-bdci-2026-certificate-redacted.jpg" alt="CCF BDCI 2026 First Prize certificate" width="560"/>

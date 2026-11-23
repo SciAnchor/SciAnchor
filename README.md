@@ -11,7 +11,6 @@
   <img src="https://img.shields.io/badge/python-3.11%2B-blue.svg" alt="Python"/>
   <img src="https://img.shields.io/badge/MCP-compatible-orange.svg" alt="MCP"/>
   <img src="https://img.shields.io/badge/CCF%20BDCI%202026-%E4%B8%80%E7%AD%89%E5%A5%96-gold.svg" alt="CCF BDCI 2026 一等奖"/>
-  <img src="https://img.shields.io/badge/built%20with-openJiuwen-1f6feb.svg" alt="Built with openJiuwen"/>
 </p>
 
 <h3 align="center">以可靠为第一原则，构建大模型时代的科研协同智能体</h3>
@@ -20,11 +19,11 @@
 
 SciAnchor 是一个开源的科研协同智能体：学者聚焦科学问题与核心判断，文献调研、实验分析、论文写作与审稿返修交给 SciAnchor。它贯通**选题 → 文献 → 数据分析 → 写作 → 审稿诊断 → 返修**全流程，每个数字能回查，每条引用能对回原文，每一个"通过"背后都有证据，学者随时可以接管。
 
-可接入 Codex、Claude Code、Gemini CLI、OpenCode、Cursor Agent 等主流 agent，也可在华为 openJiuwen / JiuwenSwarm 上运行。
+可接入 Codex、Claude Code、Gemini CLI、OpenCode、Cursor Agent 等主流 agent。
 
 ## 🏆 CCF BDCI 2026 一等奖
 
-SciAnchor 获 **第十四届 CCF 大数据与计算智能大赛（BDCI 2026）一等奖**，赛事排名 **1 / 1,447**。赛题为华为 openJiuwen「基于 JiuwenSwarm 的 Agent 科研论文自动生成」，证书由中国计算机学会颁发（编号 CCF-AWRD-TC-2026-00818）。
+SciAnchor 获 **第十四届 CCF 大数据与计算智能大赛（BDCI 2026）一等奖**：科研论文自动生成赛题共 1,447 名选手参赛、325 份作品提交，SciAnchor **排名第一**。证书由中国计算机学会颁发（编号 CCF-AWRD-TC-2026-00818）。
 
 <p align="center">
   <img src="docs/assets/ccf-bdci-2026-certificate-redacted.jpg" alt="CCF BDCI 2026 一等奖证书" width="560"/>
