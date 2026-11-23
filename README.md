@@ -92,21 +92,23 @@ claude mcp add research-harness \
 
 ## 能做什么
 
-覆盖科研全流程，每个环节都可以单独使用，也可以从任意环节接入、一路推进到投稿。
+覆盖科研全流程，每个环节都可以单独使用，也可以从任意环节接入、一路推进到成稿。
 
-| 环节 | 功能 |
-|---|---|
-| **选题与开题** | 课题框定与领域速览；研究方向生成与排序；方法、任务、领域三个维度的拥挤度（红海）评估；新颖性边界检查与 GO / NO-GO 立项认证 |
-| **文献检索** | arXiv、OpenAlex、Semantic Scholar、Crossref、PubMed 多源检索与合并去重；检索词迭代改写；沿参考文献与被引前后向扩展；开放获取 PDF 下载与全文解析；论文真实性与元数据核验，杜绝"查无此文" |
-| **文献梳理** | 文献地图与方法分类体系；按相关度排定精读顺序；逐篇精读，提取研究声明、假设、局限、数据集与指标；论文表格抽取；跨论文证据矩阵与观点矛盾发现；领域代表作识别 |
-| **创新点发现** | 基于证据识别研究空白，并做交叉验证与回原文核实；关键基线识别；候选创新方向生成、对抗式论证与排序；算法方案设计与迭代 |
-| **实验设计与执行** | 实验设计检查清单（对照、消融、统计功效等）；实验代码生成与校验；实验运行、结果回收与多轮迭代；实验日志与指标汇总；结果数字登记为已核验数字，供正文引用 |
-| **科研绘图** | 方法架构图与示意图生成；由原始实验记录渲染实验分析图，多学科图表样式；图表质量检查（分辨率、占位图、字号、配色）；图表解读文字生成 |
-| **论文写作** | 支持专项研究、综述、系统/基准、短论文、立场论文、科研汇报六类文稿；大纲与写作架构规划；范文锚定写作；按证据逐节起草；五大学科族写作规范；数学符号规范化；全文术语与符号统一；写作前逻辑门检查 |
-| **润色** | 逐节语言润色，并用不变量门控保证数字、引用、交叉引用、图表与篇幅不被改动，改坏即回退原文 |
-| **审稿与返修** | 模拟同行审稿（多维审稿组，对照由公开审稿意见归纳的缺陷树找硬伤）；投稿前全文问题排查；引用核验与清洗；正文数字回查核验；目标期刊/会议格式合规检查；按审稿意见逐节修订、修订后复审不降分才采纳；Rebuttal 回复撰写 |
-| **投稿与交付** | LaTeX 编译；带证据链的投稿材料包；为代码与数据申请 Zenodo DOI |
-| **推进与协同（贯穿全程）** | 一句话一键成稿；随时查看课题进度、门控状态与下一步；关键决策点暂停由学者拍板；中断后从检查点续跑；全过程来源追溯与复盘；把学者反馈与失败教训沉淀为经验，后续课题自动规避 |
+| 环节 | 功能 | 入口 |
+|---|---|---|
+| **论文选题** | 课题框定与领域速览；研究方向生成与排序；方法、任务、领域三个维度的拥挤度（红海）评估；与已有工作的原创性边界检查；GO / NO-GO 立项认证 | `/research-init` `/project-novelty-certification` `topic_init` `topic_framing` `field_brief` `direction_ranking` `compute_method_red_ocean` `originality_boundary_check` |
+| **文献检索** | arXiv、OpenAlex、Semantic Scholar、Crossref、PubMed 多源检索与合并去重；检索词迭代改写；沿参考文献与被引前后向扩展；开放获取 PDF 下载与全文解析；论文真实性与元数据核验，杜绝"查无此文" | `/literature-search` `/citation-trace` `/paper-verify` `paper_search` `paper_ingest` `query_refine` `iterative_retrieval_loop` `expand_citations` `paper_acquire` |
+| **文献梳理** | 文献地图与方法分类体系；按相关度、引用与时效排定精读顺序；逐篇精读，提取研究声明、假设、局限、数据集与指标；论文表格抽取与图表解读；跨论文证据矩阵与观点矛盾发现 | `/literature-mapping` `/claim-extraction` `paper_summarize` `claim_extract` `evidence_link` `deep_read` `method_taxonomy` `reading_prioritize` `table_extract` `figure_interpret` `evidence_matrix` `contradiction_detect` |
+| **创新发现** | 基于证据识别研究空白，并做交叉验证与回原文核实；关键基线识别；候选方向对抗式论证；候选算法生成与迭代设计 | `/gap-analysis` `gap_detect` `baseline_identify` `adversarial_review` `gap_cross_verify` `gap_ground_verify` `algorithm_candidate_generate` `algorithm_design_loop` |
+| **实验设计** | 把研究方向展开为正式设计简报；实验设计检查清单（基线、数据集、指标、消融、可复现性、案例与失败分析），并按课题已有文献预填 | `/rh-paper-perfection` `design_brief_expand` `experiment_design_checklist` `dataset_index` |
+| **实验执行** | 实验代码生成与校验；实验运行、结果回收与多轮迭代；实验日志与指标汇总；结果数字登记为已核验数字，供正文引用 | `/rh-paper-perfection` `code_generate` `code_validate` `experiment_run` `experiment_loop` `experiment_log` `metrics_aggregate` `verified_registry_build` |
+| **科研绘图** | 方法架构图与示意图生成；由原始实验记录渲染实验分析图，多学科图表样式；全文图表统一规划；图表质量检查（分辨率、占位图、字号、配色） | `/rh-paper-figure-generator` `/figure-quality` `figure_generate` `figure_suite_plan` `figure_suite_render` `figure_package` |
+| **论文写作** | 支持专项研究、综述、系统/基准、短论文、立场论文、科研汇报六类文稿；大纲与写作架构规划；范文锚定写作；按证据逐节起草；五大学科族写作规范；数学符号规范化；全文术语与符号统一；写作前逻辑门检查 | `/paper-writing` `/section-drafting` `/rh-exemplar-writing` `/domain-writing-*` `/manuscript-math-formalization` `/manuscript-logic-gate` `section_draft` `exemplar_retrieve` `exemplar_plan` `exemplar_generate` `outline_generate` `manuscript_unify` |
+| **论文润色** | 逐节语言润色，并用不变量门控保证数字、引用、交叉引用、图表与篇幅不被改动，改坏即回退原文 | `manuscript_polish` `exemplar_critique` |
+| **论文审稿** | 模拟同行审稿（多维审稿组，对照由公开审稿意见归纳的缺陷树找硬伤）；全文问题排查；引用核验与清洗；正文数字回查核验；目标期刊/会议格式合规检查；按审稿意见逐节修订、修订后复审不降分才采纳；Rebuttal 回复撰写 | `/manuscript-issue-audit` `/evidence-gating` `manuscript_review` `consistency_check` `advisory_check` `section_review` `section_revise` `citation_verify` `paper_verify_numbers` `venue_compliance_check` `rebuttal_format` |
+| **全流程协同** | 一句话一键成稿；随时查看课题进度、门控状态与下一步；关键决策点暂停由学者拍板；中断后从检查点续跑；全过程来源追溯与复盘；把学者反馈与失败教训沉淀为经验，后续课题自动规避 | `/rh-write` `/rh-status` `/rh-decide` `/rh-continue` `/provenance-review` `/rh-self-evolution` `paper_production_start` `orchestrator_status` `orchestrator_gate_check` `paper_production_decide` `provenance_summary` |
+
+<sub>入口说明：`/名字` 是 skill，在 Codex、Claude Code 等 agent 中直接调用；其余是 MCP 工具或科研原语，agent 会按需调用，也可以用 `rh primitive exec <名字>` 在命令行直接执行。完整清单见 [MCP 工具](docs/mcp-tools.zh.md) 与 [skills/manifest.json](skills/manifest.json)。</sub>
 
 ## 文档
 
