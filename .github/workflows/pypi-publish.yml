@@ -24,7 +24,6 @@ jobs:
           # scianchor bundles packages/ from outside its directory, so it ships
           # as a wheel only; the full source is this public repository.
           python -m build --wheel --outdir dist packaging/scianchor
-          python -m build --sdist --wheel --outdir dist packaging/research-harness-engine
           ls -l dist
       - uses: actions/upload-artifact@v4
         with:
@@ -44,9 +43,6 @@ jobs:
           - project: scianchor
             environment: pypi
             files: "scianchor-[0-9]*"
-          - project: research-harness-engine
-            environment: pypi-research-harness-engine
-            files: "research_harness_engine-*"
     environment: ${{ matrix.environment }}
     permissions:
       id-token: write
